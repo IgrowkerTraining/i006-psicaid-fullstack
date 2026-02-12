@@ -1,17 +1,17 @@
-import React from 'react';
-import { Navigate } from 'react-router-dom';
-import { useAuth } from '../hooks/useAuth';
+import React from "react"
+import { Navigate, Outlet } from "react-router-dom"
+import { useAuth } from "../hooks/useAuth"
 
 interface ProtectedRouteProps {
-  children: React.ReactNode;
-  redirectTo?: string;
+  children?: React.ReactNode
+  redirectTo?: string
 }
 
-export const ProtectedRoute: React.FC<ProtectedRouteProps> = ({ 
-  children, 
-  redirectTo = '/login' 
+export const ProtectedRoute: React.FC<ProtectedRouteProps> = ({
+  children,
+  redirectTo = "/login",
 }) => {
-  const { isAuthenticated, loading } = useAuth();
+  const { isAuthenticated, loading } = useAuth()
 
   if (loading) {
     return (
@@ -21,10 +21,13 @@ export const ProtectedRoute: React.FC<ProtectedRouteProps> = ({
           <p className="text-slate-400 font-medium">Loading...</p>
         </div>
       </div>
-    );
+    )
   }
 
-  return isAuthenticated ? <>{children}</> : <Navigate to={redirectTo} replace />;
-};
+  if (!isAuthenticated) {
+    return <Navigate to={redirectTo} replace />
+  }
+  return children ? <>{children}</> : <Outlet />
+}
 
-export default ProtectedRoute;
+export default ProtectedRoute
