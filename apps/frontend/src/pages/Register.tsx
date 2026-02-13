@@ -6,6 +6,8 @@ import { User } from "../types";
 import { getSecurityTip } from "../services/service";
 import { api } from "../services/api";
 import { useAuth } from "../hooks/useAuth";
+import { ASSETS } from "@/constants/routes";
+import { AlertCircle, Lock, Mail, Sparkles, Users } from "lucide-react";
 
 const Register: React.FC = () => {
   const navigate = useNavigate();
@@ -80,29 +82,24 @@ const Register: React.FC = () => {
     <div className="min-h-screen flex items-center justify-center p-4 bg-[radial-gradient(ellipse_at_bottom,_var(--tw-gradient-stops))] from-indigo-900/20 via-slate-950 to-slate-950">
       <div className="w-full max-w-lg">
         <div className="bg-slate-900/40 backdrop-blur-xl border border-slate-800 p-8 rounded-2xl shadow-2xl">
-          <div className="flex flex-col items-center mb-6">
-            <h1 className="text-3xl font-bold text-white mb-1">
-              Create Account
-            </h1>
-            <p className="text-slate-400">Join the Example digital ecosystem</p>
+          <div className="flex flex-col items-center mb-8">
+            <div className="w-12 h-12 rounded-xl overflow-hidden mb-4 shadow-lg">
+              <img
+                src={`${ASSETS.S3_BUCKET_BASE_URL}${ASSETS.IMAGES.LOGO}`}
+                alt="Psicaid Logo"
+                className="w-full h-full object-cover"
+              />
+            </div>
+
+            <h1 className="text-3xl font-bold text-white mb-1">Psicaid</h1>
+            <p className="text-slate-400">
+              Create your profile to start the experience
+            </p>
           </div>
 
           {serverError && (
             <div className="mb-6 bg-red-500/10 border border-red-500/20 text-red-400 text-sm p-3 rounded-lg flex items-center gap-2">
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                fill="none"
-                viewBox="0 0 24 24"
-                strokeWidth={1.5}
-                stroke="currentColor"
-                className="w-5 h-5"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  d="M12 9v3.75m9-.75a9 9 0 1 1-18 0 9 9 0 0 1 18 0Zm-9 3.75h.008v.008H12v-.008Z"
-                />
-              </svg>
+              <AlertCircle className="size-5" />
               {serverError}
             </div>
           )}
@@ -120,6 +117,9 @@ const Register: React.FC = () => {
                 disabled={isLoading}
                 value={formData.name}
                 onChange={handleChange}
+                icon={
+                  <Users className="size-5" />
+                }
               />
             </div>
             <div className="md:col-span-2">
@@ -132,6 +132,9 @@ const Register: React.FC = () => {
                 disabled={isLoading}
                 value={formData.email}
                 onChange={handleChange}
+                icon={
+                  <Mail className="size-5" />
+                }
               />
             </div>
             <Input
@@ -144,6 +147,9 @@ const Register: React.FC = () => {
               error={errors.password}
               value={formData.password}
               onChange={handleChange}
+              icon={
+                <Lock className="size-5" />
+              }
             />
             <Input
               label="Confirm Password"
@@ -155,6 +161,9 @@ const Register: React.FC = () => {
               error={errors.confirmPassword}
               value={formData.confirmPassword}
               onChange={handleChange}
+              icon={
+                <Lock className="size-5" />
+              }
             />
 
             <div className="md:col-span-2 mt-4">
@@ -168,20 +177,7 @@ const Register: React.FC = () => {
             <div className="mt-6 p-4 bg-indigo-500/5 border border-indigo-500/10 rounded-xl">
               <div className="flex items-start gap-3">
                 <div className="p-1.5 bg-indigo-500/20 rounded-lg text-indigo-400 mt-0.5">
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    strokeWidth={2}
-                    stroke="currentColor"
-                    className="w-4 h-4"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      d="M9.813 15.904 9 18.75l-.813-2.846a4.5 4.5 0 0 0-3.09-3.09L2.25 12l2.846-.813a4.5 4.5 0 0 0 3.09-3.09L9 5.25l.813 2.846a4.5 4.5 0 0 0 3.09 3.09L15.75 12l-2.846.813a4.5 4.5 0 0 0-3.09 3.09ZM18.259 8.715 18 9.75l-.259-1.035a3.375 3.375 0 0 0-2.455-2.456L14.25 6l1.036-.259a3.375 3.375 0 0 0 2.456-2.454L18 2.25l.259 1.035a3.375 3.375 0 0 0 2.456 2.456L21.75 6l-1.035.259a3.375 3.375 0 0 0-2.456 2.456ZM16.894 20.567 16.5 21.75l-.394-1.183a2.25 2.25 0 0 0-1.423-1.423L13.5 18.75l1.183-.394a2.25 2.25 0 0 0 1.423-1.423l.394-1.183.394 1.183a2.25 2.25 0 0 0 1.423 1.423l1.183.394-1.183.394a2.25 2.25 0 0 0-1.423 1.423Z"
-                    />
-                  </svg>
+                  <Sparkles className="size-4" />
                 </div>
               </div>
             </div>
