@@ -11,12 +11,11 @@ export const API_ENDPOINTS = {
     LOGIN: '/auth/login',
     REGISTER: '/auth/register',
   },
-  HEALTH: '/health',
 } as const;
 
 export const STORAGE_KEYS = {
-  USER: 'example_user',
-  TOKEN: 'example_token',
+  USER: 'user',
+  TOKEN: 'access_token',
 } as const;
 
 export const ASSETS = {

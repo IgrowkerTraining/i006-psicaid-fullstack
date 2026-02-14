@@ -2,13 +2,11 @@ import React, { useState, useEffect } from "react";
 import { User } from "../types";
 import { Button } from "../components/common/Button";
 import { getAIGreeting } from "../services/service";
-import { api } from "../services/api";
 import { useAuth } from "../hooks/useAuth";
 
 const Dashboard: React.FC = () => {
   const { user, logout } = useAuth();
   const [greeting, setGreeting] = useState<string>("Loading greeting...");
-  const [isBackendOnline, setIsBackendOnline] = useState<boolean | null>(null);
   const [stats] = useState([
     { label: "Cloud Storage", value: "1.2 TB", icon: "☁️" },
     { label: "Active Sessions", value: "4", icon: "💻" },
@@ -18,12 +16,10 @@ const Dashboard: React.FC = () => {
 
   useEffect(() => {
     const initDashboard = async () => {
-      const [msg, online] = await Promise.all([
+      const [msg] = await Promise.all([
         getAIGreeting(user?.name || ""),
-        api.checkHealth(),
       ]);
       setGreeting(msg);
-      setIsBackendOnline(online);
     };
     initDashboard();
   }, [user?.name]);
