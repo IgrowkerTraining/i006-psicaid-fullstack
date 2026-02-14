@@ -8,7 +8,12 @@ services:
     ports:
       - "3000:3000"
     environment:
+      - DB_URL=${DB_URL}
+      - DB_USER=${DB_USER}
+      - DB_PASSWORD=${DB_PASSWORD}
       - SPRING_PROFILES_ACTIVE=development
+    env_file:
+      - .env  # <--- Esto le dice a Docker que lea el archivo .env local
     volumes:
       - ./apps/backend:/app
       - /app/.mvn
