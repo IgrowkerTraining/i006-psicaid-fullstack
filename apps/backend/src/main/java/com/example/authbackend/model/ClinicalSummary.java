@@ -17,18 +17,20 @@ public class ClinicalSummary {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    @Column(columnDefinition = "content", nullable = false)
+    @Column(columnDefinition = "TEXT", nullable = false)
     private String content;
 
     @Column(name = "date_from")
-    private LocalDate dateFrom; // date -> LocalDate
+    private LocalDate dateFrom;
 
     @Column(name = "date_until")
-    private LocalDateTime dateUntil;
+    private LocalDate dateUntil;
 
     @Column(name = "generated_at")
-    private LocalDateTime generatedAt;
+    private OffsetDateTime generatedAt;
 
-    @Column(name = "patient_id", nullable = false)
-    private Integer patientId; // integer (int4) -> Integer
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "patient_id", nullable = false)
+    @ToString.Exclude
+    private Patient patient;
 }

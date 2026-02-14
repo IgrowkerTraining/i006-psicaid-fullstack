@@ -6,7 +6,7 @@ import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
 import java.util.List;
 
 @Entity
@@ -22,53 +22,56 @@ public class Patient {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    // "unique = true" ayuda a que Hibernate valide, aunque la DB ya tiene la restricción
-    @Column(name = "internal_code", nullable = false, unique = true)
+    @Column(name = "internal_code")
     private String internalCode;
 
+    // --- COINCIDENCIA EXACTA CON TU CAPTURA ---
     @Column(name = "first_name", nullable = false)
-    private String firstName;
+    private String firstName; // Mapea a first_name
 
     @Column(name = "last_name", nullable = false)
-    private String lastName;
+    private String lastName;  // Mapea a last_name
+    // ------------------------------------------
 
+    // Nota: En tu captura tienes "birthday" Y "birth_date".
+    // Usaremos birth_date que es el estándar que creó Hibernate.
     @Column(name = "birth_date", nullable = false)
-    private LocalDate birthDate; // JPA lo mapea automáticamente a DATE de SQL
+    private LocalDate birthDate;
 
+    @Column(nullable = true)
     private String occupation;
 
     @Column(name = "marital_status")
     private String maritalStatus;
 
+    @Column(nullable = true)
     private String sex;
 
-    // Inicializamos en true por defecto para evitar nulos
-    @Builder.Default
-    @Column(nullable = false)
-    private Boolean active = true;
+    // Campo vital para borrado lógico (Soft Delete)
+    @Column(name = "active")
+    private Boolean active;
 
     // --- RELACIONES ---
-
-    // Muchos Pacientes pertenecen a UN Profesional
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "professional_id", nullable = false)
-    @ToString.Exclude // <--- ¡VITAL! Evita el bucle infinito
+    @ToString.Exclude
     private Professional professional;
+
     @OneToMany(mappedBy = "patient", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private List<ClinicalSession> clinicalSessions;
+
     @OneToMany(mappedBy = "patient", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private List<Treatment> treatments;
+
     @OneToMany(mappedBy = "patient", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private List<ClinicalSummary> clinicalSummaries;
 
-    // --- AUDITORÍA AUTOMÁTICA ---
-    // Hibernate llenará esto solo, sin que tú tengas que hacer setCreatedAt(now)
-
+    // --- AUDITORÍA ---
     @CreationTimestamp
     @Column(name = "created_at", updatable = false)
-    private LocalDateTime createdAt;
+    private OffsetDateTime createdAt;
 
     @UpdateTimestamp
     @Column(name = "updated_at")
-    private LocalDateTime updatedAt;
+    private OffsetDateTime updatedAt;
 }

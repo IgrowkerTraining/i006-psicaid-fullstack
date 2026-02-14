@@ -1,35 +1,36 @@
 package com.example.authbackend.model;
-import jakarta.persistence.*;
-import lombok.*; // Importamos Lombok
-import java.util.List;
-import java.time.*;
 
+import jakarta.persistence.*;
+import lombok.*;
+import org.hibernate.annotations.CreationTimestamp;
+import java.time.OffsetDateTime;
 
 @Entity
-@Table(name = "Logs")
-@Getter // Genera getters para todos los campos
-@Setter // Genera setters para todos los campos
-@NoArgsConstructor // Genera el constructor vacío (Obligatorio para JPA)
-@AllArgsConstructor // Genera un constructor con todos los argumentos (Útil para tests)
-@Builder // Patrón Builder (Opcional, pero muy pro para crear objetos)
-
+@Table(name = "logs")
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
 public class Log {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "criticaly", nullable = false)
-    private Criticality criticaly;
+    @Column(name = "criticality", nullable = false)
+    private LogCriticality criticality;
 
-    @Column(name = "date_time", nullable = false)
-    private LocalDateTime date_time;
+    @CreationTimestamp
+    @Column(name = "date_time", nullable = false, updatable = false)
+    private OffsetDateTime dateTime;
 
-    @Column(name = "action", nullable = false)
+    @Column(name = "action", columnDefinition = "TEXT", nullable = false)
     private String action;
 
-    @Column(name = "professional_id", nullable = false)
-    private Integer professionalId; // integer -> Integer
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "professional_id", nullable = false)
+    @ToString.Exclude
+    private Professional professional;
 }
-
-
 

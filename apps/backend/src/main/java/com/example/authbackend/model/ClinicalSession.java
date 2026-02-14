@@ -21,7 +21,6 @@ public class ClinicalSession {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    // Mapeo exacto para TIMESTAMPTZ de Postgres
     @Column(name = "session_date_time", nullable = false)
     private OffsetDateTime sessionDateTime;
 
@@ -61,12 +60,10 @@ public class ClinicalSession {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "patient_id", nullable = false)
-    @ToString.Exclude // Evitamos bucle infinito
+    @ToString.Exclude
     private Patient patient;
-
-    // Relación con el historial de cambios (Aún no creada, comentada)
-    // @OneToMany(mappedBy = "session", fetch = FetchType.LAZY)
-    // private List<HistoryChange> historyChanges;
+    @OneToMany(mappedBy = "session", fetch = FetchType.LAZY)
+    private List<HistoryChange> historyChanges;
 
     // --- AUDITORÍA AUTOMÁTICA ---
 

@@ -7,7 +7,7 @@ import org.hibernate.annotations.CreationTimestamp;
 import java.time.OffsetDateTime;
 
 @Entity
-@Table(name = "history_changes") // Debe coincidir con tu tabla en Supabase
+@Table(name = "history_changes")
 @Getter
 @Setter
 @NoArgsConstructor
@@ -40,13 +40,4 @@ public class HistoryChange {
     @JoinColumn(name = "session_id", nullable = false)
     @ToString.Exclude // Evitamos bucle infinito
     private ClinicalSession session;
-
-    // OJO: Si en tu script SQL final añadiste "modified_by_id" (relación con Professional),
-    // descomenta las siguientes líneas. Si no está en la tabla, déjalo comentado.
-    /*
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "modified_by_id")
-    @ToString.Exclude
-    private Professional modifiedBy;
-    */
 }

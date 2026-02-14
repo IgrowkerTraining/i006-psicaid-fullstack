@@ -1,5 +1,6 @@
-package com.psicaid.example.authbackend.model;
+package com.example.authbackend.model;
 
+import com.example.authbackend.model.LogCriticality;
 import jakarta.persistence.AttributeConverter;
 import jakarta.persistence.Converter;
 
