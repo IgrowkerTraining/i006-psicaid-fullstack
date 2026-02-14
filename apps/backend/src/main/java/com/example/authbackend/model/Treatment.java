@@ -1,3 +1,5 @@
+package com.example.authbackend.model;
+
 import jakarta.persistence.*;
 import lombok.*;
 import java.time.LocalDate;
@@ -15,12 +17,15 @@ public class Treatment {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    @Column(columnDefinition = "content", nullable = true)
+    @Column(columnDefinition = "TEXT", nullable = true)
     private String content;
 
-    @Column(columnDefinition = "date", nullable = false)
-    private LocalDate date; // date -> LocalDate
+    @Column(name = "date", nullable = false)
+    private LocalDate date;
 
-    @Column(name = "patient_id", nullable = false)
-    private Integer patientId;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "patient_id", nullable = false)
+    @ToString.Exclude
+
+    private Patient patient;
 }
