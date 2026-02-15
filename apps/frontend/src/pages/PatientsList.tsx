@@ -1,7 +1,9 @@
 import React from 'react';
+import { useNavigate } from 'react-router-dom';
 
 
 const PatientsList: React.FC = () => {
+  const navigate = useNavigate();
   return (
     <div className="min-h-screen">
       <div className="max-w-7xl mx-auto w-full p-6 lg:p-10">
@@ -12,7 +14,7 @@ const PatientsList: React.FC = () => {
             </h1>
             <p className="text-slate-400">Gestiona y visualiza todos tus pacientes</p>
           </div>
-          <button className="px-6 py-3 bg-indigo-600 text-white font-medium rounded-xl hover:bg-indigo-700 transition-all duration-200">
+          <button onClick={()=>navigate('/patients/new')} className="px-6 py-3 bg-indigo-600 text-white font-medium rounded-xl hover:bg-indigo-700 transition-all duration-200">
             + Registrar Paciente
           </button>
         </div>
