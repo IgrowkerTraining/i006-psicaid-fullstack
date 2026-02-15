@@ -4,7 +4,7 @@ import { storage } from "../utils/storage";
 
 interface AuthContextType {
   authState: AuthState;
-  login: (user: User) => void;
+  login: (user: User, token: string) => void;
   logout: () => void;
   setLoading: (loading: boolean) => void;
   setError: (error: string | null) => void;
@@ -59,15 +59,17 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
 
   useEffect(() => {
     const savedUser = storage.getUser();
-    if (savedUser) {
+    const savedToken = storage.getToken();
+    if (savedUser && savedToken) {
       dispatch({ type: "SET_USER", payload: savedUser });
     } else {
       dispatch({ type: "SET_LOADING", payload: false });
     }
   }, []);
 
-  const login = (user: User) => {
+  const login = (user: User, token: string) => {
     storage.setUser(user);
+    storage.setToken(token);
     dispatch({ type: "SET_USER", payload: user });
   };
 

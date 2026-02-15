@@ -69,10 +69,10 @@ const Register: React.FC = () => {
         email: formData.email,
         password: formData.password,
       });
-      login(response.user);
+      login(response.user, response.token);
       navigate("/dashboard");
     } catch (err: any) {
-      setServerError(err.message || "Registration failed");
+      setServerError("Ha ocurrido un error en el proceso de registro. Intentalo nuevamente más tarde.");
     } finally {
       setIsLoading(false);
     }
