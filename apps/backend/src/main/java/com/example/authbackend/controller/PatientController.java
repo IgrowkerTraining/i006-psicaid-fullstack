@@ -3,9 +3,8 @@ package com.example.authbackend.controller;
 import com.example.authbackend.dto.PatientDTO;
 import com.example.authbackend.service.PatientService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -19,5 +18,10 @@ public class PatientController {
     @GetMapping
     public List<PatientDTO> list() {
         return patientService.getAllPatients();
+    }
+
+    @PostMapping
+    public ResponseEntity<PatientDTO> createPatient(@RequestBody PatientDTO patientDTO) {
+        return ResponseEntity.ok(patientService.createPatient(patientDTO));
     }
 }
