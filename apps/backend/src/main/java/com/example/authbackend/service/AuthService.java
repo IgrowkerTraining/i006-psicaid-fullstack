@@ -13,7 +13,7 @@ import org.springframework.stereotype.Service;
 import java.util.Optional;
 
 @Service
-public abstract class AuthService {
+public class AuthService {
 
     @Autowired
     private UserRepository userRepository;
