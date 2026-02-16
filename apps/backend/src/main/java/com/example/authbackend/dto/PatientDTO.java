@@ -5,6 +5,8 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDate;
+
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
@@ -15,6 +17,11 @@ public class PatientDTO {
     private String firstName;
     private String lastName;
     private String occupation;
+    private LocalDate birthDate;
+    private String maritalStatus;
+    private String sex;
     private Boolean active;
-    // No incluimos 'professional' ni listas pesadas para que sea rápido
+
+    // Para relacionarlo con el médico (Foreign Key)
+    private Integer professionalId;
 }

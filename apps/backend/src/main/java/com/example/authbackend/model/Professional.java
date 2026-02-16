@@ -6,10 +6,10 @@ import java.util.List;
 
 @Entity
 @Table(name = "professionals")
-@Getter // Genera getters para todos los campos
-@Setter // Genera setters para todos los campos
-@NoArgsConstructor // Genera el constructor vacío (Obligatorio para JPA)
-@AllArgsConstructor // Genera un constructor con todos los argumentos (Útil para tests)
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
 @Builder // Patrón Builder (Opcional, pero muy pro para crear objetos)
 public class Professional {
 
