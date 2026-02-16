@@ -3,6 +3,7 @@ package com.example.authbackend.service;
 import com.example.authbackend.dto.AuthResponse;
 import com.example.authbackend.dto.LoginRequest;
 import com.example.authbackend.dto.RegisterRequest;
+import com.example.authbackend.dto.UserDTO;
 import com.example.authbackend.model.User;
 import com.example.authbackend.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,7 +13,7 @@ import org.springframework.stereotype.Service;
 import java.util.Optional;
 
 @Service
-public class AuthService {
+public abstract class AuthService {
 
     @Autowired
     private UserRepository userRepository;
@@ -22,6 +23,19 @@ public class AuthService {
 
     @Autowired
     private JwtService jwtService;
+
+    // Método auxiliar para convertir Entidad -> DTO
+    private UserDTO mapToDTO(User user) {
+        return new UserDTO(
+                user.getId(),
+                user.getEmail(),
+                user.getUsername(),
+                user.getName(),
+                user.getAvatar(),
+                user.isAdmin()
+        );
+    }
+
 
     public AuthResponse register(RegisterRequest request) {
         // Generate username from email if not provided
@@ -44,13 +58,11 @@ public class AuthService {
         user.setPassword(passwordEncoder.encode(request.getPassword()));
 
         User savedUser = userRepository.save(user);
-        
-        // Remove password from response
-        savedUser.setPassword(null);
-        
+
         String token = jwtService.generateToken(savedUser.getEmail());
-        
-        return new AuthResponse(savedUser, token, "User registered successfully");
+
+        // Devolvemos el DTO
+        return new AuthResponse(mapToDTO(savedUser), token, "User registered successfully");
     }
 
     public AuthResponse login(LoginRequest request) {
@@ -65,11 +77,9 @@ public class AuthService {
             throw new RuntimeException("Invalid credentials");
         }
 
-        // Remove password from response
-        user.setPassword(null);
-        
         String token = jwtService.generateToken(user.getEmail());
-        
-        return new AuthResponse(user, token, "Login successful");
+
+        // Devolvemos el DTO
+        return new AuthResponse(mapToDTO(user), token, "Login successful");
     }
 }
