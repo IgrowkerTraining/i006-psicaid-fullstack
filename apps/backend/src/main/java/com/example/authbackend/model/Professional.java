@@ -29,7 +29,7 @@ public class Professional {
     @Column(nullable = false)
     private String password;
 
-    // Relaciones (Ojo: JPA requiere cuidado aquí)
+    // Relaciones
     @OneToMany(mappedBy = "professional", fetch = FetchType.LAZY)
     private List<Patient> patients;
 
