@@ -9,7 +9,7 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 
 @Repository
-public interface PatientRepository extends JpaRepository<Patient, Integer> {
+public interface PatientRepository extends JpaRepository<Patient, Long> {
 
     // Esto busca en nombre O apellido, ignorando mayúsculas y minúsculas.
     @Query("SELECT p FROM Patient p WHERE " +
@@ -19,4 +19,6 @@ public interface PatientRepository extends JpaRepository<Patient, Integer> {
 
     // Método extra para filtrar por estado
     List<Patient> findByActiveTrue();
+
+    List<Patient> findByProfessionalId(Long professionalId);
 }
