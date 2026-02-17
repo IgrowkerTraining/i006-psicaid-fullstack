@@ -59,6 +59,8 @@ public class PatientService {
                 .occupation(patient.getOccupation())
                 .active(patient.getActive())
                 .birthDate(patient.getBirthDate())
+                .maritalStatus(patient.getMaritalStatus())
+                .sex(patient.getSex())
                 // Extraemos solo el ID para enviarlo al frontend
                 .professionalId(patient.getProfessional() != null ? patient.getProfessional().getId() : null)
                 .build();
