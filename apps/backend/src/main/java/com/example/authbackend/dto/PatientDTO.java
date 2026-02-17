@@ -12,7 +12,7 @@ import java.time.LocalDate;
 @AllArgsConstructor
 @Builder
 public class PatientDTO {
-    private Integer id;
+    private Long id;
     private String internalCode;
     private String firstName;
     private String lastName;
@@ -23,5 +23,5 @@ public class PatientDTO {
     private Boolean active;
 
     // Para relacionarlo con el médico (Foreign Key)
-    private Integer professionalId;
+    private Long professionalId;
 }

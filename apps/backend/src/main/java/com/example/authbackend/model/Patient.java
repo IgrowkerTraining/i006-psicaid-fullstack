@@ -20,21 +20,17 @@ public class Patient {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
+    private Long id;
 
     @Column(name = "internal_code")
     private String internalCode;
 
-    // --- COINCIDENCIA EXACTA CON TU CAPTURA ---
     @Column(name = "first_name", nullable = false)
-    private String firstName; // Mapea a first_name
+    private String firstName;
 
     @Column(name = "last_name", nullable = false)
-    private String lastName;  // Mapea a last_name
-    // ------------------------------------------
+    private String lastName;
 
-    // Nota: En tu captura tienes "birthday" Y "birth_date".
-    // Usaremos birth_date que es el estándar que creó Hibernate.
     @Column(name = "birth_date", nullable = false)
     private LocalDate birthDate;
 

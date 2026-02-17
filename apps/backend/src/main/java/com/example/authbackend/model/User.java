@@ -28,7 +28,7 @@ public class User {
     private String avatar;
 
     @Column(name = "is_admin", nullable = false)
-    private boolean isAdmin = false; // Por defecto false
+    private boolean isAdmin = false; // Por defecto
 
     public User() {}
 
@@ -37,7 +37,7 @@ public class User {
         this.username = username;
         this.name = name;
         this.password = password;
-        this.isAdmin = false; // Siempre nacen como usuarios normales
+        this.isAdmin = false; // Siempre nacen como usuario normal
     }
 
 }

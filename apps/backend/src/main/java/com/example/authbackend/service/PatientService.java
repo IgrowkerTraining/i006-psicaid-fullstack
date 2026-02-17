@@ -7,6 +7,7 @@ import com.example.authbackend.repository.PatientRepository;
 import com.example.authbackend.repository.ProfessionalRepository; // Necesitas este repo
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -19,17 +20,32 @@ public class PatientService {
     private final ProfessionalRepository professionalRepository;
 
     // MÉTODO PARA OBTENER TODOS (GET) ---
+    // OJO: Este método es peligroso (Trae todos los pacientes del sistema)
+    // Deberíamos borrarlo o protegerlo con @PreAuthorize("hasRole('ADMIN')")
     public List<PatientDTO> getAllPatients() {
         return patientRepository.findAll().stream()
                 .map(this::convertToDTO)
                 .collect(Collectors.toList());
     }
 
-    //  MÉTODO PARA CREAR (POST) ---
-    public PatientDTO createPatient(PatientDTO dto) {
+    // Listar SOLO los pacientes de un médico específico
+    @Transactional(readOnly = true)
+    public List<PatientDTO> getPatientsByProfessional(Long professionalId) { // CAMBIO: Integer -> Long
 
-        Professional professional = professionalRepository.findById(Long.valueOf(dto.getProfessionalId()))
-                .orElseThrow(() -> new RuntimeException("Professional not found with ID: " + dto.getProfessionalId()));
+        // CAMBIO: Eliminamos Long.valueOf() porque ya recibimos un Long
+        return patientRepository.findByProfessionalId(professionalId)
+                .stream()
+                .map(this::convertToDTO)
+                .collect(Collectors.toList());
+    }
+
+    //  MÉTODO PARA CREAR (POST) ---
+    @Transactional
+    public PatientDTO createPatient(Long professionalId, PatientDTO dto) {
+
+        // Validamos que el médico existe
+        Professional professional = professionalRepository.findById(professionalId)
+                .orElseThrow(() -> new RuntimeException("Professional not found with ID: " + professionalId));
 
         // Mapear DTO a Entidad
         Patient patient = new Patient();
@@ -40,9 +56,9 @@ public class PatientService {
         patient.setBirthDate(dto.getBirthDate());
         patient.setSex(dto.getSex());
         patient.setMaritalStatus(dto.getMaritalStatus());
-        patient.setActive(true); // Por defecto activo
-        // Asignar la relación
-        patient.setProfessional(professional);
+
+        patient.setActive(true); // Regla de negocio: Nace activo
+        patient.setProfessional(professional); // Vinculación
 
         // Guardar y devolver convertido
         Patient savedPatient = patientRepository.save(patient);
@@ -61,7 +77,6 @@ public class PatientService {
                 .birthDate(patient.getBirthDate())
                 .maritalStatus(patient.getMaritalStatus())
                 .sex(patient.getSex())
-                // Extraemos solo el ID para enviarlo al frontend
                 .professionalId(patient.getProfessional() != null ? patient.getProfessional().getId() : null)
                 .build();
     }
