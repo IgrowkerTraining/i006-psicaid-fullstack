@@ -110,36 +110,38 @@ const Dashboard: React.FC = () => {
             <h3 className="text-xl font-semibold text-white">
               Identity Insight
             </h3>
-            <div className="bg-indigo-600/10 border border-indigo-500/20 p-6 rounded-2xl">
-              <div className="flex items-center gap-4 mb-6">
-                <img
-                  src={user.avatar}
-                  className="w-16 h-16 rounded-2xl"
-                  alt=""
-                />
-                <div>
-                  <h4 className="font-bold text-white text-lg">{user.name}</h4>
-                  <p className="text-indigo-400 text-sm">@{user.username}</p>
+            {user && (
+              <div className="bg-indigo-600/10 border border-indigo-500/20 p-6 rounded-2xl">
+                <div className="flex items-center gap-4 mb-6">
+                  <img
+                    src={user.avatar}
+                    className="w-16 h-16 rounded-2xl"
+                    alt=""
+                  />
+                  <div>
+                    <h4 className="font-bold text-white text-lg">{user.name}</h4>
+                    <p className="text-indigo-400 text-sm">@{user.username}</p>
+                  </div>
                 </div>
+                <div className="space-y-4">
+                  <div className="flex justify-between text-sm">
+                    <span className="text-slate-400">Account ID</span>
+                    <span className="text-slate-200 font-mono">{user.id}</span>
+                  </div>
+                  <div className="flex justify-between text-sm">
+                    <span className="text-slate-400">Encryption Level</span>
+                    <span className="text-emerald-400 font-bold">SHA-512</span>
+                  </div>
+                  <div className="flex justify-between text-sm">
+                    <span className="text-slate-400">Member Since</span>
+                    <span className="text-slate-200">Feb 2024</span>
+                  </div>
+                </div>
+                <Button variant="primary" className="w-full mt-6">
+                  Edit Profile
+                </Button>
               </div>
-              <div className="space-y-4">
-                <div className="flex justify-between text-sm">
-                  <span className="text-slate-400">Account ID</span>
-                  <span className="text-slate-200 font-mono">{user.id}</span>
-                </div>
-                <div className="flex justify-between text-sm">
-                  <span className="text-slate-400">Encryption Level</span>
-                  <span className="text-emerald-400 font-bold">SHA-512</span>
-                </div>
-                <div className="flex justify-between text-sm">
-                  <span className="text-slate-400">Member Since</span>
-                  <span className="text-slate-200">Feb 2024</span>
-                </div>
-              </div>
-              <Button variant="primary" className="w-full mt-6">
-                Edit Profile
-              </Button>
-            </div>
+            )}
           </section>
         </div>
       </main>
