@@ -21,6 +21,7 @@ public class ProfessionalPatientController {
         return ResponseEntity.ok(patientService.getPatientsByProfessional(id));
     }
 
+    //Checked
     @PostMapping("/{id}/patients")
     public ResponseEntity<PatientDTO> createPatient(
             @PathVariable Long id,
@@ -31,4 +32,21 @@ public class ProfessionalPatientController {
         return ResponseEntity.status(HttpStatus.CREATED)
                 .body(patientService.createPatient(id, patientDTO));
     }
+
+
+    @PatchMapping("/{id}/patients/{patientId}")
+    public ResponseEntity<PatientDTO> updatePatient(
+            @PathVariable Long professionalId,
+            @PathVariable Long patientId,
+            @RequestBody PatientDTO dto) {
+
+        PatientDTO updatedPatient = patientService.updatePatient(
+                professionalId,
+                patientId,
+                dto
+        );
+
+        return ResponseEntity.ok(updatedPatient);
+    }
+
 }

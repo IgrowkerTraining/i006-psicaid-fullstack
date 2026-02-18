@@ -17,8 +17,11 @@ public interface PatientRepository extends JpaRepository<Patient, Long> {
             "LOWER(p.lastName) LIKE LOWER(CONCAT('%', :keyword, '%'))")
     List<Patient> searchByName(@Param("keyword") String keyword);
 
-    // Método extra para filtrar por estado
+    // Metodo extra para filtrar por estado
     List<Patient> findByActiveTrue();
 
     List<Patient> findByProfessionalId(Long professionalId);
+
+    Patient findById();
+
 }

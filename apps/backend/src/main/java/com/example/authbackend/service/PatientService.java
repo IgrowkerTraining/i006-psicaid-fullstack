@@ -19,9 +19,8 @@ public class PatientService {
     private final PatientRepository patientRepository;
     private final ProfessionalRepository professionalRepository;
 
-    // MÉTODO PARA OBTENER TODOS (GET) ---
-    // OJO: Este método es peligroso (Trae todos los pacientes del sistema)
-    // Deberíamos borrarlo o protegerlo con @PreAuthorize("hasRole('ADMIN')")
+    // MeTODO PARA OBTENER TODOS (GET) ---
+    // OJO: Este metodo es peligroso (Trae todos los pacientes del sistema)
     public List<PatientDTO> getAllPatients() {
         return patientRepository.findAll().stream()
                 .map(this::convertToDTO)
@@ -39,7 +38,7 @@ public class PatientService {
                 .collect(Collectors.toList());
     }
 
-    //  MÉTODO PARA CREAR (POST) ---
+    //  MeTODO PARA CREAR (POST) ---
     @Transactional
     public PatientDTO createPatient(Long professionalId, PatientDTO dto) {
 
@@ -80,4 +79,53 @@ public class PatientService {
                 .professionalId(patient.getProfessional() != null ? patient.getProfessional().getId() : null)
                 .build();
     }
+
+    @Transactional
+    public PatientDTO updatePatient(Long professionalId, Long patientId, PatientDTO dto) {
+
+        // 1. Validar que el paciente existe
+        Patient patient = patientRepository.findById(patientId)
+                .orElseThrow(() -> new RuntimeException("Patient not found with ID: " + patientId));
+
+        // 2. Validar que pertenece a este profesional (SEGURIDAD)
+        if (!patient.getProfessional().getId().equals(professionalId)) {
+            throw new RuntimeException(
+                    "Patient with ID " + patientId + " does not belong to professional " + professionalId
+            );
+        }
+
+        // 3. Actualizar solo los campos permitidos
+        if (dto.getFirstName() != null) {
+            patient.setFirstName(dto.getFirstName());
+        }
+        if (dto.getLastName() != null) {
+            patient.setLastName(dto.getLastName());
+        }
+//        if (dto.getInternalCode() != null) {
+//            patient.setInternalCode(dto.getInternalCode());
+//        }
+        if (dto.getOccupation() != null) {
+            patient.setOccupation(dto.getOccupation());
+        }
+        if (dto.getBirthDate() != null) {
+            patient.setBirthDate(dto.getBirthDate());
+        }
+        if (dto.getMaritalStatus() != null) {
+            patient.setMaritalStatus(dto.getMaritalStatus());
+        }
+        if (dto.getActive() != null) {
+            patient.setActive(dto.getActive());
+        }
+        if (dto.getSex() != null) {
+            patient.setSex(dto.getSex());
+        }
+
+        // 4. Guardar los cambios
+        Patient updatedPatient = patientRepository.save(patient); //Si el objeto TIENE ID, .save() ACTUALIZA la fila existente
+
+        // 5. Convertir a DTO y devolver
+        return convertToDTO(updatedPatient);
+    }
+
+
 }
