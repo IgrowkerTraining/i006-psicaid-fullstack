@@ -1,17 +1,60 @@
 import React, { useState, useEffect } from "react";
-import { User } from "../types";
 import { Button } from "../components/common/Button";
 import { getAIGreeting } from "../services/service";
 import { useAuth } from "../hooks/useAuth";
+import { StatsCard } from "@/components/shared/dashboard/StatsCard";
+import { Calendar, FileText, TrendingUp, Users } from "lucide-react";
+import {
+  DashboardLogsAppointments,
+  type DashboardAppointmentLog,
+} from "@/components/shared/dashboard/DashboardLogsAppointments";
 
 const Dashboard: React.FC = () => {
   const { user, logout } = useAuth();
   const [greeting, setGreeting] = useState<string>("Loading greeting...");
   const [stats] = useState([
-    { label: "Cloud Storage", value: "1.2 TB", icon: "☁️" },
-    { label: "Active Sessions", value: "4", icon: "💻" },
-    { label: "Security Score", value: "98%", icon: "🛡️" },
-    { label: "Network Speed", value: "850 Mbps", icon: "⚡" },
+    { label: "Total Pacientes", value: "2", subtext: 'Pacientes activos', icon: <Users className="text-gray-600" /> },
+    { label: "Citas de Hoy", value: "0", subtext: 'Sesiones programadas', icon: <Calendar className="text-gray-600" /> },
+    { label: "Esta Semana", value: "0", subtext: 'Citas programadas', icon: <TrendingUp className="text-gray-600" /> },
+    { label: "Sesiones Completadas", value: "0", subtext: 'Este mes', icon: <FileText className="text-gray-600" /> },
+  ]);
+  const [appointmentLogs] = useState<DashboardAppointmentLog[]>([
+    {
+      id: "appt-001",
+      date: "18 Feb 2026",
+      time: "09:00",
+      patientName: "Ana Morales",
+      diagnosis: "Ansiedad generalizada",
+      status: "confirmada",
+      url: "/patients/patient-001",
+    },
+    {
+      id: "appt-002",
+      date: "18 Feb 2026",
+      time: "10:30",
+      patientName: "Carlos Rojas",
+      diagnosis: "Insomnio cronico",
+      status: "seguimiento",
+      url: "/patients/patient-002",
+    },
+    {
+      id: "appt-003",
+      date: "18 Feb 2026",
+      time: "12:00",
+      patientName: "Lucia Herrera",
+      diagnosis: "Trastorno de panico",
+      status: "prioritaria",
+      url: "/patients/patient-003",
+    },
+    {
+      id: "appt-004",
+      date: "18 Feb 2026",
+      time: "15:30",
+      patientName: "Jorge Sanchez",
+      diagnosis: "Depresion moderada",
+      status: "seguimiento",
+      url: "/patients/patient-004",
+    },
   ]);
 
   useEffect(() => {
@@ -35,75 +78,21 @@ const Dashboard: React.FC = () => {
         </header>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-10">
-          {stats.map((stat, i) => (
-            <div
-              key={i}
-              className="bg-slate-900/40 border border-slate-800 p-6 rounded-2xl hover:border-indigo-500/50 transition-all duration-300 group"
-            >
-              <div className="text-3xl mb-4 group-hover:scale-110 transition-transform duration-300">
-                {stat.icon}
-              </div>
-              <p className="text-slate-500 text-sm font-medium uppercase tracking-wider">
-                {stat.label}
-              </p>
-              <h3 className="text-2xl font-bold text-white mt-1">
-                {stat.value}
-              </h3>
-            </div>
+          {stats.map((stat) => (
+            <StatsCard
+              key={stat.label}
+              label={stat.label}
+              value={stat.value}
+              subText={stat.subtext}
+              icon={stat.icon}
+            />
           ))}
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
           <section className="lg:col-span-2 space-y-6">
-            <h3 className="text-xl font-semibold text-white">System Logs</h3>
-            <div className="bg-slate-900/40 border border-slate-800 rounded-2xl overflow-hidden">
-              {[
-                {
-                  action: "New login detected",
-                  location: "San Francisco, US",
-                  time: "2 mins ago",
-                  status: "secure",
-                },
-                {
-                  action: "Database sync",
-                  location: "Global-Edge-01",
-                  time: "1 hour ago",
-                  status: "success",
-                },
-                {
-                  action: "Security patch applied",
-                  location: "Auto-update",
-                  time: "3 hours ago",
-                  status: "success",
-                },
-                {
-                  action: "Password rotation reminder",
-                  location: "User node",
-                  time: "5 hours ago",
-                  status: "pending",
-                },
-              ].map((log, i) => (
-                <div
-                  key={i}
-                  className="flex items-center justify-between p-4 border-b border-slate-800 last:border-0 hover:bg-slate-800/20 transition-colors"
-                >
-                  <div className="flex gap-4 items-center">
-                    <div
-                      className={`w-2 h-2 rounded-full ${log.status === "secure" || log.status === "success" ? "bg-emerald-500 shadow-[0_0_8px_rgba(16,185,129,0.5)]" : "bg-amber-500 shadow-[0_0_8px_rgba(245,158,11,0.5)]"}`}
-                    ></div>
-                    <div>
-                      <p className="text-sm font-medium text-slate-200">
-                        {log.action}
-                      </p>
-                      <p className="text-xs text-slate-500">{log.location}</p>
-                    </div>
-                  </div>
-                  <span className="text-xs text-slate-600 font-medium">
-                    {log.time}
-                  </span>
-                </div>
-              ))}
-            </div>
+            <h3 className="text-xl font-semibold text-white">Tus últimas sesiones</h3>
+            <DashboardLogsAppointments logs={appointmentLogs} />
           </section>
 
           <section className="space-y-6">
@@ -136,7 +125,7 @@ const Dashboard: React.FC = () => {
                   <span className="text-slate-200">Feb 2024</span>
                 </div>
               </div>
-              <Button variant="primary" className="w-full mt-6">
+              <Button variant="secondary" className="w-full mt-6">
                 Edit Profile
               </Button>
             </div>

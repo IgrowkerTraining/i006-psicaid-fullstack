@@ -1,37 +1,63 @@
 import React from 'react';
-import { useNavigate } from 'react-router-dom';
+import {
+  type PatientResult,
+  PatientResultCard,
+} from '@/components/shared/patients/PatientResultCard';
+import {
+  NewPatientDialog,
+} from '@/components/shared/patients/NewPatientDialog';
+import { PatientSearchInput } from '@/components/shared/patients/PatientSearchInput';
 
+const initialPatients: PatientResult[] = [
+  {
+    id: 'patient-001',
+    fullName: 'Maria Gonzalez',
+    age: 32,
+    phone: '+34 612 345 678',
+    email: 'maria.gonzalez@email.com',
+    diagnosis: 'Ansiedad generalizada',
+    status: 'activo',
+  },
+  {
+    id: 'patient-002',
+    fullName: 'Carlos Rodriguez',
+    age: 45,
+    phone: '+34 623 456 789',
+    email: 'carlos.rodriguez@email.com',
+    diagnosis: 'Terapia de pareja',
+    status: 'activo',
+  },
+];
 
 const PatientsList: React.FC = () => {
-  const navigate = useNavigate();
+  const [searchValue, setSearchValue] = React.useState('');
+
+  const handleCreatePatient = () => {
+    // Placeholder: la creacion real se conectara en otro issue.
+  };
+
   return (
     <div className="min-h-screen">
-      <div className="max-w-7xl mx-auto w-full p-6 lg:p-10">
-        <div className="flex justify-between items-center mb-8">
+      <div className="mx-auto w-full max-w-7xl p-6 lg:p-10">
+        <div className="mb-8 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
           <div>
-            <h1 className="text-3xl font-bold text-white mb-2">
-              Lista de Pacientes
-            </h1>
-            <p className="text-slate-400">Gestiona y visualiza todos tus pacientes</p>
+            <h1 className="mb-2 text-3xl font-bold text-white">Pacientes</h1>
+            <p className="text-slate-400">Gestiona la informacion de tus pacientes</p>
           </div>
-          <button onClick={()=>navigate('/patients/new')} className="px-6 py-3 bg-indigo-600 text-white font-medium rounded-xl hover:bg-indigo-700 transition-all duration-200">
-            + Registrar Paciente
-          </button>
-        </div>
-        
-        <div className="bg-amber-500/10 border border-amber-500/30 rounded-xl p-4 mb-6">
-          <p className="text-amber-200 text-sm font-medium">
-            🎨 Placeholder - Diseño pendiente de UX
-          </p>
-          <p className="text-amber-300/70 text-xs mt-1">
-            Aquí se mostrará la tabla/lista de pacientes con búsqueda, filtros y acciones.
-          </p>
+          <NewPatientDialog onSave={handleCreatePatient} />
         </div>
 
-        <div className="bg-slate-900/40 border border-slate-800 rounded-2xl p-8">
-          <p className="text-slate-500 text-center">
-            Tabla de pacientes - Componente pendiente
-          </p>
+        <PatientSearchInput
+          value={searchValue}
+          onChange={setSearchValue}
+          className="mb-6"
+          placeholder="Buscar paciente por nombre, apellido o email..."
+        />
+
+        <div className="space-y-4">
+          {initialPatients.map((patient) => (
+            <PatientResultCard key={patient.id} patient={patient} />
+          ))}
         </div>
       </div>
     </div>

@@ -10,8 +10,6 @@ import Register from "@/pages/Register"
 
 import Dashboard from "@/pages/Dashboard"
 import PatientsList from "@/pages/PatientsList"
-import PatientNew from "@/pages/PatientNew"
-import PatientSearch from "@/pages/PatientSearch"
 import PatientDetail from "@/pages/PatientDetail"
 import SessionNew from "@/pages/SessionNew"
 import Profile from "@/pages/Profile"
@@ -34,8 +32,6 @@ export const AppRoutes: React.FC = () => {
 
           {/* Gestión de Pacientes */}
           <Route path="/patients" element={<PatientsList />} />
-          <Route path="/patients/new" element={<PatientNew />} />
-          <Route path="/patients/search" element={<PatientSearch />} />
           <Route path="/patients/:id" element={<PatientDetail />} />
 
           {/* Sesiones Clínicas */}
