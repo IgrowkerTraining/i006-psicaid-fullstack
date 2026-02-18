@@ -15,7 +15,7 @@ import java.time.*;
 public class ClinicalSummary {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
+    private Long id;
 
     @Column(columnDefinition = "TEXT", nullable = false)
     private String content;
