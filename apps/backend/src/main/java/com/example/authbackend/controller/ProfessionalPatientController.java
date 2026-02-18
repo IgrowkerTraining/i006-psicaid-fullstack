@@ -34,7 +34,7 @@ public class ProfessionalPatientController {
     }
 
 
-    @PatchMapping("/{id}/patients/{patientId}")
+    @PatchMapping("/{professionalId}/patients/{patientId}")
     public ResponseEntity<PatientDTO> updatePatient(
             @PathVariable Long professionalId,
             @PathVariable Long patientId,
