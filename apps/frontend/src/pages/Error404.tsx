@@ -28,7 +28,10 @@ export const Error404 = () => {
   }, [navigate, redirectPath]);
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-b from-brand-acento to-brand-secundario/20 px-4">
+    <div 
+      className="min-h-screen flex items-center justify-center px-4"
+      style={{ background: 'var(--gradient-brand-linear)' }}
+    >
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
