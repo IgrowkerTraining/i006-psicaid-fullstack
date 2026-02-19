@@ -1,5 +1,5 @@
 import React from "react";
-import { HashRouter } from "react-router-dom";
+import { BrowserRouter } from "react-router-dom";
 import { AuthProvider } from "./src/context/AuthContext";
 import { Layout } from "./src/components/layout/Layout";
 import { LoadingSpinner } from "./src/components/layout/LoadingSpinner";
@@ -22,11 +22,11 @@ const AppContent: React.FC = () => {
 
 export const App: React.FC = () => {
   return (
-    <HashRouter>
+    <BrowserRouter>
       <AuthProvider>
         <AppContent />
       </AuthProvider>
-    </HashRouter>
+    </BrowserRouter>
   );
 };
 
