@@ -9,7 +9,7 @@ import java.util.Optional;
 @Repository
 public interface ProfessionalRepository extends JpaRepository<Professional, Long> {
 
-    // Método mágico: Spring crea el SQL automáticamente al leer el nombre del método
+    // Metodo mágico: Spring crea el SQL automáticamente al leer el nombre del metodo
     Optional<Professional> findByEmail(String email);
 
     // Para verificar si existe antes de registrar

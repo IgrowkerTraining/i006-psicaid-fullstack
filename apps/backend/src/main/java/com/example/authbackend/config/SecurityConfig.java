@@ -30,7 +30,7 @@ public class SecurityConfig {
 
     private final JwtAuthenticationFilter jwtAuthFilter;
 
-    // 1. INYECTAMOS TU CONFIGURACIÓN DESDE APPLICATION.PROPERTIES
+    // INYECTAMOS TU CONFIGURACIÓN DESDE APPLICATION.PROPERTIES
     // Si la propiedad no existe, usamos localhost:5173 por defecto para que no falle.
     @Value("${spring.web.cors.allowed-origins:http://localhost:5173}")
     private String allowedOrigins;

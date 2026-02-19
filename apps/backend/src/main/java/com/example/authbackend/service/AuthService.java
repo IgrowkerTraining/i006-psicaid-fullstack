@@ -2,84 +2,82 @@ package com.example.authbackend.service;
 
 import com.example.authbackend.dto.AuthResponse;
 import com.example.authbackend.dto.LoginRequest;
+import com.example.authbackend.dto.ProfessionalDTO;
 import com.example.authbackend.dto.RegisterRequest;
-import com.example.authbackend.dto.UserDTO;
-import com.example.authbackend.model.User;
-import com.example.authbackend.repository.UserRepository;
-import org.springframework.beans.factory.annotation.Autowired;
+import com.example.authbackend.model.Professional;
+import com.example.authbackend.repository.ProfessionalRepository;
+import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-
-import java.util.Optional;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
+@RequiredArgsConstructor // Inyección por constructor (Senior Practice)
 public class AuthService {
 
-    @Autowired
-    private UserRepository userRepository;
+    private final ProfessionalRepository professionalRepository;
+    private final PasswordEncoder passwordEncoder;
+    private final JwtService jwtService;
 
-    @Autowired
-    private PasswordEncoder passwordEncoder;
+    /**
+     * Registra un nuevo profesional en el sistema.
+     * Cumple con RF1 - Registro de profesionales.
+     */
+    @Transactional
+    public AuthResponse register(RegisterRequest request) {
+        // 1. Verificamos si el email ya existe (RB-04 / Regla de negocio)
+        if (professionalRepository.existsByEmail(request.getEmail())) {
+            throw new RuntimeException("El correo electrónico ya está registrado");
+        }
 
-    @Autowired
-    private JwtService jwtService;
+        // 2. Mapeamos DTO a Entidad y ciframos la contraseña
+        Professional professional = Professional.builder()
+                .firstName(request.getFirstName())
+                .lastName(request.getLastName())
+                .email(request.getEmail())
+                .password(passwordEncoder.encode(request.getPassword())) // Nunca texto plano
+                .build();
 
-    // Método auxiliar para convertir Entidad -> DTO
-    private UserDTO mapToDTO(User user) {
-        return new UserDTO(
-                user.getId(),
-                user.getEmail(),
-                user.getUsername(),
-                user.getName(),
-                user.getAvatar(),
-                user.isAdmin()
+        Professional savedProfessional = professionalRepository.save(professional);
+
+        // 3. Generamos el token JWT
+        String token = jwtService.generateToken(savedProfessional.getEmail());
+
+        // 4. Devolvemos la respuesta estructurada
+        return new AuthResponse(
+                mapToDTO(savedProfessional),
+                token,
+                "Profesional registrado exitosamente"
         );
     }
 
+    /**
+     * Valida las credenciales y genera un token de acceso.
+     */
+    public AuthResponse login(LoginRequest request) {
+        Professional professional = professionalRepository.findByEmail(request.getEmail())
+                .orElseThrow(() -> new RuntimeException("Credenciales inválidas"));
 
-    public AuthResponse register(RegisterRequest request) {
-        // Generate username from email if not provided
-        String username = request.getUsername();
-        if (username == null || username.trim().isEmpty()) {
-            username = request.getEmail().split("@")[0];
+        if (!passwordEncoder.matches(request.getPassword(), professional.getPassword())) {
+            throw new RuntimeException("Credenciales inválidas");
         }
 
-        if (userRepository.existsByEmail(request.getEmail())) {
-            throw new RuntimeException("Email already exists");
-        }
-        if (userRepository.existsByUsername(username)) {
-            throw new RuntimeException("Username already exists");
-        }
+        String token = jwtService.generateToken(professional.getEmail());
 
-        User user = new User();
-        user.setEmail(request.getEmail());
-        user.setUsername(username);
-        user.setName(request.getName());
-        user.setPassword(passwordEncoder.encode(request.getPassword()));
-
-        User savedUser = userRepository.save(user);
-
-        String token = jwtService.generateToken(savedUser.getEmail());
-
-        // Devolvemos el DTO
-        return new AuthResponse(mapToDTO(savedUser), token, "User registered successfully");
+        return new AuthResponse(
+                mapToDTO(professional),
+                token,
+                "Inicio de sesión exitoso"
+        );
     }
 
-    public AuthResponse login(LoginRequest request) {
-        Optional<User> userOpt = userRepository.findByEmail(request.getEmail());
-        
-        if (userOpt.isEmpty()) {
-            throw new RuntimeException("Invalid credentials");
-        }
-
-        User user = userOpt.get();
-        if (!passwordEncoder.matches(request.getPassword(), user.getPassword())) {
-            throw new RuntimeException("Invalid credentials");
-        }
-
-        String token = jwtService.generateToken(user.getEmail());
-
-        // Devolvemos el DTO
-        return new AuthResponse(mapToDTO(user), token, "Login successful");
+    // Helper manual para evitar exponer la entidad Professional
+    private ProfessionalDTO mapToDTO(Professional professional) {
+        return ProfessionalDTO.builder()
+                .id(professional.getId())
+                .firstName(professional.getFirstName())
+                .lastName(professional.getLastName())
+                .email(professional.getEmail())
+                .build();
     }
 }

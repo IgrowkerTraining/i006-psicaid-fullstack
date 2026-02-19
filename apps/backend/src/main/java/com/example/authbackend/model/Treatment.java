@@ -15,7 +15,7 @@ public class Treatment {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
+    private Long id;
 
     @Column(columnDefinition = "TEXT", nullable = true)
     private String content;

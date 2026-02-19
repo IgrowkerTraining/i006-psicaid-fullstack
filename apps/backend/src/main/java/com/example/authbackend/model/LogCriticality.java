@@ -5,10 +5,10 @@ import lombok.Getter;
 @Getter
 public enum LogCriticality {
     // Definimos los valores de Java (Mayúsculas) y su equivalente en BD (Minúsculas)
-    LOW("bajo"),
-    MEDIUM("medio"),
-    HIGH("alto"),
-    CRITICAL("critico");
+    LOW("low"),
+    MEDIUM("meidum"),
+    HIGH("high"),
+    CRITICAL("critical");
 
     private final String dbValue;
 
@@ -16,7 +16,7 @@ public enum LogCriticality {
         this.dbValue = dbValue;
     }
 
-    // Método helper para convertir de Texto BD -> Enum Java
+    // Metodo helper para convertir de Texto BD -> Enum Java
     public static LogCriticality fromDbValue(String text) {
         for (LogCriticality b : LogCriticality.values()) {
             if (b.dbValue.equalsIgnoreCase(text)) {

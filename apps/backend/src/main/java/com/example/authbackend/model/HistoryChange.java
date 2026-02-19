@@ -17,7 +17,7 @@ public class HistoryChange {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
+    private Long id;
 
     // "change_date" es timestamptz en Supabase -> OffsetDateTime en Java
     // Usamos @CreationTimestamp para que se guarde la fecha exacta del insert automáticamente

@@ -1,23 +1,28 @@
 package com.example.authbackend.dto;
 
-import lombok.Getter;
-import lombok.Setter;
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Size;
+import lombok.*;
 
-@Setter
 @Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
 public class RegisterRequest {
+
+    @NotBlank(message = "El nombre es obligatorio")
+    private String firstName;
+
+    @NotBlank(message = "El apellido es obligatorio")
+    private String lastName;
+
+    @NotBlank(message = "El email es obligatorio")
+    @Email(message = "Debe ser un email válido")
     private String email;
+
+    @NotBlank(message = "La contraseña es obligatoria")
+    @Size(min = 8, message = "La contraseña debe tener al menos 8 caracteres")
     private String password;
-    private String name;
-    private String username;
-
-    public RegisterRequest() {}
-
-    public RegisterRequest(String email, String password, String name, String username) {
-        this.email = email;
-        this.name = name;
-        this.password = password;
-        this.username = username;
-    }
-
 }

@@ -1,22 +1,16 @@
 package com.example.authbackend.dto;
 
-import com.example.authbackend.model.User;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Setter
 @Getter
+@NoArgsConstructor
+@AllArgsConstructor
 public class AuthResponse {
-    private UserDTO user;
+    private ProfessionalDTO user;
     private String token;
     private String message;
-
-    public AuthResponse() {}
-
-    public AuthResponse(UserDTO user, String token, String message) {
-        this.user = user;
-        this.token = token;
-        this.message = message;
-    }
-
 }
