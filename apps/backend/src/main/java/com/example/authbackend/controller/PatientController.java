@@ -13,10 +13,10 @@ import java.util.List;
 
 /**
  * Controlador para la gestión de pacientes.
- * Centraliza las operaciones del RF2 - Gestión de pacientes[cite: 36, 37].
+ * Centraliza las operaciones de gestión de pacientes.
  */
 @RestController
-@RequestMapping("/api/patients") // Ruta limpia, estándar y profesional
+@RequestMapping("/api/patients")
 @RequiredArgsConstructor
 public class PatientController {
 
@@ -24,14 +24,14 @@ public class PatientController {
 
     @GetMapping
     public ResponseEntity<List<PatientDTO>> listPatients() {
-        // Obtenemos los pacientes asegurando el aislamiento de datos (RB-04)
+        // Obtenemos los pacientes asegurando el aislamiento de datos
         return ResponseEntity.ok(patientService.getPatientsByAuthenticatedProfessional());
     }
 
     @PostMapping
     public ResponseEntity<PatientDTO> createPatient(@Valid @RequestBody PatientDTO patientDTO) {
         // @Valid activa las restricciones del DTO.
-        // El paciente se asocia de forma única al profesional autenticado [cite: 82, 193]
+        // El paciente se asocia de forma única al profesional autenticado
         return ResponseEntity.status(HttpStatus.CREATED)
                 .body(patientService.createPatient(patientDTO));
     }

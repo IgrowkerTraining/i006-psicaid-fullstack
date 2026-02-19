@@ -23,7 +23,6 @@ public class PatientService {
 
     /**
      * Método privado de utilidad para obtener al profesional que ha iniciado sesión.
-     * Garantiza el cumplimiento de RF6 - Control de acceso.
      */
     private Professional getAuthenticatedProfessional() {
         String email = SecurityContextHolder.getContext().getAuthentication().getName();
@@ -32,7 +31,7 @@ public class PatientService {
     }
 
     /**
-     * Lista solo los pacientes del profesional autenticado (RB-04).
+     * Lista solo los pacientes del profesional autenticado.
      */
     @Transactional(readOnly = true)
     public List<PatientDTO> getPatientsByAuthenticatedProfessional() {
@@ -44,7 +43,7 @@ public class PatientService {
     }
 
     /**
-     * Crea un paciente vinculado automáticamente al profesional logueado (HU1).
+     * Crea un paciente vinculado automáticamente al profesional logueado.
      */
     @Transactional
     public PatientDTO createPatient(PatientDTO patientDTO) {
@@ -78,7 +77,7 @@ public class PatientService {
         Patient patient = patientRepository.findById(patientId)
                 .orElseThrow(() -> new RuntimeException("Paciente no encontrado con ID: " + patientId));
 
-        // 3. VALIDACIÓN CRÍTICA (RB-04): Verificamos que el paciente sea de este profesional [cite: 68]
+        // 3. VALIDACIÓN: Verificamos que el paciente sea de este profesional
         if (!patient.getProfessional().getId().equals(pro.getId())) {
             // Lanzar una excepción aquí evita fugas de información.
             // En un caso real podríamos lanzar un 403 Forbidden.
