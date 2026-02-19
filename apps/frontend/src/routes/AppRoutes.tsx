@@ -4,6 +4,7 @@ import { Navigate, Route, Routes } from "react-router-dom"
 import ProtectedLayout from "@/components/layout/ProtectedRouteLayout"
 import { ROUTES } from "@/constants/routes"
 import Dashboard from "@/pages/Dashboard"
+import Error404 from "@/pages/Error404"
 import Home from "@/pages/Home"
 import Login from "@/pages/Login"
 import PatientDetail from "@/pages/PatientDetail"
@@ -39,7 +40,7 @@ export const AppRoutes: React.FC = () => {
         </Route>
       </Route>
 
-      <Route path="*" element={<Navigate to={ROUTES.ROOT} replace />} />
+      <Route path="*" element={<Error404 />} />
     </Routes>
   )
 }
