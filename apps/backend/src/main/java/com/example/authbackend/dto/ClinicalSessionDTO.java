@@ -35,6 +35,7 @@ public class ClinicalSessionDTO {
     private String clinicalEvolution;
     private String therapeuticGoals;
     private String diagnosticNotes;
+    private String summary;
 
     // Relación de entrada
     @NotNull(message = "El ID del paciente es obligatorio")

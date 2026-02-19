@@ -41,6 +41,18 @@ public class PatientService {
                 .map(this::convertToDTO)
                 .collect(Collectors.toList());
     }
+    /**
+     * Lista SOLO los pacientes ACTIVOS del profesional autenticado.
+     */
+    @Transactional(readOnly = true)
+    public List<PatientDTO> getActivePatientsByAuthenticatedProfessional() {
+        Professional pro = getAuthenticatedProfessional();
+
+        return patientRepository.findByProfessionalIdAndActiveTrue(pro.getId())
+                .stream()
+                .map(this::convertToDTO)
+                .collect(Collectors.toList());
+    }
 
     /**
      * Crea un paciente vinculado automáticamente al profesional logueado.
@@ -70,21 +82,19 @@ public class PatientService {
      */
     @Transactional
     public PatientDTO updatePatient(Long patientId, PatientUpdateDTO dto) {
-        // 1. Obtenemos quién está haciendo la petición (Seguridad total por Token)
+        // Obtenemos quién está haciendo la petición (Seguridad total por Token)
         Professional pro = getAuthenticatedProfessional();
 
-        // 2. Buscamos el paciente por ID
+        // Buscamos el paciente por ID
         Patient patient = patientRepository.findById(patientId)
                 .orElseThrow(() -> new RuntimeException("Paciente no encontrado con ID: " + patientId));
 
-        // 3. VALIDACIÓN: Verificamos que el paciente sea de este profesional
+        // VALIDACIÓN: Verificamos que el paciente sea de este profesional
         if (!patient.getProfessional().getId().equals(pro.getId())) {
-            // Lanzar una excepción aquí evita fugas de información.
-            // En un caso real podríamos lanzar un 403 Forbidden.
             throw new RuntimeException("Acceso denegado. Este paciente no te pertenece.");
         }
 
-        // 4. Actualizamos solo los campos permitidos y enviados (Soporte para PATCH)
+        // Actualizamos solo los campos permitidos y enviados (Soporte para PATCH)
         if (dto.getFirstName() != null) patient.setFirstName(dto.getFirstName());
         if (dto.getLastName() != null) patient.setLastName(dto.getLastName());
         if (dto.getOccupation() != null) patient.setOccupation(dto.getOccupation());
@@ -93,9 +103,29 @@ public class PatientService {
         if (dto.getSex() != null) patient.setSex(dto.getSex());
         if (dto.getActive() != null) patient.setActive(dto.getActive());
 
-        // 5. Guardamos y devolvemos. Al tener ID, Hibernate hace un UPDATE en lugar de un INSERT.
         Patient updatedPatient = patientRepository.save(patient);
         return convertToDTO(updatedPatient);
+    }
+
+    /**
+     * Archiva (Soft Delete) a un paciente en lugar de borrarlo de la base de datos.
+     * Garantiza que no se pierda el historial clínico (Legal/Compliance).
+     */
+    @Transactional
+    public void archivePatient(Long patientId) {
+        String email = SecurityContextHolder.getContext().getAuthentication().getName();
+        Professional pro = professionalRepository.findByEmail(email)
+                .orElseThrow(() -> new RuntimeException("Profesional no encontrado"));
+
+        Patient patient = patientRepository.findById(patientId)
+                .orElseThrow(() -> new RuntimeException("Paciente no encontrado"));
+
+        if (!patient.getProfessional().getId().equals(pro.getId())) {
+            throw new RuntimeException("Acceso denegado. No puedes archivar pacientes de otros profesionales.");
+        }
+
+        patient.setActive(false);
+        patientRepository.save(patient);
     }
 
     // --- MÉTODOS DE MAPEO ---

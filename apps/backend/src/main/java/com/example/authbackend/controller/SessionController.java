@@ -10,9 +10,8 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-
 @RestController
-@RequestMapping("/api/patients") // La ruta base, siguiendo el estándar REST
+@RequestMapping("/api/patients")
 @RequiredArgsConstructor
 public class SessionController {
 
@@ -36,5 +35,18 @@ public class SessionController {
 
         return ResponseEntity.status(HttpStatus.CREATED)
                 .body(sessionService.createSession(patientId, sessionDTO));
+    }
+
+    /**
+     * Endpoint para generar un resumen de la sesión clínica usando IA (Microservicio Python).
+     */
+    @PostMapping("/{patientId}/sessions/{sessionId}/summarize")
+    public ResponseEntity<ClinicalSessionDTO> generateSessionSummary(
+            @PathVariable Long patientId,
+            @PathVariable Long sessionId) {
+
+        ClinicalSessionDTO updatedSession = sessionService.generateAndSaveSummary(patientId, sessionId);
+
+        return ResponseEntity.ok(updatedSession);
     }
 }

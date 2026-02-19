@@ -56,6 +56,9 @@ public class ClinicalSession {
     @Column(name = "diagnostic_notes", columnDefinition = "TEXT")
     private String diagnosticNotes;
 
+    @Column(columnDefinition = "TEXT")
+    private String summary; // Aquí guardaremos la respuesta de la IA
+
     // --- RELACIONES ---
 
     @ManyToOne(fetch = FetchType.LAZY)

@@ -22,6 +22,7 @@ public class ClinicalSessionService {
     private final ClinicalSessionRepository sessionRepository;
     private final PatientRepository patientRepository;
     private final ProfessionalRepository professionalRepository;
+    private final AiIntegrationService aiIntegrationService;
 
     /**
      * Obtiene el profesional autenticado a través del JWT.
@@ -88,6 +89,27 @@ public class ClinicalSessionService {
                 .collect(Collectors.toList());
     }
 
+    private String buildRawNotesForAi(ClinicalSession session) {
+        StringBuilder rawNotes = new StringBuilder();
+
+        if (session.getReasonConsultation() != null)
+            rawNotes.append("Motivo de consulta: ").append(session.getReasonConsultation()).append(". ");
+        if (session.getBackground() != null)
+            rawNotes.append("Antecedentes: ").append(session.getBackground()).append(". ");
+        if (session.getObservations() != null)
+            rawNotes.append("Observaciones: ").append(session.getObservations()).append(". ");
+        if (session.getHypothesis() != null)
+            rawNotes.append("Hipótesis: ").append(session.getHypothesis()).append(". ");
+        if (session.getInterventions() != null)
+            rawNotes.append("Intervenciones: ").append(session.getInterventions()).append(". ");
+        if (session.getClinicalEvolution() != null)
+            rawNotes.append("Evolución: ").append(session.getClinicalEvolution()).append(". ");
+        if (session.getDiagnosticNotes() != null)
+            rawNotes.append("Diagnóstico: ").append(session.getDiagnosticNotes()).append(". ");
+
+        return rawNotes.toString();
+    }
+
     // --- MAPEO DE ENTIDAD A DTO ---
 
     private ClinicalSessionDTO convertToDTO(ClinicalSession session) {
@@ -107,6 +129,38 @@ public class ClinicalSessionService {
                 .patientId(session.getPatient().getId())
                 .createdAt(session.getCreatedAt())
                 .updatedAt(session.getUpdatedAt())
+                .summary(session.getSummary())
                 .build();
+    }
+    @Transactional
+    public ClinicalSessionDTO generateAndSaveSummary(Long patientId, Long sessionId) {
+        Professional pro = getAuthenticatedProfessional();
+        ClinicalSession session = sessionRepository.findById(sessionId)
+                .orElseThrow(() -> new RuntimeException("Sesión no encontrada"));
+
+        if (!session.getPatient().getProfessional().getId().equals(pro.getId())) {
+            throw new RuntimeException("Acceso denegado. No puedes resumir sesiones de otros profesionales.");
+        }
+
+        if (!session.getPatient().getId().equals(patientId)) {
+            throw new RuntimeException("La sesión no pertenece al paciente indicado en la URL.");
+        }
+
+        // Preparamos el texto crudo para la IA
+        String combinedNotes = buildRawNotesForAi(session);
+
+        if (combinedNotes.isBlank()) {
+            throw new RuntimeException("No hay suficientes notas clínicas para generar un resumen.");
+        }
+
+        // Llamamos al microservicio de Python (FastAPI)
+        String generatedSummary = aiIntegrationService.getSessionSummary(pro.getId(), combinedNotes);
+
+        // Guardamos el resumen generado en la base de datos
+        session.setSummary(generatedSummary);
+        ClinicalSession savedSession = sessionRepository.save(session);
+
+        // Devolvemos el DTO actualizado
+        return convertToDTO(savedSession);
     }
 }
