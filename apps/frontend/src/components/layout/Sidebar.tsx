@@ -19,6 +19,8 @@ export function Sidebar({
   activePath,
   onNavigate,
 }: SidebarProps) {
+  const currentPath = activePath ?? ""
+
   return (
     <aside className="h-full w-64 border-r border-slate-800 bg-slate-900/80">
       <div className="h-24 px-4 flex items-center border-b border-slate-800">
@@ -35,7 +37,9 @@ export function Sidebar({
 
       <nav className="p-3 space-y-1">
         {items.map((item) => {
-          const isActive = activePath === item.path
+          const isActive =
+            currentPath === item.path ||
+            (item.path !== "/" && currentPath.startsWith(`${item.path}/`))
 
           return (
             <button

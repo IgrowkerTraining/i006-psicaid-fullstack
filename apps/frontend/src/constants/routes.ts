@@ -52,9 +52,10 @@ export const STORAGE_KEYS = {
 } as const;
 
 export const ASSETS = {
-  S3_BUCKET_BASE_URL: "https://psicaid-static-resources-bucket.s3.eu-south-2.amazonaws.com/",
+  S3_BUCKET_BASE_URL: "https://d2oi3ate4vb1sl.cloudfront.net/",
 
   IMAGES: {
     LOGO: "isotipo_psicaid+2.png",
+    AUTH_IMAGE: "login-sigup-image.webp"
   },
 } as const;

@@ -1,29 +1,33 @@
 import React from "react"
-import { Outlet } from "react-router-dom"
+import { Outlet, useLocation, useNavigate } from "react-router-dom"
+import { Home, Settings, User } from "lucide-react"
+
+import { ROUTES } from "@/constants/routes"
 import { useAuth } from "@/hooks/useAuth"
+
 import { Header } from "./Header"
 import { Sidebar } from "./Sidebar"
-import { Home, Settings, User } from "lucide-react"
 
 export const ProtectedLayout: React.FC = () => {
   const { user, logout } = useAuth()
+  const navigate = useNavigate()
+  const location = useLocation()
 
   return (
-    <div className="min-h-screen flex bg-slate-950 text-slate-200">
+    <div className="flex min-h-screen bg-slate-950 text-slate-200">
       <div className="hidden md:block">
         <Sidebar
           items={[
-            { label: "Inicio", path: "/dashboard", icon: <Home/> },
-            { label: "Pacientes", path: "/patients", icon: <User /> },
-            { label: "Configuración", path: "/settings", icon: <Settings /> },
+            { label: "Inicio", path: ROUTES.DASHBOARD, icon: <Home /> },
+            { label: "Pacientes", path: ROUTES.PATIENTS, icon: <User /> },
+            { label: "Configuracion", path: ROUTES.SETTINGS, icon: <Settings /> },
           ]}
-          activePath={location.hash.replace("#", "")}
-          onNavigate={(path) => (window.location.hash = path)}
+          activePath={location.pathname}
+          onNavigate={(path) => navigate(path)}
         />
       </div>
 
-      {/* Contenido principal de cada vista bajo el layout de ruta protegida */}
-      <div className="flex-1 min-w-0">
+      <div className="min-w-0 flex-1">
         <Header
           user={{ name: user?.name ?? "Usuario", avatar: user?.avatar }}
           onLogout={logout}

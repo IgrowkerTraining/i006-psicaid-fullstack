@@ -1,72 +1,155 @@
 export interface ValidationError {
-  field: string;
-  message: string;
+  field: string
+  message: string
 }
 
 export interface ValidationResult {
-  isValid: boolean;
-  errors: ValidationError[];
+  isValid: boolean
+  errors: ValidationError[]
 }
 
+type RegistrationValidationData = {
+  name: string
+  email: string
+  password: string
+  confirmPassword?: string
+}
+
+type LoginValidationData = {
+  email: string
+  password: string
+}
+
+const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
+
 export const validateEmail = (email: string): string | null => {
-  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-  if (!emailRegex.test(email)) {
-    return 'Invalid email format';
+  if (!EMAIL_REGEX.test(email.trim())) {
+    return "Ingresa un correo electrónico válido."
   }
-  return null;
-};
+  return null
+}
 
-export const validateRequired = (value: string, fieldName: string): string | null => {
-  if (!value || value.trim() === '') {
-    return `${fieldName} is required`;
+export const validateRequired = (
+  value: string,
+  fieldName: string
+): string | null => {
+  if (!value || value.trim() === "") {
+    return `${fieldName} es obligatorio.`
   }
-  return null;
-};
+  return null
+}
 
-export const validateMinLength = (value: string, min: number): string | null => {
+export const validateMinLength = (
+  value: string,
+  min: number,
+  fieldName = "Este campo"
+): string | null => {
   if (value.length < min) {
-    return `Must be at least ${min} characters long`;
+    return `${fieldName} debe tener al menos ${min} caracteres.`
   }
-  return null;
-};
+  return null
+}
 
-export const validateRegistration = (data: {
-  name: string;
-  email: string;
-  password: string;
-}): ValidationResult => {
-  const errors: ValidationError[] = [];
+export const validateLogin = (data: LoginValidationData): ValidationResult => {
+  const errors: ValidationError[] = []
 
-  const nameError = validateRequired(data.name, 'Name');
-  if (nameError) errors.push({ field: 'name', message: nameError });
+  const emailValue = data.email.trim()
+  const passwordValue = data.password
 
-  const emailError = validateRequired(data.email, 'Email') || validateEmail(data.email);
-  if (emailError) errors.push({ field: 'email', message: emailError });
+  const emailRequiredError = validateRequired(emailValue, "El correo electrónico")
+  if (emailRequiredError) {
+    errors.push({ field: "email", message: emailRequiredError })
+  } else {
+    const emailFormatError = validateEmail(emailValue)
+    if (emailFormatError) {
+      errors.push({ field: "email", message: emailFormatError })
+    }
+  }
 
-  const passwordError = validateRequired(data.password, 'Password') || 
-                       validateMinLength(data.password, 6);
-  if (passwordError) errors.push({ field: 'password', message: passwordError });
-
-  return {
-    isValid: errors.length === 0,
-    errors,
-  };
-};
-
-export const validateLogin = (data: {
-  email: string;
-  password: string;
-}): ValidationResult => {
-  const errors: ValidationError[] = [];
-
-  const emailError = validateRequired(data.email, 'Email') || validateEmail(data.email);
-  if (emailError) errors.push({ field: 'email', message: emailError });
-
-  const passwordError = validateRequired(data.password, 'Password');
-  if (passwordError) errors.push({ field: 'password', message: passwordError });
+  const passwordError = validateRequired(passwordValue, "La contraseña")
+  if (passwordError) {
+    errors.push({ field: "password", message: passwordError })
+  }
 
   return {
     isValid: errors.length === 0,
     errors,
-  };
-};
+  }
+}
+
+export const validateRegistration = (
+  data: RegistrationValidationData
+): ValidationResult => {
+  const errors: ValidationError[] = []
+
+  const nameValue = data.name.trim()
+  const emailValue = data.email.trim()
+  const passwordValue = data.password
+  const confirmPasswordValue = data.confirmPassword ?? ""
+
+  const nameError = validateRequired(nameValue, "El nombre completo")
+  if (nameError) {
+    errors.push({ field: "name", message: nameError })
+  }
+
+  const emailRequiredError = validateRequired(emailValue, "El correo electrónico")
+  if (emailRequiredError) {
+    errors.push({ field: "email", message: emailRequiredError })
+  } else {
+    const emailFormatError = validateEmail(emailValue)
+    if (emailFormatError) {
+      errors.push({ field: "email", message: emailFormatError })
+    }
+  }
+
+  const passwordRequiredError = validateRequired(passwordValue, "La contraseña")
+  if (passwordRequiredError) {
+    errors.push({ field: "password", message: passwordRequiredError })
+  } else {
+    const passwordLengthError = validateMinLength(
+      passwordValue,
+      8,
+      "La contraseña"
+    )
+    if (passwordLengthError) {
+      errors.push({ field: "password", message: passwordLengthError })
+    }
+  }
+
+  if (data.confirmPassword !== undefined) {
+    const confirmRequiredError = validateRequired(
+      confirmPasswordValue,
+      "La confirmación de contraseña"
+    )
+    if (confirmRequiredError) {
+      errors.push({ field: "confirmPassword", message: confirmRequiredError })
+    } else if (passwordValue !== confirmPasswordValue) {
+      errors.push({
+        field: "confirmPassword",
+        message: "Las contraseñas no coinciden.",
+      })
+    }
+  }
+
+  return {
+    isValid: errors.length === 0,
+    errors,
+  }
+}
+
+export const toErrorMap = (
+  errors: ValidationError[]
+): Record<string, string> => {
+  return errors.reduce<Record<string, string>>((accumulator, error) => {
+    accumulator[error.field] = error.message
+    return accumulator
+  }, {})
+}
+
+export const validateEmailOnBlur = (value: string): string | null => {
+  const emailValue = value.trim()
+  if (!emailValue) {
+    return null
+  }
+  return validateEmail(emailValue)
+}
