@@ -10,7 +10,6 @@ import lombok.Setter;
 @NoArgsConstructor
 @AllArgsConstructor
 public class AuthResponse {
-    // CAMBIO CLAVE: Antes era UserDTO, ahora es ProfessionalDTO
     private ProfessionalDTO user;
     private String token;
     private String message;

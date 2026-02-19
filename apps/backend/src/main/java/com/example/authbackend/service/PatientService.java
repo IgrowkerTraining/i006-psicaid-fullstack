@@ -1,6 +1,7 @@
 package com.example.authbackend.service;
 
 import com.example.authbackend.dto.PatientDTO;
+import com.example.authbackend.dto.PatientUpdateDTO;
 import com.example.authbackend.model.Patient;
 import com.example.authbackend.model.Professional;
 import com.example.authbackend.repository.PatientRepository;
@@ -22,7 +23,7 @@ public class PatientService {
 
     /**
      * Método privado de utilidad para obtener al profesional que ha iniciado sesión.
-     * Garantiza el cumplimiento de RF6 - Control de acceso[cite: 44, 45].
+     * Garantiza el cumplimiento de RF6 - Control de acceso.
      */
     private Professional getAuthenticatedProfessional() {
         String email = SecurityContextHolder.getContext().getAuthentication().getName();
@@ -31,7 +32,7 @@ public class PatientService {
     }
 
     /**
-     * Lista solo los pacientes del profesional autenticado (RB-04)[cite: 67, 68, 69].
+     * Lista solo los pacientes del profesional autenticado (RB-04).
      */
     @Transactional(readOnly = true)
     public List<PatientDTO> getPatientsByAuthenticatedProfessional() {
@@ -43,7 +44,7 @@ public class PatientService {
     }
 
     /**
-     * Crea un paciente vinculado automáticamente al profesional logueado (HU1)[cite: 190, 191].
+     * Crea un paciente vinculado automáticamente al profesional logueado (HU1).
      */
     @Transactional
     public PatientDTO createPatient(PatientDTO patientDTO) {
@@ -56,16 +57,49 @@ public class PatientService {
                 .occupation(patientDTO.getOccupation())
                 .maritalStatus(patientDTO.getMaritalStatus())
                 .sex(patientDTO.getSex())
-                .internalCode(generateInternalCode()) // Lógica según PRD [cite: 214]
+                .internalCode(generateInternalCode())
                 .active(true)
-                .professional(pro) // Vínculo obligatorio [cite: 82, 193]
+                .professional(pro) // Vínculo obligatorio
                 .build();
 
         Patient savedPatient = patientRepository.save(patient);
         return convertToDTO(savedPatient);
     }
 
-    // --- MÉTODOS DE MAPEO (En una empresa usarías MapStruct, aquí lo hacemos manual para aprender) ---
+    /**
+     * Actualiza un paciente existente, asegurando que pertenezca al profesional autenticado.
+     */
+    @Transactional
+    public PatientDTO updatePatient(Long patientId, PatientUpdateDTO dto) {
+        // 1. Obtenemos quién está haciendo la petición (Seguridad total por Token)
+        Professional pro = getAuthenticatedProfessional();
+
+        // 2. Buscamos el paciente por ID
+        Patient patient = patientRepository.findById(patientId)
+                .orElseThrow(() -> new RuntimeException("Paciente no encontrado con ID: " + patientId));
+
+        // 3. VALIDACIÓN CRÍTICA (RB-04): Verificamos que el paciente sea de este profesional [cite: 68]
+        if (!patient.getProfessional().getId().equals(pro.getId())) {
+            // Lanzar una excepción aquí evita fugas de información.
+            // En un caso real podríamos lanzar un 403 Forbidden.
+            throw new RuntimeException("Acceso denegado. Este paciente no te pertenece.");
+        }
+
+        // 4. Actualizamos solo los campos permitidos y enviados (Soporte para PATCH)
+        if (dto.getFirstName() != null) patient.setFirstName(dto.getFirstName());
+        if (dto.getLastName() != null) patient.setLastName(dto.getLastName());
+        if (dto.getOccupation() != null) patient.setOccupation(dto.getOccupation());
+        if (dto.getBirthDate() != null) patient.setBirthDate(dto.getBirthDate());
+        if (dto.getMaritalStatus() != null) patient.setMaritalStatus(dto.getMaritalStatus());
+        if (dto.getSex() != null) patient.setSex(dto.getSex());
+        if (dto.getActive() != null) patient.setActive(dto.getActive());
+
+        // 5. Guardamos y devolvemos. Al tener ID, Hibernate hace un UPDATE en lugar de un INSERT.
+        Patient updatedPatient = patientRepository.save(patient);
+        return convertToDTO(updatedPatient);
+    }
+
+    // --- MÉTODOS DE MAPEO ---
 
     private PatientDTO convertToDTO(Patient patient) {
         return PatientDTO.builder()
@@ -83,58 +117,6 @@ public class PatientService {
     }
 
     private String generateInternalCode() {
-        // Ejemplo simple basado en el formato del PRD: PSI-PCT-2026-XXX [cite: 214]
         return "PSI-PCT-2026-" + (int)(Math.random() * 1000);
     }
-
-    /*------- Aquí igual..... con el @validate ahorramos escribir un método tan largo
-       @Transactional
-    public PatientDTO updatePatient(Long professionalId, Long patientId, PatientDTO dto) {
-
-
-        // 1. Validar que el paciente existe
-        Patient patient = patientRepository.findById(patientId)
-                .orElseThrow(() -> new RuntimeException("Patient not found with ID: " + patientId));
-
-        // 2. Validar que pertenece a este profesional (SEGURIDAD)
-        if (!patient.getProfessional().getId().equals(professionalId)) {
-            throw new RuntimeException(
-                    "Patient with ID " + patientId + " does not belong to professional " + professionalId
-            );
-        }
-
-        // 3. Actualizar solo los campos permitidos
-        if (dto.getFirstName() != null) {
-            patient.setFirstName(dto.getFirstName());
-        }
-        if (dto.getLastName() != null) {
-            patient.setLastName(dto.getLastName());
-        }
-//        if (dto.getInternalCode() != null) {
-//            patient.setInternalCode(dto.getInternalCode());
-//        }
-        if (dto.getOccupation() != null) {
-            patient.setOccupation(dto.getOccupation());
-        }
-        if (dto.getBirthDate() != null) {
-            patient.setBirthDate(dto.getBirthDate());
-        }
-        if (dto.getMaritalStatus() != null) {
-            patient.setMaritalStatus(dto.getMaritalStatus());
-        }
-        if (dto.getActive() != null) {
-            patient.setActive(dto.getActive());
-        }
-        if (dto.getSex() != null) {
-            patient.setSex(dto.getSex());
-        }
-
-        // 4. Guardar los cambios
-        Patient updatedPatient = patientRepository.save(patient); //Si el objeto TIENE ID, .save() ACTUALIZA la fila existente
-
-        // 5. Convertir a DTO y devolver
-        return convertToDTO(updatedPatient);
-    }
-     */
-
 }

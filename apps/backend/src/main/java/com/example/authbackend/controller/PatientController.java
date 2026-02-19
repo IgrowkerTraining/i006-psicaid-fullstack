@@ -1,6 +1,7 @@
 package com.example.authbackend.controller;
 
 import com.example.authbackend.dto.PatientDTO;
+import com.example.authbackend.dto.PatientUpdateDTO;
 import com.example.authbackend.service.PatientService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -15,7 +16,7 @@ import java.util.List;
  * Centraliza las operaciones del RF2 - Gestión de pacientes[cite: 36, 37].
  */
 @RestController
-@RequestMapping("/api/patients") // Ruta limpia y profesional
+@RequestMapping("/api/patients") // Ruta limpia, estándar y profesional
 @RequiredArgsConstructor
 public class PatientController {
 
@@ -23,50 +24,24 @@ public class PatientController {
 
     @GetMapping
     public ResponseEntity<List<PatientDTO>> listPatients() {
-        // El Service obtendrá el profesional autenticado internamente
+        // Obtenemos los pacientes asegurando el aislamiento de datos (RB-04)
         return ResponseEntity.ok(patientService.getPatientsByAuthenticatedProfessional());
     }
 
     @PostMapping
     public ResponseEntity<PatientDTO> createPatient(@Valid @RequestBody PatientDTO patientDTO) {
-        // Añadimos @Valid para activar las validaciones del DTO
-        // El Service se encarga de vincular el paciente al profesional correcto [cite: 82, 193]
+        // @Valid activa las restricciones del DTO.
+        // El paciente se asocia de forma única al profesional autenticado [cite: 82, 193]
         return ResponseEntity.status(HttpStatus.CREATED)
                 .body(patientService.createPatient(patientDTO));
     }
-    /*-------te dejo tu clase comentada para que puedas comparar aunque como te digo no se debe poner el {id} dentro de la URL. Culpa mia ;)
 
-    @GetMapping("/{id}/patients")
-    public ResponseEntity<List<PatientDTO>> listPatients(@PathVariable Long id) {
-        return ResponseEntity.ok(patientService.getPatientsByProfessional(id));
-    }
-
-    //Checked
-    @PostMapping("/{id}/patients")
-    public ResponseEntity<PatientDTO> createPatient(
-            @PathVariable Long id,
-            @RequestBody PatientDTO patientDTO) {
-
-        // Ignoramos el professionalId que venga dentro del DTO (si viene)
-        // Usamos el de la URL que es la fuente de verdad en este endpoint
-        return ResponseEntity.status(HttpStatus.CREATED)
-                .body(patientService.createPatient(id, patientDTO));
-    }
-
-    @PatchMapping("/{professionalId}/patients/{patientId}")
+    @PatchMapping("/{patientId}")
     public ResponseEntity<PatientDTO> updatePatient(
-            @PathVariable Long professionalId,
             @PathVariable Long patientId,
-            @RequestBody PatientDTO dto) {
+            @Valid @RequestBody PatientUpdateDTO dto) {
 
-        PatientDTO updatedPatient = patientService.updatePatient(
-                professionalId,
-                patientId,
-                dto
-        );
-
-        return ResponseEntity.ok(updatedPatient);
+        // El Service se encargará de verificar que el patientId le pertenece al usuario actual antes de actualizar.
+        return ResponseEntity.ok(patientService.updatePatient(patientId, dto));
     }
-
-     */
 }
