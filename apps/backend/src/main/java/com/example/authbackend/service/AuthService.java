@@ -12,7 +12,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 @Service
-@RequiredArgsConstructor // Inyección por constructor (Senior Practice)
+@RequiredArgsConstructor
 public class AuthService {
 
     private final ProfessionalRepository professionalRepository;
@@ -21,11 +21,10 @@ public class AuthService {
 
     /**
      * Registra un nuevo profesional en el sistema.
-     * Cumple con RF1 - Registro de profesionales.
      */
     @Transactional
     public AuthResponse register(RegisterRequest request) {
-        // 1. Verificamos si el email ya existe (RB-04 / Regla de negocio)
+        // 1. Verificamos si el email ya existe
         if (professionalRepository.existsByEmail(request.getEmail())) {
             throw new RuntimeException("El correo electrónico ya está registrado");
         }

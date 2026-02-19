@@ -12,7 +12,6 @@ import org.springframework.web.bind.annotation.*;
 
 /**
  * Controlador para la gestión de autenticación y registro de profesionales.
- * Cumple con el requerimiento RF1 del sistema PSICAID.
  */
 @RestController
 @RequestMapping("/api/auth")

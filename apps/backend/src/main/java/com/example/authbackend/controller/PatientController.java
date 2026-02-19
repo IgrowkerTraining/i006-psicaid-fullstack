@@ -13,7 +13,7 @@ import java.util.List;
 
 /**
  * Controlador para la gestión de pacientes.
- * Centraliza las operaciones del RF2 - Gestión de pacientes.
+ * Centraliza las operaciones de gestión de pacientes.
  */
 @RestController
 @RequestMapping("/api/patients")

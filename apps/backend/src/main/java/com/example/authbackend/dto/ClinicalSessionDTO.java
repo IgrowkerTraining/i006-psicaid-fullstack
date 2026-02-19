@@ -26,7 +26,7 @@ public class ClinicalSessionDTO {
 
     private Integer duration; // En minutos
 
-    // --- Narrativa Clínica (Textos libres permitidos por HU2) ---
+    // --- Narrativa Clínica ---
     private String reasonConsultation;
     private String background;
     private String observations;

@@ -15,9 +15,8 @@ public interface PatientRepository extends JpaRepository<Patient, Long> {
 
     /**
      * Busca pacientes pertenecientes a un profesional específico.
-     * Esto garantiza el cumplimiento de la regla RB-04: Aislamiento total de datos[cite: 69].
-     * * @param professionalId ID del profesional autenticado.
-     * @return Lista de pacientes asociados a ese profesional[cite: 82, 193].
+     * Esto garantiza el cumplimiento del aislamiento total de datos.
+     * pasándole el  ID del profesional autenticado, devuelve lista de pacientes asociados a ese profesional.
      */
     List<Patient> findByProfessionalId(Long professionalId);
 }
