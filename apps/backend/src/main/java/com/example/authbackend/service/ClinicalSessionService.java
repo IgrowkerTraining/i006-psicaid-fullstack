@@ -1,6 +1,7 @@
 package com.example.authbackend.service;
 
 import com.example.authbackend.dto.ClinicalSessionDTO;
+import com.example.authbackend.dto.ClinicalSessionUpdateDTO;
 import com.example.authbackend.model.ClinicalSession;
 import com.example.authbackend.model.Patient;
 import com.example.authbackend.model.Professional;
@@ -132,6 +133,39 @@ public class ClinicalSessionService {
                 .summary(session.getSummary())
                 .build();
     }
+
+    /**
+     * Actualiza una sesión existente (es para rellenar notas de citas previamente agendadas).
+     */
+    @Transactional
+    public ClinicalSessionDTO updateSession(Long patientId, Long sessionId, ClinicalSessionUpdateDTO dto) {
+        Professional pro = getAuthenticatedProfessional();
+        getValidPatientForProfessional(patientId, pro);
+
+        ClinicalSession session = sessionRepository.findById(sessionId)
+                .orElseThrow(() -> new RuntimeException("Sesión no encontrada con ID: " + sessionId));
+
+        if (!session.getPatient().getId().equals(patientId)) {
+            throw new RuntimeException("La sesión no pertenece al paciente indicado en la URL.");
+        }
+
+        // Actualizamos solo los campos que no sean nulos (Lógica PATCH)
+        if (dto.getSessionDateTime() != null) session.setSessionDateTime(dto.getSessionDateTime());
+        if (dto.getSessionType() != null) session.setSessionType(dto.getSessionType());
+        if (dto.getDuration() != null) session.setDuration(dto.getDuration());
+        if (dto.getReasonConsultation() != null) session.setReasonConsultation(dto.getReasonConsultation());
+        if (dto.getBackground() != null) session.setBackground(dto.getBackground());
+        if (dto.getObservations() != null) session.setObservations(dto.getObservations());
+        if (dto.getHypothesis() != null) session.setHypothesis(dto.getHypothesis());
+        if (dto.getInterventions() != null) session.setInterventions(dto.getInterventions());
+        if (dto.getClinicalEvolution() != null) session.setClinicalEvolution(dto.getClinicalEvolution());
+        if (dto.getTherapeuticGoals() != null) session.setTherapeuticGoals(dto.getTherapeuticGoals());
+        if (dto.getDiagnosticNotes() != null) session.setDiagnosticNotes(dto.getDiagnosticNotes());
+
+        ClinicalSession updatedSession = sessionRepository.save(session);
+        return convertToDTO(updatedSession);
+    }
+
     @Transactional
     public ClinicalSessionDTO generateAndSaveSummary(Long patientId, Long sessionId) {
         Professional pro = getAuthenticatedProfessional();

@@ -1,6 +1,7 @@
 package com.example.authbackend.controller;
 
 import com.example.authbackend.dto.ClinicalSessionDTO;
+import com.example.authbackend.dto.ClinicalSessionUpdateDTO;
 import com.example.authbackend.service.ClinicalSessionService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -35,6 +36,19 @@ public class SessionController {
 
         return ResponseEntity.status(HttpStatus.CREATED)
                 .body(sessionService.createSession(patientId, sessionDTO));
+    }
+
+    /**
+     * Endpoint para actualizar una sesión existente (añadir notas clínicas a una cita agendada).
+     */
+    @PatchMapping("/{patientId}/sessions/{sessionId}")
+    public ResponseEntity<ClinicalSessionDTO> updateSession(
+            @PathVariable Long patientId,
+            @PathVariable Long sessionId,
+            @RequestBody ClinicalSessionUpdateDTO updateDTO) {
+
+        ClinicalSessionDTO updatedSession = sessionService.updateSession(patientId, sessionId, updateDTO);
+        return ResponseEntity.ok(updatedSession);
     }
 
     /**

@@ -6,7 +6,7 @@ import lombok.Getter;
 public enum LogCriticality {
     // Definimos los valores de Java (Mayúsculas) y su equivalente en BD (Minúsculas)
     LOW("low"),
-    MEDIUM("meidum"),
+    MEDIUM("medium"),
     HIGH("high"),
     CRITICAL("critical");
 
