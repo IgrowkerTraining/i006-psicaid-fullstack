@@ -9,7 +9,8 @@ export interface ValidationResult {
 }
 
 type RegistrationValidationData = {
-  name: string
+  firstName: string
+  lastName: string
   email: string
   password: string
   confirmPassword?: string
@@ -82,14 +83,20 @@ export const validateRegistration = (
 ): ValidationResult => {
   const errors: ValidationError[] = []
 
-  const nameValue = data.name.trim()
+  const firstNameValue = data.firstName.trim()
+  const lastNameValue = data.lastName.trim()
   const emailValue = data.email.trim()
   const passwordValue = data.password
   const confirmPasswordValue = data.confirmPassword ?? ""
 
-  const nameError = validateRequired(nameValue, "El nombre completo")
-  if (nameError) {
-    errors.push({ field: "name", message: nameError })
+  const firstNameError = validateRequired(firstNameValue, "El nombre")
+  if (firstNameError) {
+    errors.push({ field: "firstName", message: firstNameError })
+  }
+
+  const lastNameError = validateRequired(lastNameValue, "El apellido")
+  if (lastNameError) {
+    errors.push({ field: "lastName", message: lastNameError })
   }
 
   const emailRequiredError = validateRequired(emailValue, "El correo electrónico")

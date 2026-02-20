@@ -27,7 +27,7 @@ type DashboardLogsAppointmentsProps = {
 
 export const DashboardLogsAppointments: React.FC<DashboardLogsAppointmentsProps> = ({ logs }) => {
     return (
-        <div className="bg-slate-900/40 border border-slate-800 rounded-2xl overflow-hidden">
+        <div className="bg-white border border-gray-200 rounded-2xl overflow-hidden shadow-sm">
             {logs.map((appointment) => {
                 const [dateText, timeText] = appointment.date.split(" - ");
                 const appointmentTime = appointment.time || timeText;
@@ -36,28 +36,28 @@ export const DashboardLogsAppointments: React.FC<DashboardLogsAppointmentsProps>
                     <Link
                         key={appointment.id}
                         to={appointment.url}
-                        className="group flex items-center justify-between p-4 border-b border-slate-800 last:border-0 hover:bg-slate-800/30 transition-colors"
+                        className="group flex items-center justify-between p-4 border-b border-gray-100 last:border-0 hover:bg-gray-50 transition-colors"
                     >
                         <div className="flex gap-4 items-start">
                             <div
                                 className={`mt-1 w-2.5 h-2.5 rounded-full ${statusClassByType[appointment.status]}`}
                             ></div>
                             <div>
-                                <p className="text-sm font-medium text-slate-100">
+                                <p className="text-sm font-medium text-[var(--brand-primario)]">
                                     {appointment.patientName}
                                 </p>
-                                <p className="text-xs text-slate-400 inline-flex items-center gap-1.5">
-                                    <Stethoscope className="size-3.5 text-slate-500" />
+                                <p className="text-xs text-gray-600 inline-flex items-center gap-1.5">
+                                    <Stethoscope className="size-3.5 text-gray-500" />
                                     Motivo / diagnostico: {appointment.diagnosis}
                                 </p>
-                                <div className="mt-1 flex flex-wrap items-center gap-x-4 gap-y-1 text-xs text-slate-500">
+                                <div className="mt-1 flex flex-wrap items-center gap-x-4 gap-y-1 text-xs text-gray-500">
                                     <span className="inline-flex items-center gap-1.5">
-                                        <CalendarDays className="size-3.5 text-slate-500" />
+                                        <CalendarDays className="size-3.5 text-gray-500" />
                                         Fecha: {dateText || appointment.date}
                                     </span>
                                     {appointmentTime ? (
                                         <span className="inline-flex items-center gap-1.5">
-                                            <Clock3 className="size-3.5 text-slate-500" />
+                                            <Clock3 className="size-3.5 text-gray-500" />
                                             Hora: {appointmentTime}
                                         </span>
                                     ) : null}
@@ -66,10 +66,10 @@ export const DashboardLogsAppointments: React.FC<DashboardLogsAppointmentsProps>
                         </div>
 
                         <div className="flex items-center gap-2">
-                            <span className="text-xs text-indigo-300 opacity-0 -translate-x-1 group-hover:opacity-100 group-hover:translate-x-0 transition-all">
+                            <span className="text-xs text-[var(--brand-secundario)] opacity-0 -translate-x-1 group-hover:opacity-100 group-hover:translate-x-0 transition-all">
                                 Ver detalle
                             </span>
-                            <ChevronRight className="size-4 text-indigo-300 opacity-0 -translate-x-2 group-hover:opacity-100 group-hover:translate-x-0 transition-all" />
+                            <ChevronRight className="size-4 text-[var(--brand-secundario)] opacity-0 -translate-x-2 group-hover:opacity-100 group-hover:translate-x-0 transition-all" />
                         </div>
                     </Link>
                 );

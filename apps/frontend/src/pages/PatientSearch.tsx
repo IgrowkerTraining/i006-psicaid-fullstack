@@ -46,12 +46,11 @@ const PatientSearch: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen">
-      <div className="mx-auto w-full max-w-7xl p-6 lg:p-10">
+    <div className="mx-auto w-full max-w-7xl">
         <div className="mb-6 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
           <div>
-            <h1 className="mb-2 text-3xl font-bold text-white">Pacientes</h1>
-            <p className="text-slate-400">Gestiona la informacion de tus pacientes</p>
+            <h1 className="mb-2 text-3xl font-bold text-[var(--brand-primario)]">Pacientes</h1>
+            <p className="text-gray-600">Gestiona la información de tus pacientes</p>
           </div>
 
           <Button
@@ -75,7 +74,6 @@ const PatientSearch: React.FC = () => {
             <PatientResultCard key={patient.id} patient={patient} />
           ))}
         </div>
-      </div>
     </div>
   );
 };

@@ -3,6 +3,7 @@ import { Navigate, Route, Routes } from "react-router-dom"
 
 import ProtectedLayout from "@/components/layout/ProtectedRouteLayout"
 import { ROUTES } from "@/constants/routes"
+import Agenda from "@/pages/Agenda"
 import Dashboard from "@/pages/Dashboard"
 import Error404 from "@/pages/Error404"
 import Home from "@/pages/Home"
@@ -31,6 +32,7 @@ export const AppRoutes: React.FC = () => {
       <Route element={<ProtectedRoute />}>
         <Route element={<ProtectedLayout />}>
           <Route path={ROUTES.DASHBOARD} element={<Dashboard />} />
+          <Route path={ROUTES.AGENDA} element={<Agenda />} />
           <Route path={ROUTES.PATIENTS} element={<PatientsList />} />
           <Route path={ROUTES.PATIENT_DETAIL} element={<PatientDetail />} />
           <Route path={ROUTES.SESSION_NEW} element={<SessionNew />} />

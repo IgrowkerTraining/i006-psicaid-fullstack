@@ -1,8 +1,34 @@
 import { User } from "../types";
 import { API_ENDPOINTS } from "../constants/routes";
 
+// Tipo de respuesta del backend (ProfessionalDTO)
+type BackendUser = {
+  id: number;
+  firstName: string;
+  lastName: string;
+  email: string;
+}
+
+type AuthResponse = {
+  user: BackendUser;
+  token: string;
+  message: string;
+}
+
+// Mapea el usuario del backend al formato del frontend
+function mapBackendUser(backendUser: BackendUser): User {
+  return {
+    id: backendUser.id.toString(),
+    email: backendUser.email,
+    firstName: backendUser.firstName,
+    lastName: backendUser.lastName,
+    username: `${backendUser.firstName.toLowerCase()}${backendUser.lastName.toLowerCase()}`,
+    name: `${backendUser.firstName} ${backendUser.lastName}`,
+  };
+}
+
 export const api = {
-  async register(data: { name: string, email: string, password: string }): Promise<{ user: User; token:string; message: string }> {
+  async register(data: { firstName: string, lastName: string, email: string, password: string }): Promise<{ user: User; token:string; message: string }> {
     const response = await fetch(
       `${API_ENDPOINTS.BASE}${API_ENDPOINTS.AUTH.REGISTER}`,
       {
@@ -12,11 +38,15 @@ export const api = {
       },
     );
 
-    const result = await response.json();
+    const result: AuthResponse = await response.json();
     if (!response.ok) {
-      throw new Error(result.error || "Registration failed");
+      throw new Error(result.message || "Registration failed");
     }
-    return result;
+    return {
+      user: mapBackendUser(result.user),
+      token: result.token,
+      message: result.message,
+    };
   },
 
   async login(
@@ -31,10 +61,14 @@ export const api = {
       },
     );
 
-    const result = await response.json();
+    const result: AuthResponse = await response.json();
     if (!response.ok) {
-      throw new Error(result.error || "Login failed");
+      throw new Error(result.message || "Login failed");
     }
-    return result;
+    return {
+      user: mapBackendUser(result.user),
+      token: result.token,
+      message: result.message,
+    };
   },
 };
