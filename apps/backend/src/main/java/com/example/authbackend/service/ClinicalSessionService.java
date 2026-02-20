@@ -13,6 +13,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.OffsetDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -54,6 +55,8 @@ public class ClinicalSessionService {
     public ClinicalSessionDTO createSession(Long patientId, ClinicalSessionDTO dto) {
         Professional pro = getAuthenticatedProfessional();
         Patient patient = getValidPatientForProfessional(patientId, pro);
+        // Comprobamos que no se solapen sesiones
+        validateNoOverlappingSessions(pro.getId(), dto.getSessionDateTime(), dto.getDuration(), null);
 
         // Convertimos el DTO a Entidad
         ClinicalSession session = ClinicalSession.builder()
@@ -111,29 +114,6 @@ public class ClinicalSessionService {
         return rawNotes.toString();
     }
 
-    // --- MAPEO DE ENTIDAD A DTO ---
-
-    private ClinicalSessionDTO convertToDTO(ClinicalSession session) {
-        return ClinicalSessionDTO.builder()
-                .id(session.getId())
-                .sessionDateTime(session.getSessionDateTime())
-                .sessionType(session.getSessionType())
-                .duration(session.getDuration())
-                .reasonConsultation(session.getReasonConsultation())
-                .background(session.getBackground())
-                .observations(session.getObservations())
-                .hypothesis(session.getHypothesis())
-                .interventions(session.getInterventions())
-                .clinicalEvolution(session.getClinicalEvolution())
-                .therapeuticGoals(session.getTherapeuticGoals())
-                .diagnosticNotes(session.getDiagnosticNotes())
-                .patientId(session.getPatient().getId())
-                .createdAt(session.getCreatedAt())
-                .updatedAt(session.getUpdatedAt())
-                .summary(session.getSummary())
-                .build();
-    }
-
     /**
      * Actualiza una sesión existente (es para rellenar notas de citas previamente agendadas).
      */
@@ -148,8 +128,14 @@ public class ClinicalSessionService {
         if (!session.getPatient().getId().equals(patientId)) {
             throw new RuntimeException("La sesión no pertenece al paciente indicado en la URL.");
         }
+        // Calculamos la fecha y duración (si el DTO trae una nueva la usamos, si no, usamos la vieja)
+        OffsetDateTime newStart = dto.getSessionDateTime() != null ? dto.getSessionDateTime() : session.getSessionDateTime();
+        Integer newDuration = dto.getDuration() != null ? dto.getDuration() : session.getDuration();
 
-        // Actualizamos solo los campos que no sean nulos (Lógica PATCH)
+        // Comprobamos que no se solapen sesiones
+        validateNoOverlappingSessions(pro.getId(), newStart, newDuration, sessionId);
+
+        // Actualizamos solo los campos que no sean nulos
         if (dto.getSessionDateTime() != null) session.setSessionDateTime(dto.getSessionDateTime());
         if (dto.getSessionType() != null) session.setSessionType(dto.getSessionType());
         if (dto.getDuration() != null) session.setDuration(dto.getDuration());
@@ -196,5 +182,60 @@ public class ClinicalSessionService {
 
         // Devolvemos el DTO actualizado
         return convertToDTO(savedSession);
+    }
+
+    /**
+     * Valida que una nueva cita no se solape con otra existente del professional.
+     */
+    private void validateNoOverlappingSessions(Long professionalId, OffsetDateTime sessionStart, Integer durationMinutes, Long currentSessionId) {
+        if (sessionStart == null || durationMinutes == null) return;
+
+        OffsetDateTime sessionEnd = sessionStart.plusMinutes(durationMinutes);
+
+        //Calculamos el inicio y final del dia para filtrar en la BD
+        OffsetDateTime startOfDay = sessionStart.toLocalDate().atStartOfDay(sessionStart.getOffset()).toOffsetDateTime();
+        OffsetDateTime endOfDay = startOfDay.plusDays(1);
+
+        // Buscamos las sesiones de ese dia para este profesional
+        List<ClinicalSession> dailySessions = sessionRepository.findByProfessionalAndDate(professionalId, startOfDay, endOfDay);
+
+        for (ClinicalSession existing : dailySessions) {
+            if (currentSessionId != null && existing.getId().equals(currentSessionId)) {
+                continue;
+            }
+
+            if (existing.getSessionDateTime() == null || existing.getDuration() == null) {
+                continue;
+            }
+
+            OffsetDateTime existingStart = existing.getSessionDateTime();
+            OffsetDateTime existingEnd = existingStart.plusMinutes(existing.getDuration());
+
+            if (sessionStart.isBefore(existingEnd) && sessionEnd.isAfter(existingStart)) {
+                throw new RuntimeException("Horario no disponible. Esta cita se solapa con otra sesión programada a las " + existingStart.toLocalTime());
+            }
+        }
+    }
+    // --- MAPEO DE ENTIDAD A DTO ---
+
+    private ClinicalSessionDTO convertToDTO(ClinicalSession session) {
+        return ClinicalSessionDTO.builder()
+                .id(session.getId())
+                .sessionDateTime(session.getSessionDateTime())
+                .sessionType(session.getSessionType())
+                .duration(session.getDuration())
+                .reasonConsultation(session.getReasonConsultation())
+                .background(session.getBackground())
+                .observations(session.getObservations())
+                .hypothesis(session.getHypothesis())
+                .interventions(session.getInterventions())
+                .clinicalEvolution(session.getClinicalEvolution())
+                .therapeuticGoals(session.getTherapeuticGoals())
+                .diagnosticNotes(session.getDiagnosticNotes())
+                .patientId(session.getPatient().getId())
+                .createdAt(session.getCreatedAt())
+                .updatedAt(session.getUpdatedAt())
+                .summary(session.getSummary())
+                .build();
     }
 }

@@ -31,7 +31,7 @@ public class GlobalExceptionHandler {
         ErrorResponse errorRes = ErrorResponse.builder()
                 .timestamp(LocalDateTime.now())
                 .status(HttpStatus.BAD_REQUEST.value())
-                .error("Validation Failed")
+                .error("Fallo de validación")
                 .message("Los datos enviados no son válidos")
                 .path(request.getRequestURI())
                 .validationErrors(errors)
@@ -48,7 +48,7 @@ public class GlobalExceptionHandler {
         ErrorResponse errorRes = ErrorResponse.builder()
                 .timestamp(LocalDateTime.now())
                 .status(HttpStatus.BAD_REQUEST.value())
-                .error("Business Logic Error")
+                .error("Error de Lógica de Negocio")
                 .message(ex.getMessage())
                 .path(request.getRequestURI())
                 .build();
