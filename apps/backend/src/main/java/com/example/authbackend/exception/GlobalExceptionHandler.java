@@ -16,7 +16,7 @@ import java.util.Map;
 @RestControllerAdvice
 public class GlobalExceptionHandler {
 
-    // 1. Captura errores de @Valid (Validation Errors)
+    // Captura errores de @Valid
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<ErrorResponse> handleValidationExceptions(
             MethodArgumentNotValidException ex, HttpServletRequest request) {
@@ -25,7 +25,8 @@ public class GlobalExceptionHandler {
         ex.getBindingResult().getAllErrors().forEach((error) -> {
             String fieldName = ((FieldError) error).getField();
             String errorMessage = error.getDefaultMessage();
-            errors.put(fieldName, errorMessage);
+
+            errors.merge(fieldName, errorMessage, (oldMsg, newMsg) -> oldMsg + " | " + newMsg);
         });
 
         ErrorResponse errorRes = ErrorResponse.builder()
@@ -40,7 +41,7 @@ public class GlobalExceptionHandler {
         return new ResponseEntity<>(errorRes, HttpStatus.BAD_REQUEST);
     }
 
-    // 2. Captura excepciones de lógica de negocio (Runtime)
+    // Captura excepciones de lógica de negocio
     @ExceptionHandler(RuntimeException.class)
     public ResponseEntity<ErrorResponse> handleRuntimeException(
             RuntimeException ex, HttpServletRequest request) {
@@ -56,10 +57,15 @@ public class GlobalExceptionHandler {
         return new ResponseEntity<>(errorRes, HttpStatus.BAD_REQUEST);
     }
 
-    // 3. Fallback para errores no controlados (500)
+    // Fallback para errores no controlados (500)
     @ExceptionHandler(Exception.class)
     public ResponseEntity<ErrorResponse> handleGlobalException(
             Exception ex, HttpServletRequest request) {
+
+        // MEJORA VITAL: Imprimimos el error real en la consola del servidor para poder depurar
+        // mientras le devolvemos un mensaje seguro y genérico al usuario/frontend.
+        System.err.println("ERROR 500 CAPTURADO POR GLOBAL HANDLER:");
+        ex.printStackTrace();
 
         ErrorResponse errorRes = ErrorResponse.builder()
                 .timestamp(LocalDateTime.now())
