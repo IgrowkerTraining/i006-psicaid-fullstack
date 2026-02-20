@@ -64,7 +64,7 @@ public class GlobalExceptionHandler {
         ErrorResponse errorRes = ErrorResponse.builder()
                 .timestamp(LocalDateTime.now())
                 .status(HttpStatus.INTERNAL_SERVER_ERROR.value())
-                .error("Internal Server Error")
+                .error("Error de Servidor")
                 .message("Ocurrió un error inesperado en el servidor")
                 .path(request.getRequestURI())
                 .build();
