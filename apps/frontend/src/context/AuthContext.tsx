@@ -61,6 +61,21 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
     const savedUser = storage.getUser();
     const savedToken = storage.getToken();
     if (savedUser && savedToken) {
+      // Migrar formato antiguo de usuario al nuevo si es necesario
+      if (!savedUser.firstName || !savedUser.lastName) {
+        // Si el usuario tiene formato antiguo con campo "name", intentar dividirlo
+        if (savedUser.name) {
+          const nameParts = savedUser.name.split(" ");
+          savedUser.firstName = nameParts[0] || "Usuario";
+          savedUser.lastName = nameParts.slice(1).join(" ") || "";
+        } else {
+          // Valores por defecto
+          savedUser.firstName = "Usuario";
+          savedUser.lastName = "";
+        }
+        // Guardar usuario migrado
+        storage.setUser(savedUser);
+      }
       dispatch({ type: "SET_USER", payload: savedUser });
     } else {
       dispatch({ type: "SET_LOADING", payload: false });
@@ -104,7 +119,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
 export const useAuth = (): AuthContextType => {
   const context = useContext(AuthContext);
   if (context === undefined) {
-    throw new Error("useAuth must be used within an AuthProvider");
+    throw new Error("useAuth debe ser usado dentro de un AuthProvider");
   }
   return context;
 };

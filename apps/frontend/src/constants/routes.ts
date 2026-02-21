@@ -6,6 +6,7 @@ export const ROUTES = {
   
   // Rutas privadas
   DASHBOARD: '/dashboard',
+  AGENDA: '/agenda',
   
   // Pacientes
   PATIENTS: '/patients',

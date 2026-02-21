@@ -11,14 +11,16 @@ import {
 } from "@/utils/validation"
 
 type RegisterFormValues = {
-  name: string
+  firstName: string
+  lastName: string
   email: string
   password: string
   confirmPassword: string
 }
 
 export type RegisterSubmitPayload = {
-  name: string
+  firstName: string
+  lastName: string
   email: string
   password: string
 }
@@ -28,7 +30,8 @@ type RegisterFormProps = {
 }
 
 const initialValues: RegisterFormValues = {
-  name: "",
+  firstName: "",
+  lastName: "",
   email: "",
   password: "",
   confirmPassword: "",
@@ -113,7 +116,8 @@ export function RegisterForm({ onSubmit }: RegisterFormProps) {
     setIsLoading(true)
     try {
       await onSubmit({
-        name: values.name.trim(),
+        firstName: values.firstName.trim(),
+        lastName: values.lastName.trim(),
         email: values.email.trim(),
         password: values.password,
       })
@@ -133,7 +137,7 @@ export function RegisterForm({ onSubmit }: RegisterFormProps) {
       variants={formVariants}
       initial="hidden"
       animate="visible"
-      className="grid grid-cols-1 gap-4 md:grid-cols-2"
+      className="grid grid-cols-1 gap-4"
     >
       <AnimatePresence initial={false}>
         {serverError ? (
@@ -151,21 +155,35 @@ export function RegisterForm({ onSubmit }: RegisterFormProps) {
         ) : null}
       </AnimatePresence>
 
-      <motion.div variants={itemVariants} className="col-span-full">
+      <motion.div variants={itemVariants}>
         <Input
-          label="Nombre completo"
-          name="name"
-          placeholder="Julián Gómez"
-          value={values.name}
-          onChange={handleChange("name")}
-          error={errors.name}
+          label="Nombre"
+          name="firstName"
+          placeholder="Julián"
+          value={values.firstName}
+          onChange={handleChange("firstName")}
+          error={errors.firstName}
           disabled={isLoading}
           icon={<UserRound className="size-4" />}
           className="border-slate-300 bg-white text-slate-900 placeholder:text-slate-400"
         />
       </motion.div>
 
-      <motion.div variants={itemVariants} className="col-span-full">
+      <motion.div variants={itemVariants}>
+        <Input
+          label="Apellido"
+          name="lastName"
+          placeholder="Martínez"
+          value={values.lastName}
+          onChange={handleChange("lastName")}
+          error={errors.lastName}
+          disabled={isLoading}
+          icon={<UserRound className="size-4" />}
+          className="border-slate-300 bg-white text-slate-900 placeholder:text-slate-400"
+        />
+      </motion.div>
+
+      <motion.div variants={itemVariants}>
         <Input
           label="Correo electrónico"
           name="email"
@@ -211,7 +229,7 @@ export function RegisterForm({ onSubmit }: RegisterFormProps) {
         />
       </motion.div>
 
-      <motion.div variants={itemVariants} className="col-span-full pt-2">
+      <motion.div variants={itemVariants}>
         <Button
           type="submit"
           className="h-11 w-full rounded-md bg-brand-secundario text-white hover:bg-brand-secundario/90"

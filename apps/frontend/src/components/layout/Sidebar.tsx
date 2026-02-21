@@ -22,8 +22,8 @@ export function Sidebar({
   const currentPath = activePath ?? ""
 
   return (
-    <aside className="h-full w-64 border-r border-slate-800 bg-slate-900/80">
-      <div className="h-24 px-4 flex items-center border-b border-slate-800">
+    <aside className="h-full w-64 border-r border-gray-200 bg-white">
+      <div className="h-24 px-4 flex items-center border-b border-gray-200">
 
         <div className="flex items-center gap-2">
           <img
@@ -31,7 +31,7 @@ export function Sidebar({
             alt="Psicaid logo"
             className="size-10 object-contain"
           />
-          <span className="font-semibold text-white text-2xl">Psicaid</span>
+          <span className="font-semibold text-[var(--brand-primario)] text-2xl">Psicaid</span>
         </div>
       </div>
 
@@ -49,8 +49,8 @@ export function Sidebar({
               className={cn(
                 "w-full flex items-center gap-2 rounded-md px-3 py-2 text-sm transition",
                 isActive
-                  ? "bg-slate-200 text-slate-900 font-medium"
-                  : "text-white hover:bg-slate-100 hover:text-gray-800 cursor-pointer"
+                  ? "bg-[var(--brand-secundario)] text-white font-medium"
+                  : "text-[var(--brand-primario)] hover:bg-gray-100 cursor-pointer"
               )}
             >
               {item.icon ? <span className="shrink-0">{item.icon}</span> : null}

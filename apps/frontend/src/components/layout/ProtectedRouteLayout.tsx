@@ -1,6 +1,6 @@
 import React from "react"
 import { Outlet, useLocation, useNavigate } from "react-router-dom"
-import { Home, Settings, User } from "lucide-react"
+import { LayoutDashboard, Settings, Users, CalendarHeart } from "lucide-react"
 
 import { ROUTES } from "@/constants/routes"
 import { useAuth } from "@/hooks/useAuth"
@@ -14,13 +14,14 @@ export const ProtectedLayout: React.FC = () => {
   const location = useLocation()
 
   return (
-    <div className="flex min-h-screen bg-slate-950 text-slate-200">
+    <div className="flex min-h-screen bg-[#e8ebf9] text-[var(--brand-primario)]">
       <div className="hidden md:block">
         <Sidebar
           items={[
-            { label: "Inicio", path: ROUTES.DASHBOARD, icon: <Home /> },
-            { label: "Pacientes", path: ROUTES.PATIENTS, icon: <User /> },
-            { label: "Configuracion", path: ROUTES.SETTINGS, icon: <Settings /> },
+            { label: "Inicio", path: ROUTES.DASHBOARD, icon: <LayoutDashboard size={20} /> },
+            { label: "Pacientes", path: ROUTES.PATIENTS, icon: <Users size={20} /> },
+            { label: "Agenda", path: ROUTES.AGENDA, icon: <CalendarHeart size={20} /> },
+            { label: "Configuración", path: ROUTES.SETTINGS, icon: <Settings size={20} /> },
           ]}
           activePath={location.pathname}
           onNavigate={(path) => navigate(path)}
@@ -29,7 +30,7 @@ export const ProtectedLayout: React.FC = () => {
 
       <div className="min-w-0 flex-1">
         <Header
-          user={{ name: user?.name ?? "Usuario", avatar: user?.avatar }}
+          user={{ name: user ? `${user.firstName} ${user.lastName}` : "Usuario", avatar: user?.avatar }}
           onLogout={logout}
         />
 

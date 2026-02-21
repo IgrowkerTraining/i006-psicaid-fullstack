@@ -13,7 +13,7 @@ export function Header({ user, onLogout }: HeaderProps) {
   const navigate = useNavigate()
 
   return (
-    <header className="sticky top-0 z-50 flex items-center justify-end border-b border-slate-800 bg-slate-900/80 px-6 py-4 backdrop-blur-md">
+    <header className="sticky top-0 z-50 flex items-center justify-end border-b border-gray-200 bg-white px-6 py-4 backdrop-blur-md shadow-sm">
       <UserAvatarDropdown
         name={user.name}
         role="Psicologo"

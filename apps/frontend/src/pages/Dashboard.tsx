@@ -1,22 +1,20 @@
 import React, { useState, useEffect } from "react";
-import { Button } from "../components/common/Button";
 import { getAIGreeting } from "../services/service";
 import { useAuth } from "../hooks/useAuth";
 import { StatsCard } from "@/components/shared/dashboard/StatsCard";
 import { Calendar, FileText, TrendingUp, Users } from "lucide-react";
-import {
-  DashboardLogsAppointments,
-  type DashboardAppointmentLog,
-} from "@/components/shared/dashboard/DashboardLogsAppointments";
+import { AgendaCalendar } from "@/components/shared/dashboard/AgendaCalendar";
+import { ProximasSesiones } from "@/components/shared/dashboard/ProximasSesiones";
+import { type DashboardAppointmentLog } from "@/components/shared/dashboard/DashboardLogsAppointments";
 
 const Dashboard: React.FC = () => {
-  const { user, logout } = useAuth();
+  const { user } = useAuth();
   const [greeting, setGreeting] = useState<string>("Loading greeting...");
   const [stats] = useState([
-    { label: "Total Pacientes", value: "2", subtext: 'Pacientes activos', icon: <Users className="text-gray-600" /> },
-    { label: "Citas de Hoy", value: "0", subtext: 'Sesiones programadas', icon: <Calendar className="text-gray-600" /> },
-    { label: "Esta Semana", value: "0", subtext: 'Citas programadas', icon: <TrendingUp className="text-gray-600" /> },
-    { label: "Sesiones Completadas", value: "0", subtext: 'Este mes', icon: <FileText className="text-gray-600" /> },
+    { label: "Sesiones de hoy", value: "2", subtext: 'Pacientes activos', icon: <Calendar className="text-[var(--brand-secundario)]" /> },
+    { label: "Esta semana", value: "5", subtext: 'Citas programadas', icon: <TrendingUp className="text-[var(--brand-secundario)]" /> },
+    { label: "Total Pacientes", value: "10", subtext: 'Pacientes activos', icon: <Users className="text-[var(--brand-secundario)]" /> },
+    { label: "Sesiones completadas", value: "5", subtext: 'Este mes', icon: <FileText className="text-[var(--brand-secundario)]" /> },
   ]);
   const [appointmentLogs] = useState<DashboardAppointmentLog[]>([
     {
@@ -59,22 +57,25 @@ const Dashboard: React.FC = () => {
 
   useEffect(() => {
     const initDashboard = async () => {
+      const userName = user ? user.firstName : "";
       const [msg] = await Promise.all([
-        getAIGreeting(user?.name || ""),
+        getAIGreeting(userName),
       ]);
       setGreeting(msg);
     };
     initDashboard();
-  }, [user?.name]);
+  }, [user]);
 
   return (
-    <div className="min-h-screen flex flex-col">
+    <div className="min-h-screen flex flex-col bg-[#e8ebf9]">
       <main className="flex-1 max-w-7xl mx-auto w-full p-6 lg:p-10">
-        <header className="mb-10">
-          <h2 className="text-3xl font-bold text-white mb-2">{greeting}</h2>
-          <p className="text-slate-400">
-            Everything looks optimal in your workspace today.
-          </p>
+        <header className="mb-10 flex items-start justify-between">
+          <div>
+            <h2 className="text-3xl font-bold text-[var(--brand-primario)] mb-2">{greeting}</h2>
+            <p className="text-gray-600">
+              Everything looks optimal in your workspace today.
+            </p>
+          </div>
         </header>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-10">
@@ -90,54 +91,15 @@ const Dashboard: React.FC = () => {
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-          <section className="lg:col-span-2 space-y-6">
-            <h3 className="text-xl font-semibold text-white">Tus últimas sesiones</h3>
-            <DashboardLogsAppointments logs={appointmentLogs} />
+          <section className="lg:col-span-2">
+            <ProximasSesiones logs={appointmentLogs} />
           </section>
 
-          <section className="space-y-6">
-            <h3 className="text-xl font-semibold text-white">
-              Identity Insight
-            </h3>
-            <div className="bg-indigo-600/10 border border-indigo-500/20 p-6 rounded-2xl">
-              <div className="flex items-center gap-4 mb-6">
-                <img
-                  src={user.avatar}
-                  className="w-16 h-16 rounded-2xl"
-                  alt=""
-                />
-                <div>
-                  <h4 className="font-bold text-white text-lg">{user.name}</h4>
-                  <p className="text-indigo-400 text-sm">@{user.username}</p>
-                </div>
-              </div>
-              <div className="space-y-4">
-                <div className="flex justify-between text-sm">
-                  <span className="text-slate-400">Account ID</span>
-                  <span className="text-slate-200 font-mono">{user.id}</span>
-                </div>
-                <div className="flex justify-between text-sm">
-                  <span className="text-slate-400">Encryption Level</span>
-                  <span className="text-emerald-400 font-bold">SHA-512</span>
-                </div>
-                <div className="flex justify-between text-sm">
-                  <span className="text-slate-400">Member Since</span>
-                  <span className="text-slate-200">Feb 2024</span>
-                </div>
-              </div>
-              <Button variant="secondary" className="w-full mt-6">
-                Edit Profile
-              </Button>
-            </div>
+          <section>
+            <AgendaCalendar />
           </section>
         </div>
       </main>
-
-      <div className="sm:hidden sticky bottom-0 p-4 bg-slate-950 border-t border-slate-800">
-        <Button variant="outline" className="w-full" onClick={logout}>
-          Log Out of Nexus
-        </Button>
-      </div>
     </div>
   );
 };
