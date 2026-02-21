@@ -4,7 +4,7 @@ import { useAuth } from "../hooks/useAuth";
 import { StatsCard } from "@/components/shared/dashboard/StatsCard";
 import { Calendar, FileText, TrendingUp, Users } from "lucide-react";
 import { AgendaCalendar } from "@/components/shared/dashboard/AgendaCalendar";
-import { UltimasSesiones } from "@/components/shared/dashboard/UltimasSesiones";
+import { ProximasSesiones } from "@/components/shared/dashboard/ProximasSesiones";
 import { type DashboardAppointmentLog } from "@/components/shared/dashboard/DashboardLogsAppointments";
 
 const Dashboard: React.FC = () => {
@@ -92,7 +92,7 @@ const Dashboard: React.FC = () => {
 
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
           <section className="lg:col-span-2">
-            <UltimasSesiones logs={appointmentLogs} />
+            <ProximasSesiones logs={appointmentLogs} />
           </section>
 
           <section>
