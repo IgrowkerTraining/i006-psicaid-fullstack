@@ -6,10 +6,6 @@ import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
-/**
- * Capa de acceso a datos para la entidad Patient.
- * El backend es el único punto de entrada hacia la base de datos.
- */
 @Repository
 public interface PatientRepository extends JpaRepository<Patient, Long> {
 
@@ -19,4 +15,7 @@ public interface PatientRepository extends JpaRepository<Patient, Long> {
      * pasándole el  ID del profesional autenticado, devuelve lista de pacientes asociados a ese profesional.
      */
     List<Patient> findByProfessionalId(Long professionalId);
+
+    // Cuenta los pacientes activos de un profesional
+    long countByProfessionalIdAndActiveTrue(Long professionalId);
 }
