@@ -7,7 +7,7 @@ import {
   type DashboardAppointmentLog,
 } from "./DashboardLogsAppointments"
 
-type UltimasSesionesProps = {
+type ProximasSesionesProps = {
   logs: DashboardAppointmentLog[]
 }
 
@@ -17,11 +17,11 @@ const statusBorderByType = {
   prioritaria: "ring-2 ring-amber-500",
 }
 
-export function UltimasSesiones({ logs }: UltimasSesionesProps) {
+export function ProximasSesiones({ logs }: ProximasSesionesProps) {
   return (
     <div className="bg-white border border-gray-200 rounded-2xl p-6 shadow-sm">
       <h3 className="text-xl font-semibold text-[var(--brand-primario)] mb-4">
-        Tus últimas sesiones
+        Tus próximas sesiones
       </h3>
       
       <div className="space-y-4">
