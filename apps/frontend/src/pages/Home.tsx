@@ -88,7 +88,6 @@ const Home: React.FC = () => {
             >
               <UserPlus className="size-4" />
               Registrarse
-              <ArrowRight className="size-4" />
             </Button>
           </motion.div>
 

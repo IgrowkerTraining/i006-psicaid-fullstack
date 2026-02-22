@@ -1,6 +1,6 @@
 import * as React from "react"
 import { AnimatePresence, motion } from "framer-motion"
-import { AlertCircle, Lock, Mail, UserRound } from "lucide-react"
+import { AlertCircle, Eye, EyeOff, Lock, Mail, UserRound } from "lucide-react"
 
 import { Input } from "@/components/common/Input"
 import { Button } from "@/components/common/Button"
@@ -64,6 +64,8 @@ const itemVariants = {
 
 export function RegisterForm({ onSubmit }: RegisterFormProps) {
   const [values, setValues] = React.useState<RegisterFormValues>(initialValues)
+  const [showPassword, setShowPassword] = React.useState(false)
+  const [showConfirmPassword, setShowConfirmPassword] = React.useState(false)
   const [errors, setErrors] = React.useState<Record<string, string>>({})
   const [serverError, setServerError] = React.useState<string | null>(null)
   const [isLoading, setIsLoading] = React.useState(false)
@@ -203,13 +205,24 @@ export function RegisterForm({ onSubmit }: RegisterFormProps) {
         <Input
           label="Contraseña"
           name="password"
-          type="password"
+          type={showPassword ? "text" : "password"}
           placeholder="********"
           value={values.password}
           onChange={handleChange("password")}
           error={errors.password}
           disabled={isLoading}
           icon={<Lock className="size-4" />}
+          endIcon={
+            showPassword ? (
+              <EyeOff className="size-4" />
+            ) : (
+              <Eye className="size-4" />
+            )
+          }
+          endIconAriaLabel={
+            showPassword ? "Ocultar contrasena" : "Mostrar contrasena"
+          }
+          onEndIconClick={() => setShowPassword((previous) => !previous)}
           className="border-slate-300 bg-white text-slate-900 placeholder:text-slate-400"
         />
       </motion.div>
@@ -218,13 +231,28 @@ export function RegisterForm({ onSubmit }: RegisterFormProps) {
         <Input
           label="Confirmar contraseña"
           name="confirmPassword"
-          type="password"
+          type={showConfirmPassword ? "text" : "password"}
           placeholder="********"
           value={values.confirmPassword}
           onChange={handleChange("confirmPassword")}
           error={errors.confirmPassword}
           disabled={isLoading}
           icon={<Lock className="size-4" />}
+          endIcon={
+            showConfirmPassword ? (
+              <EyeOff className="size-4" />
+            ) : (
+              <Eye className="size-4" />
+            )
+          }
+          endIconAriaLabel={
+            showConfirmPassword
+              ? "Ocultar confirmacion de contrasena"
+              : "Mostrar confirmacion de contrasena"
+          }
+          onEndIconClick={() =>
+            setShowConfirmPassword((previous) => !previous)
+          }
           className="border-slate-300 bg-white text-slate-900 placeholder:text-slate-400"
         />
       </motion.div>

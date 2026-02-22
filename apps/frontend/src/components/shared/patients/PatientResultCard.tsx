@@ -1,7 +1,7 @@
-import * as React from 'react';
 import { Eye, Pencil, Trash2 } from 'lucide-react';
 
 import { cn } from '@/lib/utils';
+import IconActionButton from './IconActionButton';
 
 export type PatientStatus = 'activo' | 'inactivo';
 
@@ -11,7 +11,7 @@ export type PatientResult = {
   age: number;
   phone: string;
   email: string;
-  diagnosis: string;
+  occupation: string;
   status: PatientStatus;
 };
 
@@ -24,44 +24,9 @@ type PatientResultCardProps = {
 };
 
 const statusBadgeClassByType: Record<PatientStatus, string> = {
-  activo: 'bg-emerald-500/15 text-emerald-300 border border-emerald-500/30',
-  inactivo: 'bg-slate-600/20 text-slate-300 border border-slate-500/30',
+  activo: 'bg-emerald-500/15 text-emerald-500 border border-emerald-500/30',
+  inactivo: 'bg-red-600/20 text-red-500 border border-red-500/30',
 };
-
-type IconActionButtonProps = {
-  label: string;
-  tone?: 'default' | 'danger';
-  onClick?: () => void;
-  children: React.ReactNode;
-};
-
-function IconActionButton({
-  label,
-  tone = 'default',
-  onClick,
-  children,
-}: IconActionButtonProps) {
-  const toneClasses =
-    tone === 'danger'
-      ? 'text-rose-400 hover:text-rose-300 hover:bg-rose-500/10'
-      : 'text-slate-400 hover:text-slate-100 hover:bg-slate-800';
-
-  return (
-    <button
-      type="button"
-      aria-label={label}
-      title={label}
-      onClick={onClick}
-      disabled={!onClick}
-      className={cn(
-        'rounded-md p-2 transition-colors disabled:cursor-not-allowed disabled:opacity-40',
-        toneClasses
-      )}
-    >
-      {children}
-    </button>
-  );
-}
 
 export function PatientResultCard({
   patient,
@@ -73,14 +38,14 @@ export function PatientResultCard({
   return (
     <article
       className={cn(
-        'rounded-2xl border border-slate-700 bg-slate-900/40 p-5',
+        'rounded-2xl shadow-sm bg-brand-acento p-5 border border-gray-200',
         className
       )}
     >
       <div className="flex flex-col gap-4 md:flex-row md:items-start md:justify-between">
         <div className="min-w-0 flex-1">
           <div className="mb-3 flex flex-wrap items-center gap-3">
-            <h3 className="text-2xl font-semibold text-slate-100">
+            <h3 className="text-2xl font-semibold text-gray-800">
               {patient.fullName}
             </h3>
             <span
@@ -93,24 +58,24 @@ export function PatientResultCard({
             </span>
           </div>
 
-          <div className="grid grid-cols-1 gap-2 text-sm text-slate-300 md:grid-cols-3">
+          <div className="grid grid-cols-1 gap-2 text-sm text-slate-500 md:grid-cols-3">
             <p>
-              <span className="font-semibold text-slate-400">Edad:</span>{' '}
-              {patient.age} anos
+              <span className="font-semibold text-slate-600">Edad:</span>{' '}
+              {patient.age} años
             </p>
             <p>
-              <span className="font-semibold text-slate-400">Telefono:</span>{' '}
+              <span className="font-semibold text-slate-600">Telefono:</span>{' '}
               {patient.phone}
             </p>
             <p className="truncate">
-              <span className="font-semibold text-slate-400">Email:</span>{' '}
+              <span className="font-semibold text-slate-600">Email:</span>{' '}
               {patient.email}
             </p>
           </div>
 
-          <p className="mt-2 text-sm text-slate-300">
-            <span className="font-semibold text-slate-400">Diagnostico:</span>{' '}
-            {patient.diagnosis}
+          <p className="mt-2 text-sm text-slate-500">
+            <span className="font-semibold text-slate-600">Ocupacion:</span>{' '}
+            {patient.occupation}
           </p>
         </div>
 

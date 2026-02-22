@@ -1,56 +1,47 @@
-import React from 'react';
-import { useParams } from 'react-router-dom';
+import React from "react";
+import { useLocation, useNavigate, useParams } from "react-router-dom";
 
+import PatientDetailHeader from "@/components/shared/patient-detail/PatientDetailHeader";
+import PatientDetailTabs from "@/components/shared/patient-detail/PatientDetailTabs";
+import { buildPatientDetailMock } from "@/components/shared/patient-detail/mockPatientDetail";
+import { ROUTES } from "@/constants/routes";
+import type { Patient } from "@/services/patients.service";
+
+type PatientDetailLocationState = {
+  patient?: Patient;
+} | null;
 
 const PatientDetail: React.FC = () => {
+  const navigate = useNavigate();
+  const location = useLocation();
   const { id } = useParams<{ id: string }>();
 
-  return (
-      <div className="max-w-7xl mx-auto w-full">
-        <div className="mb-8">
-          <button className="text-[var(--brand-secundario)] hover:text-[var(--brand-primario)] mb-3 flex items-center gap-2 transition-colors">
-            ← Volver a lista de pacientes
-          </button>
-          <h1 className="text-3xl font-bold text-[var(--brand-primario)] mb-1">
-            Perfil del Paciente
-          </h1>
-          <p className="text-gray-600 text-sm">ID: {id}</p>
-        </div>
-        
-        <div className="bg-amber-100 border border-amber-300 rounded-xl p-4 mb-6">
-          <p className="text-amber-800 text-sm font-medium">
-            🎨 Placeholder - Diseño pendiente de UX
-          </p>
-          <p className="text-amber-700 text-xs mt-1">
-            Vista con tabs: (1) Información básica, (2) Sesiones clínicas, (3) Diagnósticos, (4) Resúmenes IA
-          </p>
-        </div>
+  const state = (location.state ?? null) as PatientDetailLocationState;
+  const patientFromState = state?.patient ?? null;
 
-        {/* Pestañas */}
-        <div className="bg-white border border-gray-200 rounded-2xl overflow-hidden shadow-sm">
-          <div className="border-b border-gray-200 px-6 py-3 flex gap-4">
-            <button className="px-4 py-2 text-[var(--brand-secundario)] border-b-2 border-[var(--brand-secundario)] font-medium">
-              Información básica
-            </button>
-            <button className="px-4 py-2 text-gray-600 hover:text-[var(--brand-primario)] transition-colors">
-              Sesiones clínicas
-            </button>
-            <button className="px-4 py-2 text-gray-600 hover:text-[var(--brand-primario)] transition-colors">
-              Diagnósticos
-            </button>
-            <button className="px-4 py-2 text-gray-600 hover:text-[var(--brand-primario)] transition-colors">
-              Resúmenes IA
-            </button>
-          </div>
-          
-          <div className="p-6">
-            <p className="text-gray-500 text-center py-8">
-              Contenido de pestañas - Componentes pendientes
-            </p>
-          </div>
-        </div>
+  const patientDetail = React.useMemo(
+    () => buildPatientDetailMock(patientFromState, id),
+    [patientFromState, id]
+  );
+
+  return (
+    <div className="relative min-h-full">
+      <div className="pointer-events-none absolute inset-0 overflow-hidden">
+        <div className="absolute left-32 top-24 h-56 w-56 rounded-full bg-brand-secundario/10 blur-3xl" />
+        <div className="absolute right-24 top-20 h-52 w-52 rounded-full bg-brand-terciario/12 blur-3xl" />
+        <div className="absolute bottom-10 left-1/3 h-44 w-44 rounded-full bg-brand-secundario/8 blur-3xl" />
       </div>
+
+      <div className="relative mx-auto w-full max-w-7xl px-4 py-6 sm:px-6 lg:px-8">
+        <PatientDetailHeader
+          patient={patientDetail}
+          onBack={() => navigate(ROUTES.PATIENTS)}
+        />
+        <PatientDetailTabs patient={patientDetail} />
+      </div>
+    </div>
   );
 };
 
 export default PatientDetail;
+
