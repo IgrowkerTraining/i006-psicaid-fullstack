@@ -39,6 +39,7 @@ const PatientDetail: React.FC = () => {
         />
         <PatientDetailTabs patient={patientDetail} />
       </div>
+    </div>
   );
 };
 

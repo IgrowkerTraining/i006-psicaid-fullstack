@@ -99,7 +99,7 @@ const PatientsList: React.FC = () => {
     }
 
     return patientsForView.filter((patient) =>
-      `${patient.fullName} ${patient.email} ${patient.diagnosis}`
+      `${patient.fullName} ${patient.occupation}`
         .toLowerCase()
         .includes(normalizedSearch)
     );
