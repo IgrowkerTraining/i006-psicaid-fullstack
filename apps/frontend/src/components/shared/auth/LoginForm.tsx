@@ -1,6 +1,6 @@
 import * as React from "react"
 import { AnimatePresence, motion } from "framer-motion"
-import { CircleAlert, Lock, Mail } from "lucide-react"
+import { CircleAlert, Eye, EyeOff, Lock, Mail } from "lucide-react"
 
 import { Input } from "@/components/common/Input"
 import { Button } from "@/components/common/Button"
@@ -49,6 +49,7 @@ export function LoginForm({ onSubmit }: LoginFormProps) {
     email: "",
     password: "",
   })
+  const [showPassword, setShowPassword] = React.useState(false)
   const [errors, setErrors] = React.useState<Record<string, string>>({})
   const [serverError, setServerError] = React.useState<string | null>(null)
   const [isLoading, setIsLoading] = React.useState(false)
@@ -156,13 +157,24 @@ export function LoginForm({ onSubmit }: LoginFormProps) {
       <motion.div variants={itemVariants}>
         <Input
           label="Contraseña"
-          type="password"
+          type={showPassword ? "text" : "password"}
           placeholder="********"
           value={values.password}
           onChange={handleChange("password")}
           error={errors.password}
           disabled={isLoading}
           icon={<Lock className="size-4" />}
+          endIcon={
+            showPassword ? (
+              <EyeOff className="size-4" />
+            ) : (
+              <Eye className="size-4" />
+            )
+          }
+          endIconAriaLabel={
+            showPassword ? "Ocultar contrasena" : "Mostrar contrasena"
+          }
+          onEndIconClick={() => setShowPassword((previous) => !previous)}
           className="border-slate-300 bg-white text-slate-900 placeholder:text-slate-400"
         />
       </motion.div>

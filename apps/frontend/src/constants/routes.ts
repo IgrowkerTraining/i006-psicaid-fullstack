@@ -45,6 +45,11 @@ export const API_ENDPOINTS = {
     LOGIN: '/auth/login',
     REGISTER: '/auth/register',
   },
+  PATIENTS: {
+    LIST: '/patients',
+    CREATE: '/patients',
+    DETAIL: (id: string) => `/patients/${id}`,
+  }
 } as const;
 
 export const STORAGE_KEYS = {
