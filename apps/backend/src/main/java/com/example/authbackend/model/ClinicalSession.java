@@ -27,16 +27,13 @@ public class ClinicalSession {
     @Column(name = "session_type")
     private String sessionType; // Ej: "Presencial", "Online"
 
+    @Column(name = "session_frequency")
+    private String frequency; // Semanal, quincenal, mensual..
+
     private Integer duration; // En minutos
 
     // --- CAMPOS DE TEXTO LARGO (Narrativa Clínica) ---
     // Usamos columnDefinition = "TEXT" para que Hibernate sepa que no es un VARCHAR(255)
-
-    @Column(name = "reason_consultation", columnDefinition = "TEXT")
-    private String reasonConsultation;
-
-    @Column(columnDefinition = "TEXT")
-    private String background;
 
     @Column(columnDefinition = "TEXT")
     private String observations;

@@ -23,12 +23,10 @@ public class ClinicalSessionDTO {
     private OffsetDateTime sessionDateTime;
 
     private String sessionType; // Ej: Individual presencial
-
+    private String frequency; // Semanal, mensual..
     private Integer duration; // En minutos
 
     // --- Narrativa Clínica ---
-    private String reasonConsultation;
-    private String background;
     private String observations;
     private String hypothesis;
     private String interventions;

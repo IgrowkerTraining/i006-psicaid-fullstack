@@ -67,6 +67,10 @@ public class PatientService {
                 .birthDate(patientDTO.getBirthDate())
                 .occupation(patientDTO.getOccupation())
                 .maritalStatus(patientDTO.getMaritalStatus())
+                .email(patientDTO.getEmail())
+                .phone(patientDTO.getPhone())
+                .clinical_history(patientDTO.getClinical_history())
+                .reason_consultation(patientDTO.getReason_consultation())
                 .sex(patientDTO.getSex())
                 .internalCode(generateInternalCode())
                 .active(true)
@@ -102,6 +106,10 @@ public class PatientService {
         if (dto.getMaritalStatus() != null) patient.setMaritalStatus(dto.getMaritalStatus());
         if (dto.getSex() != null) patient.setSex(dto.getSex());
         if (dto.getActive() != null) patient.setActive(dto.getActive());
+        if (dto.getReason_consultation() != null) patient.setReason_consultation(dto.getReason_consultation());
+        if (dto.getEmail() != null) patient.setEmail(dto.getEmail());
+        if (dto.getPhone() != null) patient.setPhone(dto.getPhone());
+        if (dto.getClinical_history() != null) patient.setClinical_history(dto.getClinical_history());
 
         Patient updatedPatient = patientRepository.save(patient);
         return convertToDTO(updatedPatient);
@@ -135,6 +143,10 @@ public class PatientService {
                 .id(patient.getId())
                 .firstName(patient.getFirstName())
                 .lastName(patient.getLastName())
+                .email(patient.getEmail())
+                .phone(patient.getPhone())
+                .clinical_history(patient.getClinical_history())
+                .reason_consultation(patient.getReason_consultation())
                 .internalCode(patient.getInternalCode())
                 .birthDate(patient.getBirthDate())
                 .occupation(patient.getOccupation())

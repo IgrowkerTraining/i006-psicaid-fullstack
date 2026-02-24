@@ -69,7 +69,7 @@ public class SecurityConfig {
         // Convertimos la cadena "http://a.com,http://b.com" en una lista real
         configuration.setAllowedOrigins(Arrays.asList(allowedOrigins.split(",")));
 
-        configuration.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
+        configuration.setAllowedMethods(List.of("GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"));
         configuration.setAllowedHeaders(List.of("Authorization", "Content-Type"));
         configuration.setAllowCredentials(true);
 

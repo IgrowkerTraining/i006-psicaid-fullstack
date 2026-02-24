@@ -62,8 +62,7 @@ public class GlobalExceptionHandler {
     public ResponseEntity<ErrorResponse> handleGlobalException(
             Exception ex, HttpServletRequest request) {
 
-        // MEJORA VITAL: Imprimimos el error real en la consola del servidor para poder depurar
-        // mientras le devolvemos un mensaje seguro y genérico al usuario/frontend.
+        //Imprimimos el error real en la consola del servidor para poder depurar
         System.err.println("ERROR 500 CAPTURADO POR GLOBAL HANDLER:");
         ex.printStackTrace();
 

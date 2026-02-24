@@ -60,11 +60,10 @@ public class ClinicalSessionService {
 
         // Convertimos el DTO a Entidad
         ClinicalSession session = ClinicalSession.builder()
+                .frequency(dto.getFrequency())
                 .sessionDateTime(dto.getSessionDateTime())
                 .sessionType(dto.getSessionType())
                 .duration(dto.getDuration())
-                .reasonConsultation(dto.getReasonConsultation())
-                .background(dto.getBackground())
                 .observations(dto.getObservations())
                 .hypothesis(dto.getHypothesis())
                 .interventions(dto.getInterventions())
@@ -96,10 +95,8 @@ public class ClinicalSessionService {
     private String buildRawNotesForAi(ClinicalSession session) {
         StringBuilder rawNotes = new StringBuilder();
 
-        if (session.getReasonConsultation() != null)
-            rawNotes.append("Motivo de consulta: ").append(session.getReasonConsultation()).append(". ");
-        if (session.getBackground() != null)
-            rawNotes.append("Antecedentes: ").append(session.getBackground()).append(". ");
+        if (session.getFrequency() != null)
+            rawNotes.append("Motivo de consulta: ").append(session.getFrequency()).append(". ");
         if (session.getObservations() != null)
             rawNotes.append("Observaciones: ").append(session.getObservations()).append(". ");
         if (session.getHypothesis() != null)
@@ -139,8 +136,7 @@ public class ClinicalSessionService {
         if (dto.getSessionDateTime() != null) session.setSessionDateTime(dto.getSessionDateTime());
         if (dto.getSessionType() != null) session.setSessionType(dto.getSessionType());
         if (dto.getDuration() != null) session.setDuration(dto.getDuration());
-        if (dto.getReasonConsultation() != null) session.setReasonConsultation(dto.getReasonConsultation());
-        if (dto.getBackground() != null) session.setBackground(dto.getBackground());
+        if (dto.getFrequency() != null) session.setFrequency(dto.getFrequency());
         if (dto.getObservations() != null) session.setObservations(dto.getObservations());
         if (dto.getHypothesis() != null) session.setHypothesis(dto.getHypothesis());
         if (dto.getInterventions() != null) session.setInterventions(dto.getInterventions());
@@ -224,8 +220,7 @@ public class ClinicalSessionService {
                 .sessionDateTime(session.getSessionDateTime())
                 .sessionType(session.getSessionType())
                 .duration(session.getDuration())
-                .reasonConsultation(session.getReasonConsultation())
-                .background(session.getBackground())
+                .frequency(session.getFrequency())
                 .observations(session.getObservations())
                 .hypothesis(session.getHypothesis())
                 .interventions(session.getInterventions())
