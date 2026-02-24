@@ -2,6 +2,7 @@ package com.example.authbackend.dto;
 
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
 import lombok.*;
 
@@ -24,5 +25,9 @@ public class RegisterRequest {
 
     @NotBlank(message = "La contraseña es obligatoria")
     @Size(min = 8, message = "La contraseña debe tener al menos 8 caracteres")
+    @Pattern(
+            regexp = "^(?=.*[A-Z])(?=.*[0-9])(?=.*[^a-zA-Z0-9\\s]).+$",
+            message = "La contraseña debe contener al menos una letra mayúscula, un número y un carácter especial"
+    )
     private String password;
 }

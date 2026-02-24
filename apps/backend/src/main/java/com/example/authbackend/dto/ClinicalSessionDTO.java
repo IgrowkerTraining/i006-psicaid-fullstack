@@ -23,18 +23,17 @@ public class ClinicalSessionDTO {
     private OffsetDateTime sessionDateTime;
 
     private String sessionType; // Ej: Individual presencial
-
+    private String frequency; // Semanal, mensual..
     private Integer duration; // En minutos
 
     // --- Narrativa Clínica ---
-    private String reasonConsultation;
-    private String background;
     private String observations;
     private String hypothesis;
     private String interventions;
     private String clinicalEvolution;
     private String therapeuticGoals;
     private String diagnosticNotes;
+    private String summary;
 
     // Relación de entrada
     @NotNull(message = "El ID del paciente es obligatorio")

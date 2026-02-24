@@ -43,6 +43,18 @@ public class Patient {
     @Column(nullable = true)
     private String sex;
 
+    @Column(nullable = true)
+    private String reason_consultation;
+
+    @Column(nullable = true)
+    private String email;
+
+    @Column(nullable = true)
+    private String phone;
+
+    @Column(nullable = true)
+    private String clinical_history;
+
     // Campo vital para borrado lógico (Soft Delete)
     @Column(name = "active")
     private Boolean active;

@@ -28,6 +28,14 @@ public class PatientController {
         return ResponseEntity.ok(patientService.getPatientsByAuthenticatedProfessional());
     }
 
+    /**
+     * Endpoint para obtener SOLO los pacientes activos.
+     */
+    @GetMapping("/active")
+    public ResponseEntity<List<PatientDTO>> getActivePatients() {
+        return ResponseEntity.ok(patientService.getActivePatientsByAuthenticatedProfessional());
+    }
+
     @PostMapping
     public ResponseEntity<PatientDTO> createPatient(@Valid @RequestBody PatientDTO patientDTO) {
         // @Valid activa las restricciones del DTO.
@@ -43,5 +51,14 @@ public class PatientController {
 
         // El Service se encargará de verificar que el patientId le pertenece al usuario actual antes de actualizar.
         return ResponseEntity.ok(patientService.updatePatient(patientId, dto));
+    }
+
+    /**
+     * Archiva (da de baja) a un paciente pero no se elimina de la BD.
+     */
+    @DeleteMapping("/{patientId}")
+    public ResponseEntity<Void> archivePatient(@PathVariable Long patientId) {
+        patientService.archivePatient(patientId);
+        return ResponseEntity.noContent().build();
     }
 }

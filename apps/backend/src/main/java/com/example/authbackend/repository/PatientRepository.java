@@ -18,4 +18,7 @@ public interface PatientRepository extends JpaRepository<Patient, Long> {
 
     // Cuenta los pacientes activos de un profesional
     long countByProfessionalIdAndActiveTrue(Long professionalId);
+
+    // Devuelve solo los pacientes ACTIVOS de un profesional
+    List<Patient> findByProfessionalIdAndActiveTrue(Long professionalId);
 }

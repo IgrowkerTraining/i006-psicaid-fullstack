@@ -17,6 +17,13 @@ public interface ClinicalSessionRepository extends JpaRepository<ClinicalSession
             @Param("endDate") OffsetDateTime endDate
     );
 
+    @Query("SELECT s FROM ClinicalSession s WHERE s.patient.professional.id = :professionalId " +
+            "AND s.sessionDateTime >= :startOfDay AND s.sessionDateTime < :endOfDay")
+    List<ClinicalSession> findByProfessionalAndDate(
+            @Param("professionalId") Long professionalId,
+            @Param("startOfDay") OffsetDateTime startOfDay,
+            @Param("endOfDay") OffsetDateTime endOfDay);
+
     List<ClinicalSession> findByPatientIdOrderBySessionDateTimeDesc(Long patientId);
 
     // Busca las próximas 5 sesiones de este profesional, desde 'ahora' hacia el futuro, ordenadas por fecha más cercana.

@@ -16,7 +16,7 @@ import java.util.Map;
 @RestControllerAdvice
 public class GlobalExceptionHandler {
 
-    // 1. Captura errores de @Valid (Validation Errors)
+    // Captura errores de @Valid
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<ErrorResponse> handleValidationExceptions(
             MethodArgumentNotValidException ex, HttpServletRequest request) {
@@ -25,13 +25,14 @@ public class GlobalExceptionHandler {
         ex.getBindingResult().getAllErrors().forEach((error) -> {
             String fieldName = ((FieldError) error).getField();
             String errorMessage = error.getDefaultMessage();
-            errors.put(fieldName, errorMessage);
+
+            errors.merge(fieldName, errorMessage, (oldMsg, newMsg) -> oldMsg + " | " + newMsg);
         });
 
         ErrorResponse errorRes = ErrorResponse.builder()
                 .timestamp(LocalDateTime.now())
                 .status(HttpStatus.BAD_REQUEST.value())
-                .error("Validation Failed")
+                .error("Fallo de validación")
                 .message("Los datos enviados no son válidos")
                 .path(request.getRequestURI())
                 .validationErrors(errors)
@@ -40,7 +41,7 @@ public class GlobalExceptionHandler {
         return new ResponseEntity<>(errorRes, HttpStatus.BAD_REQUEST);
     }
 
-    // 2. Captura excepciones de lógica de negocio (Runtime)
+    // Captura excepciones de lógica de negocio
     @ExceptionHandler(RuntimeException.class)
     public ResponseEntity<ErrorResponse> handleRuntimeException(
             RuntimeException ex, HttpServletRequest request) {
@@ -48,7 +49,7 @@ public class GlobalExceptionHandler {
         ErrorResponse errorRes = ErrorResponse.builder()
                 .timestamp(LocalDateTime.now())
                 .status(HttpStatus.BAD_REQUEST.value())
-                .error("Business Logic Error")
+                .error("Error de Lógica de Negocio")
                 .message(ex.getMessage())
                 .path(request.getRequestURI())
                 .build();
@@ -56,15 +57,19 @@ public class GlobalExceptionHandler {
         return new ResponseEntity<>(errorRes, HttpStatus.BAD_REQUEST);
     }
 
-    // 3. Fallback para errores no controlados (500)
+    // Fallback para errores no controlados (500)
     @ExceptionHandler(Exception.class)
     public ResponseEntity<ErrorResponse> handleGlobalException(
             Exception ex, HttpServletRequest request) {
 
+        //Imprimimos el error real en la consola del servidor para poder depurar
+        System.err.println("ERROR 500 CAPTURADO POR GLOBAL HANDLER:");
+        ex.printStackTrace();
+
         ErrorResponse errorRes = ErrorResponse.builder()
                 .timestamp(LocalDateTime.now())
                 .status(HttpStatus.INTERNAL_SERVER_ERROR.value())
-                .error("Internal Server Error")
+                .error("Error de Servidor")
                 .message("Ocurrió un error inesperado en el servidor")
                 .path(request.getRequestURI())
                 .build();

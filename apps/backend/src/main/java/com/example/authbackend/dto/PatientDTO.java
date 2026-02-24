@@ -39,6 +39,10 @@ public class PatientDTO {
     private String occupation;
     private String maritalStatus;
     private String sex;
+    private String reason_consultation;
+    private String email;
+    private String phone;
+    private String clinical_history;
 
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     private Boolean active;
