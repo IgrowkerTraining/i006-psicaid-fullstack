@@ -1,6 +1,11 @@
 import * as React from "react"
 import { Calendar } from "@/components/common/calendar"
 
+// TODO: Para integrar con sesiones reales, pedir a backend:
+// 1. Endpoint GET /api/dashboard/sessions?startDate=xxx&endDate=xxx
+//    que retorne List<ClinicalSessionDTO> del profesional autenticado
+// 2. Agregar campo 'patientFullName: String' a ClinicalSessionDTO
+
 export function AgendaCalendar() {
   const [date, setDate] = React.useState<Date | undefined>(new Date())
 

@@ -1,6 +1,12 @@
 import * as React from "react";
 import { format } from "date-fns";
-import { CalendarHeart, Check, Stethoscope, User } from "lucide-react";
+import { CalendarHeart, Check, Mail, Phone, Stethoscope, User } from "lucide-react";
+
+// TODO BACKEND: Error JDBC al actualizar pacientes
+// "prepared statement S_4 already exists"
+// Revisar manejo de conexiones/transacciones en PatientService
+// También configurar Jackson con PropertyNamingStrategies.SNAKE_CASE
+// para evitar conversión manual de field names
 
 import { Button } from "@/components/common/Button";
 import { Calendar } from "@/components/common/calendar";
@@ -43,6 +49,9 @@ const emptyValues: UpdatePatientDto = {
   occupation: "",
   maritalStatus: "",
   sex: "",
+  email: "",
+  phone: "",
+  reasonConsultation: "",
 };
 
 const MARITAL_STATUS_OPTIONS = [
@@ -77,6 +86,10 @@ export function EditPatientDialog({
       occupation: patient.occupation ?? "",
       maritalStatus: patient.maritalStatus ?? "",
       sex: patient.sex ?? "",
+      email: patient.email ?? "",
+      phone: patient.phone ?? "",
+      // Backend devuelve reason_consultation (snake_case)
+      reasonConsultation: patient.reasonConsultation ?? patient.reason_consultation ?? "",
     });
     setSubmitError(null);
     setConfirmOpen(false);
@@ -138,7 +151,7 @@ export function EditPatientDialog({
     }
   };
 
-  const isSaveDisabled = Object.values(values).some((value) => !value.trim());
+  const isSaveDisabled = !values.firstName.trim() || !values.lastName.trim() || !values.birthDate || !values.occupation.trim() || !values.maritalStatus || !values.sex;
 
   const handleConfirmUpdate = async () => {
     if (!patient || isSaveDisabled || isSaving) {
@@ -227,6 +240,24 @@ export function EditPatientDialog({
               icon={<Stethoscope className="size-4" />}
             />
             <div className="flex w-full flex-col gap-1.5">
+              <label className="ml-1 text-sm font-medium text-slate-400">Sexo</label>
+              <select
+                value={values.sex}
+                onChange={handleSelectChange("sex")}
+                disabled={isSaving}
+                className="h-[42px] w-full rounded-lg border border-slate-300 bg-white px-3 text-slate-900 focus:border-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-500/50"
+              >
+                <option value="" disabled>
+                  Selecciona sexo
+                </option>
+                {SEX_OPTIONS.map((option) => (
+                  <option key={option} value={option}>
+                    {option}
+                  </option>
+                ))}
+              </select>
+            </div>
+            <div className="flex w-full flex-col gap-1.5">
               <label className="ml-1 text-sm font-medium text-slate-400">
                 Estado civil
               </label>
@@ -246,26 +277,37 @@ export function EditPatientDialog({
                 ))}
               </select>
             </div>
-            <div className="flex w-full flex-col gap-1.5">
-              <label className="ml-1 text-sm font-medium text-slate-400">
-                Sexo
-              </label>
-              <select
-                value={values.sex}
-                onChange={handleSelectChange("sex")}
-                disabled={isSaving}
-                className="h-[42px] w-full rounded-lg border border-slate-300 bg-white px-3 text-slate-900 focus:border-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-500/50"
-              >
-                <option value="" disabled>
-                  Selecciona sexo
-                </option>
-                {SEX_OPTIONS.map((option) => (
-                  <option key={option} value={option}>
-                    {option}
-                  </option>
-                ))}
-              </select>
-            </div>
+            <Input
+              label="Email"
+              placeholder="ejemplo@email.com"
+              type="email"
+              value={values.email || ''}
+              onChange={handleFieldChange('email')}
+              icon={<Mail className="size-4" />}
+            />
+            <Input
+              label="Telefono"
+              placeholder="+56 9 1234 5678"
+              value={values.phone || ''}
+              onChange={handleFieldChange('phone')}
+              icon={<Phone className="size-4" />}
+            />
+          </div>
+
+          <div className="flex w-full flex-col gap-1.5">
+            <label className="ml-1 text-sm font-medium text-slate-400">
+              Motivo de consulta
+            </label>
+            <textarea
+              value={values.reasonConsultation || ''}
+              onChange={(e) => {
+                setValues((prev) => ({...prev, reasonConsultation: e.target.value}));
+                setSubmitError(null);
+              }}
+              disabled={isSaving}
+              placeholder="Describe el motivo de la consulta..."
+              className="min-h-[80px] w-full rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm text-slate-900 focus:border-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-500/50 resize-none"
+            />
           </div>
 
           {submitError ? (

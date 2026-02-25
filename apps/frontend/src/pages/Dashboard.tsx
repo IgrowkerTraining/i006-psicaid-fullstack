@@ -1,67 +1,56 @@
 import React, { useState, useEffect } from "react";
-import { getAIGreeting } from "../services/service";
 import { useAuth } from "../hooks/useAuth";
 import { StatsCard } from "@/components/shared/dashboard/StatsCard";
 import { Calendar, FileText, TrendingUp, Users } from "lucide-react";
 import { AgendaCalendar } from "@/components/shared/dashboard/AgendaCalendar";
 import { ProximasSesiones } from "@/components/shared/dashboard/ProximasSesiones";
 import { type DashboardAppointmentLog } from "@/components/shared/dashboard/DashboardLogsAppointments";
+import { dashboardService, type DashboardStats, type UpcomingSession } from "@/services/dashboard.service";
+import { format } from "date-fns";
 
 const Dashboard: React.FC = () => {
   const { user } = useAuth();
-  const [greeting, setGreeting] = useState<string>("Loading greeting...");
-  const [stats] = useState([
-    { label: "Sesiones de hoy", value: "2", subtext: 'Pacientes activos', icon: <Calendar className="text-[var(--brand-secundario)]" /> },
-    { label: "Esta semana", value: "5", subtext: 'Citas programadas', icon: <TrendingUp className="text-[var(--brand-secundario)]" /> },
-    { label: "Total Pacientes", value: "10", subtext: 'Pacientes activos', icon: <Users className="text-[var(--brand-secundario)]" /> },
-    { label: "Sesiones completadas", value: "5", subtext: 'Este mes', icon: <FileText className="text-[var(--brand-secundario)]" /> },
-  ]);
-  const [appointmentLogs] = useState<DashboardAppointmentLog[]>([
-    {
-      id: "appt-001",
-      date: "18 Feb 2026",
-      time: "09:00",
-      patientName: "Ana Morales",
-      diagnosis: "Ansiedad generalizada",
+  const [dashboardData, setDashboardData] = useState<DashboardStats | null>(null);
+  const [loading, setLoading] = useState(true);
+
+  const greeting = user?.firstName 
+    ? `Hola de nuevo, ${user.firstName}. Tu espacio terapéutico está listo.`
+    : "Hola de nuevo. Tu espacio terapéutico está listo.";
+
+  const transformUpcomingSession = (session: UpcomingSession): DashboardAppointmentLog => {
+    const date = new Date(session.sessionDateTime);
+    return {
+      id: `session-${session.sessionId}`,
+      date: format(date, 'dd MMM yyyy'),
+      time: format(date, 'HH:mm'),
+      patientName: session.patientFullName,
+      // TODO: Backend podría agregar campo 'diagnosis' o 'reasonConsultation' a UpcomingSessionDTO
+      // para mostrar motivo de consulta real en vez de placeholder
+      diagnosis: "Sesión programada",
       status: "confirmada",
-      url: "/patients/patient-001",
-    },
-    {
-      id: "appt-002",
-      date: "18 Feb 2026",
-      time: "10:30",
-      patientName: "Carlos Rojas",
-      diagnosis: "Insomnio cronico",
-      status: "seguimiento",
-      url: "/patients/patient-002",
-    },
-    {
-      id: "appt-003",
-      date: "18 Feb 2026",
-      time: "12:00",
-      patientName: "Lucia Herrera",
-      diagnosis: "Trastorno de panico",
-      status: "prioritaria",
-      url: "/patients/patient-003",
-    },
-    {
-      id: "appt-004",
-      date: "18 Feb 2026",
-      time: "15:30",
-      patientName: "Jorge Sanchez",
-      diagnosis: "Depresion moderada",
-      status: "seguimiento",
-      url: "/patients/patient-004",
-    },
-  ]);
+      url: `/patients/${session.patientId}`,
+    };
+  };
+
+  const stats = dashboardData ? [
+    { label: "Sesiones de hoy", value: String(dashboardData.sessionsToday), subtext: 'Pacientes activos', icon: <Calendar className="text-[var(--brand-secundario)]" /> },
+    { label: "Esta semana", value: String(dashboardData.sessionsThisWeek), subtext: 'Citas programadas', icon: <TrendingUp className="text-[var(--brand-secundario)]" /> },
+    { label: "Total Pacientes", value: String(dashboardData.totalActivePatients), subtext: 'Pacientes activos', icon: <Users className="text-[var(--brand-secundario)]" /> },
+    { label: "Sesiones completadas", value: String(dashboardData.sessionsThisMonth), subtext: 'Este mes', icon: <FileText className="text-[var(--brand-secundario)]" /> },
+  ] : [];
+
+  const appointmentLogs = dashboardData?.upcomingSessions.map(transformUpcomingSession) || [];
 
   useEffect(() => {
     const initDashboard = async () => {
-      const userName = user ? user.firstName : "";
-      const [msg] = await Promise.all([
-        getAIGreeting(userName),
-      ]);
-      setGreeting(msg);
+      try {
+        const data = await dashboardService.getStats();
+        setDashboardData(data);
+      } catch (error) {
+        console.error('Error loading dashboard:', error);
+      } finally {
+        setLoading(false);
+      }
     };
     initDashboard();
   }, [user]);
@@ -72,9 +61,6 @@ const Dashboard: React.FC = () => {
         <header className="mb-10 flex items-start justify-between">
           <div>
             <h2 className="text-3xl font-bold text-[var(--brand-primario)] mb-2">{greeting}</h2>
-            <p className="text-gray-600">
-              Everything looks optimal in your workspace today.
-            </p>
           </div>
         </header>
 

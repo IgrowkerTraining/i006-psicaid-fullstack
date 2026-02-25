@@ -1,6 +1,7 @@
 export type PatientDetailViewModel = {
   profile: {
     id: string;
+    numericId: number;
     fullName: string;
     age: number;
     birthDate: string;

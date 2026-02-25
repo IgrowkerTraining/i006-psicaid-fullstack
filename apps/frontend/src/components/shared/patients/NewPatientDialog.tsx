@@ -3,6 +3,8 @@ import { format } from 'date-fns';
 import {
   CalendarHeart,
   Check,
+  Mail,
+  Phone,
   Plus,
   Stethoscope,
   User,
@@ -41,6 +43,9 @@ const emptyFormValues: NewPatientFormValues = {
   occupation: '',
   maritalStatus: '',
   sex: '',
+  email: '',
+  phone: '',
+  reasonConsultation: '',
 };
 
 const MARITAL_STATUS_OPTIONS = [
@@ -123,7 +128,7 @@ export function NewPatientDialog({ onSave }: NewPatientDialogProps) {
     }
   };
 
-  const isSaveDisabled = Object.values(values).some((value) => !value.trim());
+  const isSaveDisabled = !values.firstName.trim() || !values.lastName.trim() || !values.birthDate || !values.occupation.trim() || !values.maritalStatus || !values.sex;
 
   const handleSave = async () => {
     if (isSaveDisabled || isSaving) {
@@ -157,7 +162,7 @@ export function NewPatientDialog({ onSave }: NewPatientDialogProps) {
       <DialogContent className="border-gray-200 bg-brand-acento text-gray-700 sm:max-w-2xl">
         <DialogHeader className="space-y-2 text-left">
           <DialogTitle className="text-2xl font-bold">
-            Nuevo paciente
+            Agregar paciente
           </DialogTitle>
           <DialogDescription className="text-slate-600">
             Completa los datos para registrar el paciente.
@@ -224,6 +229,24 @@ export function NewPatientDialog({ onSave }: NewPatientDialogProps) {
             icon={<Stethoscope className="size-4" />}
           />
           <div className="flex w-full flex-col gap-1.5">
+            <label className="ml-1 text-sm font-medium text-slate-400">Sexo</label>
+            <select
+              value={values.sex}
+              onChange={handleSelectChange('sex')}
+              disabled={isSaving}
+              className="h-[42px] w-full rounded-lg border border-slate-300 bg-white px-3 text-slate-900 focus:border-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-500/50"
+            >
+              <option value="" disabled>
+                Selecciona sexo
+              </option>
+              {SEX_OPTIONS.map((option) => (
+                <option key={option} value={option}>
+                  {option}
+                </option>
+              ))}
+            </select>
+          </div>
+          <div className="flex w-full flex-col gap-1.5">
             <label className="ml-1 text-sm font-medium text-slate-400">
               Estado civil
             </label>
@@ -243,24 +266,37 @@ export function NewPatientDialog({ onSave }: NewPatientDialogProps) {
               ))}
             </select>
           </div>
-          <div className="flex w-full flex-col gap-1.5">
-            <label className="ml-1 text-sm font-medium text-slate-400">Sexo</label>
-            <select
-              value={values.sex}
-              onChange={handleSelectChange('sex')}
-              disabled={isSaving}
-              className="h-[42px] w-full rounded-lg border border-slate-300 bg-white px-3 text-slate-900 focus:border-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-500/50"
-            >
-              <option value="" disabled>
-                Selecciona sexo
-              </option>
-              {SEX_OPTIONS.map((option) => (
-                <option key={option} value={option}>
-                  {option}
-                </option>
-              ))}
-            </select>
-          </div>
+          <Input
+            label="Email"
+            placeholder="ejemplo@email.com"
+            type="email"
+            value={values.email || ''}
+            onChange={handleFieldChange('email')}
+            icon={<Mail className="size-4" />}
+          />
+          <Input
+            label="Telefono"
+            placeholder="+56 9 1234 5678"
+            value={values.phone || ''}
+            onChange={handleFieldChange('phone')}
+            icon={<Phone className="size-4" />}
+          />
+        </div>
+
+        <div className="flex w-full flex-col gap-1.5">
+          <label className="ml-1 text-sm font-medium text-slate-400">
+            Motivo de consulta
+          </label>
+          <textarea
+            value={values.reasonConsultation || ''}
+            onChange={(e) => {
+              setValues((prev) => ({...prev, reasonConsultation: e.target.value}));
+              setSubmitError(null);
+            }}
+            disabled={isSaving}
+            placeholder="Describe el motivo de la consulta..."
+            className="min-h-[80px] w-full rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm text-slate-900 focus:border-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-500/50 resize-none"
+          />
         </div>
 
         {submitError ? (

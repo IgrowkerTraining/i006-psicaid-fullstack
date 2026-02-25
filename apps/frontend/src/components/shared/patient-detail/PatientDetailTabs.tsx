@@ -1,10 +1,4 @@
 import * as React from "react";
-import {
-  BrainCircuit,
-  CalendarClock,
-  ClipboardList,
-  Sparkles,
-} from "lucide-react";
 
 import { cn } from "@/lib/utils";
 
@@ -19,16 +13,16 @@ import type { PatientDetailViewModel } from "./types";
 
 type PatientDetailTabsProps = {
   patient: PatientDetailViewModel;
+  onActiveTabChange?: (tabId: TabId) => void;
 };
 
 type TabItem = {
   id: TabId;
   label: string;
-  icon: React.ComponentType<{ className?: string }>;
   content: React.ReactNode;
 };
 
-export function PatientDetailTabs({ patient }: PatientDetailTabsProps) {
+export function PatientDetailTabs({ patient, onActiveTabChange }: PatientDetailTabsProps) {
   const tabsId = React.useId();
   const tabRefs = React.useRef<Array<HTMLButtonElement | null>>([]);
 
@@ -37,32 +31,32 @@ export function PatientDetailTabs({ patient }: PatientDetailTabsProps) {
       {
         id: "ficha",
         label: "Ficha paciente",
-        icon: ClipboardList,
         content: <PatientRecordTab patient={patient} />,
       },
       {
         id: "historia",
         label: "Historia clinica",
-        icon: BrainCircuit,
         content: <ClinicalHistoryTab patient={patient} />,
       },
       {
         id: "sesiones",
         label: "Sesiones clinicas",
-        icon: CalendarClock,
         content: <SessionsTab patient={patient} />,
       },
       {
         id: "resumen",
         label: "Resumen IA",
-        icon: Sparkles,
         content: <AiSummaryTab patient={patient} />,
       },
     ],
     [patient]
   );
 
-  const [activeTabId, setActiveTabId] = React.useState<TabId>("historia");
+  const [activeTabId, setActiveTabId] = React.useState<TabId>("ficha");
+
+  React.useEffect(() => {
+    onActiveTabChange?.(activeTabId);
+  }, [activeTabId, onActiveTabChange]);
 
   const activeTab = tabs.find((tab) => tab.id === activeTabId) ?? tabs[0];
 
@@ -113,7 +107,6 @@ export function PatientDetailTabs({ patient }: PatientDetailTabsProps) {
       >
         {tabs.map((tab, index) => {
           const isActive = tab.id === activeTab.id;
-          const Icon = tab.icon;
           const tabId = `${tabsId}-${tab.id}-tab`;
           const panelId = `${tabsId}-${tab.id}-panel`;
 
@@ -134,11 +127,10 @@ export function PatientDetailTabs({ patient }: PatientDetailTabsProps) {
               className={cn(
                 "inline-flex min-h-10 items-center gap-2 rounded-xl px-3 py-2 text-sm font-semibold transition sm:px-4",
                 isActive
-                  ? "bg-white text-[var(--brand-primario)] shadow-[0_10px_24px_rgba(9,2,36,0.08)] ring-1 ring-[var(--brand-secundario)]/15"
+                  ? "bg-[var(--brand-secundario)] text-white shadow-[0_10px_24px_rgba(9,2,36,0.08)]"
                   : "text-slate-600 hover:bg-white/70 hover:text-[var(--brand-secundario)]"
               )}
             >
-              <Icon className={cn("size-4", isActive ? "text-[var(--brand-terciario)]" : "")} />
               {tab.label}
             </button>
           );
