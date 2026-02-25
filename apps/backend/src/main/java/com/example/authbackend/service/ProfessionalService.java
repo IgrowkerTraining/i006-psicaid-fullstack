@@ -35,6 +35,22 @@ public class ProfessionalService {
         Professional updatedProfessional = professionalRepository.save(profesionalAuth);
         return convertToDTO(updatedProfessional);
     }
+    /**
+     * Obtiene los datos del profesional logueado.
+     */
+    public ProfessionalDTO getProfessionalByEmail(String email) {
+        Professional professional = professionalRepository.findByEmail(email)
+                .orElseThrow(() -> new RuntimeException("Profesional no encontrado en la base de datos"));
+
+        // Convertimos la entidad al DTO que le enviaremos al frontend (¡sin la contraseña!)
+        return ProfessionalDTO.builder()
+                .id(professional.getId())
+                .firstName(professional.getFirstName())
+                .lastName(professional.getLastName())
+                .email(professional.getEmail())
+                // .role(professional.getRole()) // Si tienes roles, añádelo
+                .build();
+    }
 
     private ProfessionalDTO convertToDTO(Professional professional) {
         return ProfessionalDTO.builder()
