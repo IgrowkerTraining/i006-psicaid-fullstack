@@ -23,8 +23,8 @@ export const mapPatientToCard = (patient: Patient): PatientResult => {
     id: String(patient.id),
     fullName: fullName || "Paciente sin nombre",
     age: calculatedAge,
-    phone: "No disponible",
-    email: "No disponible",
+    phone: patient.phone || "No disponible",
+    email: patient.email || "No disponible",
     occupation: patient.occupation || "Sin Profesion",
     status: normalizedActive ? "activo" : "inactivo",
   };

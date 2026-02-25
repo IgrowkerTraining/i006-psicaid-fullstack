@@ -1,6 +1,12 @@
 import React, { useState } from "react";
 import { Calendar } from "@/components/common/calendar";
 
+// TODO: Para integrar con sesiones reales del backend, necesitamos:
+// 1. Endpoint: GET /api/dashboard/sessions?startDate=xxx&endDate=xxx
+//    Debe retornar List<ClinicalSessionDTO> del profesional autenticado
+// 2. Agregar campo 'patientFullName: String' a ClinicalSessionDTO
+//    para mostrar el nombre del paciente en las tarjetas
+
 const Agenda: React.FC = () => {
   const [date, setDate] = useState<Date | undefined>(new Date());
 
@@ -44,6 +50,8 @@ const Agenda: React.FC = () => {
           <div className="mt-6 text-gray-400 text-sm text-center py-8">
             No hay citas programadas para este día
           </div>
+          {/* TODO: Cuando backend agregue GET /api/dashboard/sessions, 
+              mostrar aquí las sesiones del día seleccionado */}
         </div>
       </div>
     </div>

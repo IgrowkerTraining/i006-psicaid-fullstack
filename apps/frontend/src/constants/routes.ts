@@ -49,6 +49,11 @@ export const API_ENDPOINTS = {
     LIST: '/patients',
     CREATE: '/patients',
     DETAIL: (id: string) => `/patients/${id}`,
+  },
+  SESSIONS: {
+    LIST: (patientId: string) => `/patients/${patientId}/sessions`,
+    CREATE: (patientId: string) => `/patients/${patientId}/sessions`,
+    DETAIL: (patientId: string, sessionId: number) => `/patients/${patientId}/sessions/${sessionId}`,
   }
 } as const;
 
