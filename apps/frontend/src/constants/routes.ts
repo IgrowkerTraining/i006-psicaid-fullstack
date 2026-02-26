@@ -44,6 +44,7 @@ export const API_ENDPOINTS = {
   AUTH: {
     LOGIN: '/auth/login',
     REGISTER: '/auth/register',
+    VERIFY_TOKEN: '/auth/me'
   },
   PATIENTS: {
     LIST: '/patients',
