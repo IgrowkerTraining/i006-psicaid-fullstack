@@ -22,6 +22,8 @@ type LoginValidationData = {
 }
 
 const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
+const PASSWORD_COMPLEXITY_REGEX =
+  /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^A-Za-z\d]).+$/
 
 export const validateEmail = (email: string): string | null => {
   if (!EMAIL_REGEX.test(email.trim())) {
@@ -51,6 +53,21 @@ export const validateMinLength = (
   return null
 }
 
+export const validatePasswordStrength = (
+  value: string,
+  fieldName = "La contraseña"
+): string | null => {
+  if (value.length <= 8) {
+    return `${fieldName} debe tener más de 8 caracteres.`
+  }
+
+  if (!PASSWORD_COMPLEXITY_REGEX.test(value)) {
+    return `${fieldName} debe incluir una mayúscula, una minúscula, un número y un carácter especial.`
+  }
+
+  return null
+}
+
 export const validateLogin = (data: LoginValidationData): ValidationResult => {
   const errors: ValidationError[] = []
 
@@ -70,6 +87,11 @@ export const validateLogin = (data: LoginValidationData): ValidationResult => {
   const passwordError = validateRequired(passwordValue, "La contraseña")
   if (passwordError) {
     errors.push({ field: "password", message: passwordError })
+  } else {
+    const passwordStrengthError = validatePasswordStrength(passwordValue)
+    if (passwordStrengthError) {
+      errors.push({ field: "password", message: passwordStrengthError })
+    }
   }
 
   return {
@@ -113,13 +135,12 @@ export const validateRegistration = (
   if (passwordRequiredError) {
     errors.push({ field: "password", message: passwordRequiredError })
   } else {
-    const passwordLengthError = validateMinLength(
+    const passwordStrengthError = validatePasswordStrength(
       passwordValue,
-      8,
       "La contraseña"
     )
-    if (passwordLengthError) {
-      errors.push({ field: "password", message: passwordLengthError })
+    if (passwordStrengthError) {
+      errors.push({ field: "password", message: passwordStrengthError })
     }
   }
 
