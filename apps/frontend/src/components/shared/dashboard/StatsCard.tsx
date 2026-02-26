@@ -10,13 +10,13 @@ type StatCardProps = {
 export function StatsCard({ label, value, subText, icon }: StatCardProps) {
     return (
         <div
-            className="bg-brand-acento border border-gray-200 p-5 rounded-2xl hover:border-brand-secundario transition-all duration-300 group shadow-sm"
+            className="bg-brand-acento border border-gray-200 p-5 rounded-2xl hover:border-brand-primario transition-all duration-300 group shadow-sm"
         >
-            <div className="text-lg text-brand-primaro mb-4 flex justify-between font-bold">
+            <div className="text-lg text-gray-900 mb-4 flex justify-between font-bold">
                 {label}
                 {icon}
             </div>
-            <p className="text-brand-primario text-lg font-medium uppercase tracking-wider">
+            <p className="text-primary-foreground text-lg font-medium uppercase tracking-wider">
                 {value}
             </p>
             <h3 className="text-sm text-gray-600 mt-1">

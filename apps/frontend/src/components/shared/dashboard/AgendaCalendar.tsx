@@ -11,7 +11,7 @@ export function AgendaCalendar() {
 
   return (
     <div className="bg-white border border-gray-200 rounded-2xl px-3 py-4 shadow-sm w-fit mx-auto">
-      <h3 className="text-xl font-semibold text-[var(--brand-primario)] mb-3 pl-0.5">
+      <h3 className="text-xl font-semibold text-primary-foreground  mb-3 pl-0.5">
         Tu agenda
       </h3>
       <Calendar

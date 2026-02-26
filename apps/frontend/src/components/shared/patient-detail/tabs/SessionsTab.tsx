@@ -133,7 +133,7 @@ export function SessionsTab({ patient }: PatientTabPanelProps) {
               >
                 <div className="mb-3 flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
                   <div className="flex flex-wrap items-center gap-2">
-                    <h3 className="text-base font-semibold text-[var(--brand-primario)]">
+                    <h3 className="text-base font-semibold text-gray-900">
                       Sesion {session.modality}
                     </h3>
                     <StatusBadge status={session.status} />

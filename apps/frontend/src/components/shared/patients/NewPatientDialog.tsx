@@ -153,7 +153,7 @@ export function NewPatientDialog({ onSave }: NewPatientDialogProps) {
   return (
     <Dialog open={open} onOpenChange={handleOpenChange}>
       <DialogTrigger asChild>
-        <Button className="rounded-xl bg-brand-secundario px-6 text-white hover:bg-indigo-400/75 cursor-pointer">
+        <Button className="rounded-xl bg-brand-primario px-6 text-white hover:bg-brand-hover-primario cursor-pointer">
           <Plus className="size-4" />
           Nuevo Paciente
         </Button>
@@ -315,14 +315,14 @@ export function NewPatientDialog({ onSave }: NewPatientDialogProps) {
               type="button"
               variant="outline"
               disabled={isSaving}
-              className="w-full border-green-300 bg-brand-terciario text-slate-200 hover:bg-brand-terciario/85 cursor-pointer"
+              className="w-full  bg-brand-secundario text-gray-900 hover:bg-brand-hover-secundario cursor-pointer"
             >
               Cancelar
             </Button>
           </DialogClose>
           <Button
             type="button"
-            className="w-full bg-brand-secundario text-white hover:bg-brand-secundario/85"
+            className="w-full bg-brand-primario text-white hover:bg-brand-hover-primario cursor-pointer"
             onClick={handleSave}
             disabled={isSaveDisabled || isSaving}
             isLoading={isSaving}

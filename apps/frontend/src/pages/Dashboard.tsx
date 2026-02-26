@@ -17,7 +17,7 @@ const Dashboard: React.FC = () => {
     <div className="min-h-screen flex flex-col bg-[#e8ebf9]">
         <header className="mb-10 flex items-start justify-between">
           <div>
-            <h2 className="text-3xl font-bold text-brand-primario mb-2">
+            <h2 className="text-3xl font-bold text-gray-900 mb-2">
               {greeting}
             </h2>
           </div>

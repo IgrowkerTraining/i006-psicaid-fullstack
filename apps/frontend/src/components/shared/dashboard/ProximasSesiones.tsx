@@ -52,7 +52,7 @@ export function ProximasSesiones({
 }: ProximasSesionesProps) {
   return (
     <div className="bg-white border border-gray-200 rounded-2xl p-6 shadow-sm">
-      <h3 className="text-xl font-semibold text-brand-primario mb-4">
+      <h3 className="text-xl font-semibold text-primary-foreground  mb-4">
         Tus proximas sesiones
       </h3>
 
@@ -82,18 +82,18 @@ export function ProximasSesiones({
               <Link
                 key={appointment.id}
                 to={appointment.url}
-                className="group flex items-start gap-4 p-4 rounded-xl border border-gray-200 hover:border-brand-secundario bg-white hover:bg-gray-50 transition-all"
+                className="group flex items-start gap-4 p-4 rounded-xl border border-gray-200 hover:border-brand-primario bg-white hover:bg-gray-50 transition-all"
               >
                 <Avatar
                   className={`h-10 w-10 shrink-0 ${statusBorderByType[appointment.status]}`}
                 >
-                  <AvatarFallback className="bg-brand-secundario text-white text-sm font-medium">
+                  <AvatarFallback className="bg-brand-primario text-white text-sm font-medium">
                     {format.getInitials(appointment.patientName)}
                   </AvatarFallback>
                 </Avatar>
 
                 <div className="flex-1 min-w-0">
-                  <p className="text-sm font-medium text-brand-primario mb-2">
+                  <p className="text-sm font-medium text-primary-foreground  mb-2">
                     {appointment.patientName}
                   </p>
                   <p className="text-xs text-gray-600 inline-flex items-center gap-1.5 mb-3">
@@ -115,7 +115,7 @@ export function ProximasSesiones({
                 </div>
 
                 <div className="shrink-0">
-                  <span className="text-xs text-brand-secundario opacity-0 group-hover:opacity-100 transition-opacity">
+                  <span className="text-xs text-brand-primario opacity-0 group-hover:opacity-100 transition-opacity">
                     Ver detalle {">"}
                   </span>
                 </div>
