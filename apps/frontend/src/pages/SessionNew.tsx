@@ -141,7 +141,7 @@ const SessionNew: React.FC = () => {
           onClick={() => navigate(ROUTES.PATIENT_DETAIL.replace(':id', patientId || ''), {
             state: { patient }
           })}
-          className="text-[var(--brand-secundario)] hover:text-[var(--brand-primario)] mb-4 flex items-center gap-2 transition-colors text-sm font-medium"
+          className="mb-4 flex items-center gap-2 text-sm font-medium text-[var(--brand-primario)] transition-colors hover:text-[var(--brand-hover-primario)] cursor-pointer"
         >
           <ArrowLeft className="size-4" />
           Volver al perfil del paciente
@@ -360,14 +360,14 @@ const SessionNew: React.FC = () => {
                 state: { patient }
               })}
               disabled={isSubmitting}
-              className="rounded-xl border-green-300 bg-brand-terciario text-slate-200 hover:bg-brand-terciario/85 cursor-pointer"
+              className="rounded-xl border-[var(--brand-primario)]/20 bg-[var(--brand-secundario)] text-[var(--brand-primario)] hover:bg-[var(--brand-hover-secundario)] hover:text-[var(--brand-primario)] cursor-pointer"
             >
               Cancelar
             </Button>
             <Button
               type="submit"
               disabled={isSubmitting}
-              className="rounded-xl bg-[var(--brand-secundario)] hover:bg-[var(--brand-secundario)]/90 text-white"
+              className="rounded-xl bg-[var(--brand-primario)] text-white hover:bg-[var(--brand-hover-primario)] active:bg-[var(--brand-active-primario)] cursor-pointer"
             >
               <Save className="size-4" />
               {isSubmitting ? 'Guardando...' : 'Guardar sesión'}

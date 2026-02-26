@@ -133,7 +133,7 @@ const PatientDetail: React.FC = () => {
           {activeTabId === "sesiones" && (
             <Button
               onClick={handleNewSession}
-              className="rounded-xl bg-[var(--brand-secundario)] hover:bg-[var(--brand-secundario)]/90 text-white"
+              className="rounded-xl bg-[var(--brand-primario)] text-white hover:bg-[var(--brand-hover-primario)] active:bg-[var(--brand-active-primario)] cursor-pointer"
             >
               <Plus className="size-4" />
               Nueva sesión
@@ -149,4 +149,5 @@ const PatientDetail: React.FC = () => {
 };
 
 export default PatientDetail;
+
 
