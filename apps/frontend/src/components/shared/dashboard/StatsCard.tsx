@@ -10,18 +10,33 @@ type StatCardProps = {
 export function StatsCard({ label, value, subText, icon }: StatCardProps) {
     return (
         <div
-            className="bg-[var(--brand-acento)] border border-gray-200 p-5 rounded-2xl hover:border-[var(--brand-secundario)] transition-all duration-300 group shadow-sm"
+            className="bg-brand-acento border border-gray-200 p-5 rounded-2xl hover:border-brand-secundario transition-all duration-300 group shadow-sm"
         >
-            <div className="text-lg text-[var(--brand-primario)] mb-4 flex justify-between font-bold">
+            <div className="text-lg text-brand-primaro mb-4 flex justify-between font-bold">
                 {label}
                 {icon}
             </div>
-            <p className="text-[var(--brand-primario)] text-lg font-medium uppercase tracking-wider">
+            <p className="text-brand-primario text-lg font-medium uppercase tracking-wider">
                 {value}
             </p>
             <h3 className="text-sm text-gray-600 mt-1">
                 {subText}
             </h3>
+        </div>
+    )
+}
+
+export function StatsCardSkeleton() {
+    return (
+        <div className="bg-brand-acento border border-gray-200 p-5 rounded-2xl shadow-sm">
+            <div className="animate-pulse">
+                <div className="mb-4 flex items-center justify-between">
+                    <div className="h-5 w-28 rounded bg-slate-300/70" />
+                    <div className="h-5 w-5 rounded bg-slate-300/70" />
+                </div>
+                <div className="h-6 w-16 rounded bg-slate-300/80" />
+                <div className="mt-2 h-4 w-24 rounded bg-slate-300/60" />
+            </div>
         </div>
     )
 }
