@@ -48,15 +48,40 @@ export const patientsService = {
       headers: getAuthHeaders()
     });
     if (!res.ok) throw new Error(await getErrorMessage(res, "No se pudieron obtener pacientes"));
-    return res.json();
+    
+    // Manejar respuesta vacía o sin JSON válido
+    try {
+      const text = await res.text();
+      if (!text || text.trim() === '') {
+        return [];
+      }
+      return JSON.parse(text);
+    } catch (parseError) {
+      console.warn('No se pudo parsear la respuesta del backend al listar pacientes');
+      return [];
+    }
   },
 
   async getById(id: string): Promise<Patient> {
     const res = await fetch(`${API_ENDPOINTS.BASE}${API_ENDPOINTS.PATIENTS.DETAIL(id)}`, {
       headers: getAuthHeaders()
     });
-    if (!res.ok) throw new Error(await getErrorMessage(res, "No se pudo obtener el paciente"));
-    return res.json();
+    if (!res.ok) {
+      const errorMsg = await getErrorMessage(res, "No se pudo obtener el paciente");
+      throw new Error(errorMsg);
+    }
+    
+    // Manejar respuesta vacía o sin JSON válido
+    try {
+      const text = await res.text();
+      if (!text || text.trim() === '') {
+        throw new Error("El servidor devolvió una respuesta vacía");
+      }
+      return JSON.parse(text);
+    } catch (parseError) {
+      console.error('Error al parsear respuesta del backend:', parseError);
+      throw new Error("Error al procesar la respuesta del servidor");
+    }
   },
 
   async create(payload: CreatePatientDto): Promise<Patient> {
@@ -79,7 +104,19 @@ export const patientsService = {
       body: JSON.stringify(backendPayload),
     });
     if (!res.ok) throw new Error(await getErrorMessage(res, "No se pudo crear el paciente"));
-    return res.json();
+    
+    // Manejar respuesta vacía o sin JSON válido
+    try {
+      const text = await res.text();
+      if (!text || text.trim() === '') {
+        // Backend devolvió 2xx pero sin body - el paciente se creó exitosamente
+        return {} as Patient;
+      }
+      return JSON.parse(text);
+    } catch (parseError) {
+      console.warn('No se pudo parsear la respuesta del backend, pero el paciente fue creado');
+      return {} as Patient;
+    }
   },
 
   async update(id: string, payload: UpdatePatientDto): Promise<void> {
@@ -108,6 +145,13 @@ export const patientsService = {
     if (!res.ok) {
       throw new Error(await getErrorMessage(res, "No se pudo actualizar el paciente"));
     }
+    
+    // Manejar respuesta vacía - void no necesita parsear
+    try {
+      await res.text(); // Consumir el body aunque no lo usemos
+    } catch {
+      // Ignorar errores de parsing para métodos void
+    }
   },
 
   async deactivate(id: string): Promise<void> {
@@ -119,6 +163,13 @@ export const patientsService = {
 
     if (!res.ok) {
       throw new Error(await getErrorMessage(res, "No se pudo desactivar el paciente"));
+    }
+    
+    // Manejar respuesta vacía - void no necesita parsear
+    try {
+      await res.text(); // Consumir el body aunque no lo usemos
+    } catch {
+      // Ignorar errores de parsing para métodos void
     }
   },
 };

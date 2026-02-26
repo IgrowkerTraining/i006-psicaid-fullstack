@@ -211,12 +211,16 @@ export function NewPatientDialog({ onSave }: NewPatientDialogProps) {
                 <Calendar
                   mode="single"
                   selected={selectedBirthDate}
-                  defaultMonth={selectedBirthDate}
+                  defaultMonth={selectedBirthDate || new Date(new Date().getFullYear() - 20, 0)}
                   captionLayout="dropdown"
-                  startMonth={new Date(1940, 0)}
-                  endMonth={new Date()}
+                  startMonth={new Date(1930, 0)}
+                  endMonth={new Date(new Date().getFullYear() - 5, 11, 31)}
                   onSelect={handleBirthDateSelect}
-                  disabled={(date) => date > new Date()}
+                  disabled={(date) => {
+                    const fiveYearsAgo = new Date();
+                    fiveYearsAgo.setFullYear(fiveYearsAgo.getFullYear() - 5);
+                    return date > fiveYearsAgo;
+                  }}
                 />
               </PopoverContent>
             </Popover>

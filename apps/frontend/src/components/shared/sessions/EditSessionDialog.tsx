@@ -5,6 +5,8 @@ import { CalendarClock, Clock, Check, Stethoscope } from "lucide-react";
 import { Button } from "@/components/common/Button";
 import { Calendar } from "@/components/common/calendar";
 import { Input } from "@/components/common/Input";
+import { TimePicker } from "@/components/common/TimePicker";
+import { DurationPicker } from "@/components/common/DurationPicker";
 import {
   Dialog,
   DialogClose,
@@ -99,11 +101,10 @@ export function EditSessionDialog({
     };
   };
 
-  const handleDurationChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const value = e.target.value === '' ? undefined : Number(e.target.value);
+  const handleDurationChange = (duration: number) => {
     setValues(prev => ({
       ...prev,
-      duration: value,
+      duration,
     }));
     setSubmitError(null);
   };
@@ -131,8 +132,8 @@ export function EditSessionDialog({
     setDatePickerOpen(false);
   };
 
-  const handleTimeChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const time = e.target.value;
+  const handleTimeChange = (time: string) => {
+    // time ya viene en formato "HH:mm" desde el TimePicker
     if (!time || !values.sessionDateTime) return;
 
     const [hours, minutes] = time.split(':').map(Number);
@@ -233,11 +234,9 @@ export function EditSessionDialog({
                   <label className="ml-1 text-sm font-medium text-slate-600">
                     Hora *
                   </label>
-                  <Input
-                    type="time"
+                  <TimePicker
                     value={formatTimeForInput(values.sessionDateTime)}
                     onChange={handleTimeChange}
-                    icon={<Clock className="size-4" />}
                     disabled={isSaving}
                   />
                 </div>
@@ -246,12 +245,9 @@ export function EditSessionDialog({
                   <label className="ml-1 text-sm font-medium text-slate-600">
                     Duración (min)
                   </label>
-                  <Input
-                    type="number"
-                    placeholder="50"
-                    value={values.duration || ''}
+                  <DurationPicker
+                    value={values.duration}
                     onChange={handleDurationChange}
-                    icon={<Clock className="size-4" />}
                     disabled={isSaving}
                   />
                 </div>
@@ -397,7 +393,7 @@ export function EditSessionDialog({
                 type="button"
                 variant="outline"
                 disabled={isSaving}
-                className="rounded-xl"
+                className="rounded-xl border-green-300 bg-brand-terciario text-slate-200 hover:bg-brand-terciario/85 cursor-pointer"
               >
                 Cancelar
               </Button>
@@ -430,7 +426,7 @@ export function EditSessionDialog({
               variant="outline"
               onClick={() => setConfirmOpen(false)}
               disabled={isSaving}
-              className="rounded-xl"
+              className="rounded-xl border-green-300 bg-brand-terciario text-slate-200 hover:bg-brand-terciario/85 cursor-pointer"
             >
               Cancelar
             </Button>

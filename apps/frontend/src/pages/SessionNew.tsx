@@ -1,11 +1,13 @@
 import React, { useState } from 'react';
-import { useNavigate, useParams } from 'react-router-dom';
+import { useNavigate, useParams, useLocation } from 'react-router-dom';
 import { CalendarClock, Clock, ArrowLeft, Save, Stethoscope } from 'lucide-react';
 import { format } from 'date-fns';
 
 import { Button } from '@/components/common/Button';
 import { Input } from '@/components/common/Input';
 import { Calendar } from '@/components/common/calendar';
+import { TimePicker } from '@/components/common/TimePicker';
+import { DurationPicker } from '@/components/common/DurationPicker';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/common/popover';
 import { sessionsService, type CreateSessionDto } from '@/services/sessions.service';
 import { ROUTES } from '@/constants/routes';
@@ -30,9 +32,13 @@ const SessionNew: React.FC = () => {
   const { id: patientId } = useParams<{ id: string }>();
   const numericPatientId = extractNumericId(patientId);
   const navigate = useNavigate();
+  const location = useLocation();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [datePickerOpen, setDatePickerOpen] = useState(false);
+
+  // Capturar datos del paciente del location.state si existen
+  const patient = (location.state as any)?.patient || null;
 
   const [formValues, setFormValues] = useState<CreateSessionDto>({
     sessionDateTime: new Date().toISOString(),
@@ -57,11 +63,10 @@ const SessionNew: React.FC = () => {
     };
   };
 
-  const handleDurationChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const value = e.target.value === '' ? '' : Number(e.target.value);
+  const handleDurationChange = (duration: number) => {
     setFormValues(prev => ({
       ...prev,
-      duration: value as number,
+      duration,
     }));
     setError(null);
   };
@@ -90,8 +95,8 @@ const SessionNew: React.FC = () => {
     setDatePickerOpen(false);
   };
 
-  const handleTimeChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const time = e.target.value; // formato "HH:mm"
+  const handleTimeChange = (time: string) => {
+    // time ya viene en formato "HH:mm" desde el TimePicker
     if (!time) return;
 
     const [hours, minutes] = time.split(':').map(Number);
@@ -114,7 +119,9 @@ const SessionNew: React.FC = () => {
 
     try {
       await sessionsService.createSession(numericPatientId, formValues);
-      navigate(ROUTES.PATIENT_DETAIL.replace(':id', patientId));
+      navigate(ROUTES.PATIENT_DETAIL.replace(':id', patientId), {
+        state: { patient }
+      });
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Error al crear la sesión');
     } finally {
@@ -131,7 +138,9 @@ const SessionNew: React.FC = () => {
     <div className="min-h-screen bg-[#e8ebf9]">
       <div className="mx-auto max-w-5xl w-full px-4 py-6 sm:px-6 lg:px-8">
         <button
-          onClick={() => navigate(ROUTES.PATIENT_DETAIL.replace(':id', patientId || ''))}
+          onClick={() => navigate(ROUTES.PATIENT_DETAIL.replace(':id', patientId || ''), {
+            state: { patient }
+          })}
           className="text-[var(--brand-secundario)] hover:text-[var(--brand-primario)] mb-4 flex items-center gap-2 transition-colors text-sm font-medium"
         >
           <ArrowLeft className="size-4" />
@@ -187,11 +196,9 @@ const SessionNew: React.FC = () => {
                 <label className="ml-1 text-sm font-medium text-slate-600">
                   Hora *
                 </label>
-                <Input
-                  type="time"
+                <TimePicker
                   value={formatTimeForInput(formValues.sessionDateTime)}
                   onChange={handleTimeChange}
-                  icon={<Clock className="size-4" />}
                   disabled={isSubmitting}
                 />
               </div>
@@ -200,12 +207,9 @@ const SessionNew: React.FC = () => {
                 <label className="ml-1 text-sm font-medium text-slate-600">
                   Duración (min)
                 </label>
-                <Input
-                  type="number"
-                  placeholder="50"
-                  value={formValues.duration || ''}
+                <DurationPicker
+                  value={formValues.duration}
                   onChange={handleDurationChange}
-                  icon={<Clock className="size-4" />}
                   disabled={isSubmitting}
                 />
               </div>
@@ -352,9 +356,11 @@ const SessionNew: React.FC = () => {
             <Button
               type="button"
               variant="outline"
-              onClick={() => navigate(ROUTES.PATIENT_DETAIL.replace(':id', patientId || ''))}
+              onClick={() => navigate(ROUTES.PATIENT_DETAIL.replace(':id', patientId || ''), {
+                state: { patient }
+              })}
               disabled={isSubmitting}
-              className="rounded-xl border-slate-300 hover:bg-slate-50"
+              className="rounded-xl border-green-300 bg-brand-terciario text-slate-200 hover:bg-brand-terciario/85 cursor-pointer"
             >
               Cancelar
             </Button>
