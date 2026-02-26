@@ -35,7 +35,7 @@ export function PatientRecordTab({ patient }: PatientTabPanelProps) {
               <LabelValue label="Nombre" value={patient.profile.fullName.split(' ')[0] || ''} />
               <LabelValue label="Apellido" value={patient.profile.fullName.split(' ').slice(1).join(' ') || ''} />
               <LabelValue label="Fecha de nacimiento" value={patient.profile.birthDate} />
-              <LabelValue label="Edad" value={`${patient.profile.age} anos`} />
+              <LabelValue label="Edad" value={`${patient.profile.age} años`} />
               <LabelValue label="Ocupacion" value={patient.profile.occupation} />
               <LabelValue label="Sexo" value={patient.profile.sex} />
               <LabelValue label="Estado civil" value={patient.profile.maritalStatus} />
