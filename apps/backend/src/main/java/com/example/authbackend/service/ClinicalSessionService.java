@@ -208,7 +208,7 @@ public class ClinicalSessionService {
             OffsetDateTime existingEnd = existingStart.plusMinutes(existing.getDuration());
 
             if (sessionStart.isBefore(existingEnd) && sessionEnd.isAfter(existingStart)) {
-                throw new RuntimeException("Horario no disponible. Esta cita se solapa con otra sesión programada a las " + existingStart.toLocalTime());
+                throw new RuntimeException("Horario no disponible. Esta cita se solapa con otra sesión programada.");
             }
         }
     }
