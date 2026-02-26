@@ -126,7 +126,6 @@ const PatientDetail: React.FC = () => {
         <div className="absolute bottom-10 left-1/3 h-44 w-44 rounded-full bg-brand-secundario/8 blur-3xl" />
       </div>
 
-      <div className="relative mx-auto w-full max-w-7xl px-4 py-6 sm:px-6 lg:px-8">
         <PatientDetailHeader
           patient={patientDetail}
           onBack={() => navigate(ROUTES.PATIENTS)}
@@ -145,7 +144,6 @@ const PatientDetail: React.FC = () => {
           patient={patientDetail} 
           onActiveTabChange={setActiveTabId}
         />
-      </div>
     </div>
   );
 };

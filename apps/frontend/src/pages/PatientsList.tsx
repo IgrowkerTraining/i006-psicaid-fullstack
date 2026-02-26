@@ -111,7 +111,6 @@ const PatientsList: React.FC = () => {
 
   return (
     <div className="min-h-screen">
-      <div className="mx-auto w-full max-w-7xl p-6 lg:p-10">
         <div className="mb-8 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
           <div>
             <h1 className="mb-2 text-3xl font-bold text-gray-700">Pacientes</h1>
@@ -137,7 +136,6 @@ const PatientsList: React.FC = () => {
           onEditPatient={handleOpenEdit}
           onDeactivatePatient={handleOpenDeactivate}
         />
-      </div>
 
       <EditPatientDialog
         patient={patientToEdit}

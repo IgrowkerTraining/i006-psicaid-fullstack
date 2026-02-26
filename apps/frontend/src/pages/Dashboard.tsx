@@ -15,7 +15,6 @@ const Dashboard: React.FC = () => {
 
   return (
     <div className="min-h-screen flex flex-col bg-[#e8ebf9]">
-      <main className="flex-1 max-w-7xl mx-auto w-full p-6 lg:p-10">
         <header className="mb-10 flex items-start justify-between">
           <div>
             <h2 className="text-3xl font-bold text-brand-primario mb-2">
@@ -32,7 +31,6 @@ const Dashboard: React.FC = () => {
 
         <DashboardStatsGrid data={dashboardData} loading={loading} />
         <DashboardPanelsGrid data={dashboardData} loading={loading} error={error} />
-      </main>
     </div>
   );
 };

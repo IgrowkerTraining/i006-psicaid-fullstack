@@ -4,7 +4,6 @@ import React from 'react';
 const Profile: React.FC = () => {
   return (
     <div className="min-h-screen">
-      <div className="max-w-4xl mx-auto w-full p-6 lg:p-10">
         <div className="mb-8">
           <h1 className="text-3xl font-bold text-white mb-2">
             Mi Perfil
@@ -40,7 +39,6 @@ const Profile: React.FC = () => {
             </p>
           </div>
         </div>
-      </div>
     </div>
   );
 };
