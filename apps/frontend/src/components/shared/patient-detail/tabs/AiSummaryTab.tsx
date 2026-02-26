@@ -6,6 +6,33 @@ import { BulletList, PanelShell, SectionCard } from "./ui";
 export function AiSummaryTab({ patient }: PatientTabPanelProps) {
   const ai = patient.aiSummary;
 
+  // Verificar si no hay resumen generado
+  const hasNoSummary = 
+    ai.currentState === "No disponible" || 
+    (ai.keyPatterns.length === 0 && 
+     ai.recommendations.length === 0 && 
+     ai.nextSessionFocus.length === 0 && 
+     ai.riskFlags.length === 0);
+
+  // Mostrar estado vacío si no hay resumen
+  if (hasNoSummary) {
+    return (
+      <PanelShell>
+        <div className="flex min-h-[400px] flex-col items-center justify-center py-12">
+          <div className="rounded-full bg-gradient-to-br from-[var(--brand-secundario)]/10 to-[var(--brand-terciario)]/10 p-6 mb-6">
+            <Sparkles className="size-12 text-[var(--brand-secundario)]" strokeWidth={1.5} />
+          </div>
+          <h3 className="text-lg font-semibold text-slate-700 mb-2">
+            No hay resumen generado
+          </h3>
+          <p className="text-sm text-slate-500 text-center max-w-md">
+            Aún no se ha generado un resumen de IA para este paciente. El resumen se creará automáticamente después de registrar sesiones clínicas.
+          </p>
+        </div>
+      </PanelShell>
+    );
+  }
+
   return (
     <PanelShell>
       <div className="space-y-4">

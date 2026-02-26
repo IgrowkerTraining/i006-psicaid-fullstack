@@ -54,7 +54,18 @@ export const sessionsService = {
     if (!res.ok) {
       throw new Error(await getErrorMessage(res, "No se pudieron obtener las sesiones"));
     }
-    return res.json();
+    
+    // Manejar respuesta vacía o sin JSON válido
+    try {
+      const text = await res.text();
+      if (!text || text.trim() === '') {
+        return [];
+      }
+      return JSON.parse(text);
+    } catch (parseError) {
+      console.warn('No se pudo parsear la respuesta del backend al obtener sesiones');
+      return [];
+    }
   },
 
   async createSession(
@@ -72,7 +83,20 @@ export const sessionsService = {
     if (!res.ok) {
       throw new Error(await getErrorMessage(res, "No se pudo crear la sesión"));
     }
-    return res.json();
+    
+    // Manejar respuesta vacía o sin JSON válido
+    try {
+      const text = await res.text();
+      if (!text || text.trim() === '') {
+        // Backend devolvió 2xx pero sin body - la sesión se creó exitosamente
+        return {} as ClinicalSession;
+      }
+      return JSON.parse(text);
+    } catch (parseError) {
+      // Si el parsing falla pero el status fue exitoso, considerar la operación exitosa
+      console.warn('No se pudo parsear la respuesta del backend, pero la sesión fue creada');
+      return {} as ClinicalSession;
+    }
   },
 
   async updateSession(
@@ -91,6 +115,19 @@ export const sessionsService = {
     if (!res.ok) {
       throw new Error(await getErrorMessage(res, "No se pudo actualizar la sesión"));
     }
-    return res.json();
+    
+    // Manejar respuesta vacía o sin JSON válido
+    try {
+      const text = await res.text();
+      if (!text || text.trim() === '') {
+        // Backend devolvió 2xx pero sin body - la sesión se actualizó exitosamente
+        return {} as ClinicalSession;
+      }
+      return JSON.parse(text);
+    } catch (parseError) {
+      // Si el parsing falla pero el status fue exitoso, considerar la operación exitosa
+      console.warn('No se pudo parsear la respuesta del backend, pero la sesión fue actualizada');
+      return {} as ClinicalSession;
+    }
   },
 };
