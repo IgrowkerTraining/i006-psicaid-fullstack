@@ -112,9 +112,6 @@ export function NewSessionDialog({ patientId, onSessionCreated }: NewSessionDial
           <DialogTitle className="text-2xl font-bold text-gray-900">
             Nueva sesión
           </DialogTitle>
-          <DialogDescription className="text-slate-600">
-            Registra los datos básicos de la sesión clínica.
-          </DialogDescription>
         </DialogHeader>
 
         <div className="space-y-4 py-2">

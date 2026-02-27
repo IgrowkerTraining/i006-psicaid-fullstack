@@ -47,15 +47,14 @@ export function TimePicker({ value, onChange, disabled }: TimePickerProps) {
             width: 6px;
           }
           .custom-scrollbar::-webkit-scrollbar-track {
-            background: white;
+            background: #f1f5f9;
           }
           .custom-scrollbar::-webkit-scrollbar-thumb {
-            background: var(--brand-secundario);
+            background: #94a3b8;
             border-radius: 3px;
           }
           .custom-scrollbar::-webkit-scrollbar-thumb:hover {
-            background: var(--brand-secundario);
-            opacity: 0.8;
+            background: #64748b;
           }
         `}</style>
         <div className="flex w-[180px]">
@@ -64,16 +63,19 @@ export function TimePicker({ value, onChange, disabled }: TimePickerProps) {
             <div className="bg-slate-50 px-2 py-1.5 text-center text-xs font-semibold text-slate-600 border-b border-slate-200">
               Hora
             </div>
-            <div className="max-h-[180px] overflow-y-auto custom-scrollbar">
+            <div
+              className="max-h-[180px] overflow-y-auto custom-scrollbar"
+              onWheel={(e) => e.stopPropagation()}
+            >
               {hours.map((hour) => (
                 <button
                   key={hour}
                   type="button"
                   onClick={() => handleHourClick(hour)}
-                  className={`w-full px-3 py-1.5 text-sm text-center hover:bg-[var(--brand-secundario)]/10 transition-colors ${
+                  className={`w-full px-3 py-1.5 text-sm text-center transition-colors ${
                     hour === selectedHour
-                      ? 'bg-[var(--brand-secundario)] text-white font-semibold hover:bg-[var(--brand-terciario)]'
-                      : 'text-slate-700'
+                      ? 'bg-brand-primario text-white font-semibold'
+                      : 'text-slate-700 hover:bg-brand-primario/10'
                   }`}
                 >
                   {String(hour).padStart(2, '0')}
@@ -93,10 +95,10 @@ export function TimePicker({ value, onChange, disabled }: TimePickerProps) {
                   key={minute}
                   type="button"
                   onClick={() => handleMinuteClick(minute)}
-                  className={`w-full px-3 py-2 text-sm text-center hover:bg-[var(--brand-secundario)]/10 transition-colors ${
+                  className={`w-full px-3 py-2 text-sm text-center transition-colors ${
                     minute === selectedMinute
-                      ? 'bg-[var(--brand-secundario)] text-white font-semibold hover:bg-[var(--brand-terciario)]'
-                      : 'text-slate-700'
+                      ? 'bg-brand-primario text-white font-semibold'
+                      : 'text-slate-700 hover:bg-brand-primario/10'
                   }`}
                 >
                   {String(minute).padStart(2, '0')}
