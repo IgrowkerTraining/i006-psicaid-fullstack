@@ -21,7 +21,7 @@ const Register: React.FC = () => {
 
   return (
     <AuthSplitLayout
-      eyebrow="Registro"
+      eyebrow=""
       description="Ingresa tus datos para crear tu cuenta"
       footer={
         <>

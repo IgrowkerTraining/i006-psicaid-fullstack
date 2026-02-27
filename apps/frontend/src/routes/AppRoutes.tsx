@@ -12,7 +12,6 @@ import PatientDetail from "@/pages/PatientDetail"
 import PatientsList from "@/pages/PatientsList"
 import Profile from "@/pages/Profile"
 import Register from "@/pages/Register"
-import SessionNew from "@/pages/SessionNew"
 import Settings from "@/pages/Settings"
 import SummaryGenerate from "@/pages/SummaryGenerate"
 
@@ -35,7 +34,6 @@ export const AppRoutes: React.FC = () => {
           <Route path={ROUTES.AGENDA} element={<Agenda />} />
           <Route path={ROUTES.PATIENTS} element={<PatientsList />} />
           <Route path={ROUTES.PATIENT_DETAIL} element={<PatientDetail />} />
-          <Route path={ROUTES.SESSION_NEW} element={<SessionNew />} />
           <Route path={ROUTES.SUMMARY_GENERATE} element={<SummaryGenerate />} />
           <Route path={ROUTES.PROFILE} element={<Profile />} />
           <Route path={ROUTES.SETTINGS} element={<Settings />} />

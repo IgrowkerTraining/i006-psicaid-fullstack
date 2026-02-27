@@ -55,6 +55,10 @@ export const API_ENDPOINTS = {
     LIST: (patientId: string) => `/patients/${patientId}/sessions`,
     CREATE: (patientId: string) => `/patients/${patientId}/sessions`,
     DETAIL: (patientId: string, sessionId: number) => `/patients/${patientId}/sessions/${sessionId}`,
+  },
+  TREATMENTS: {
+    LIST: (patientId: string) => `/patients/${patientId}/treatments`,
+    CREATE: (patientId: string) => `/patients/${patientId}/treatments`
   }
 } as const;
 
@@ -68,6 +72,8 @@ export const ASSETS = {
 
   IMAGES: {
     LOGO: "isotipo_psicaid+2.png",
-    AUTH_IMAGE: "login-sigup-image.webp"
+    AUTH_IMAGE: "login-sigup-image.webp",
+    HOME_IMAGE: "home.webp",
   },
 } as const;
+
