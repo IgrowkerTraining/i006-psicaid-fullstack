@@ -4,9 +4,9 @@ import { cn } from "@/lib/utils";
 
 import {
   AiSummaryTab,
-  ClinicalHistoryTab,
   PatientRecordTab,
   SessionsTab,
+  TreatmentsTab,
   type TabId,
 } from "./tabs";
 import type { PatientDetailViewModel } from "./types";
@@ -15,6 +15,7 @@ type PatientDetailTabsProps = {
   patient: PatientDetailViewModel;
   onActiveTabChange?: (tabId: TabId) => void;
   sessionRefreshKey?: number;
+  treatmentCreateRequestKey?: number;
 };
 
 type TabItem = {
@@ -23,7 +24,12 @@ type TabItem = {
   content: React.ReactNode;
 };
 
-export function PatientDetailTabs({ patient, onActiveTabChange, sessionRefreshKey }: PatientDetailTabsProps) {
+export function PatientDetailTabs({
+  patient,
+  onActiveTabChange,
+  sessionRefreshKey,
+  treatmentCreateRequestKey,
+}: PatientDetailTabsProps) {
   const tabsId = React.useId();
   const tabRefs = React.useRef<Array<HTMLButtonElement | null>>([]);
 
@@ -35,9 +41,14 @@ export function PatientDetailTabs({ patient, onActiveTabChange, sessionRefreshKe
         content: <PatientRecordTab patient={patient} />,
       },
       {
-        id: "historia",
-        label: "Historia clinica",
-        content: <ClinicalHistoryTab patient={patient} />,
+        id: "tratamientos",
+        label: "Tratamientos",
+        content: (
+          <TreatmentsTab
+            patient={patient}
+            createRequestKey={treatmentCreateRequestKey}
+          />
+        ),
       },
       {
         id: "sesiones",
@@ -50,7 +61,7 @@ export function PatientDetailTabs({ patient, onActiveTabChange, sessionRefreshKe
         content: <AiSummaryTab patient={patient} />,
       },
     ],
-    [patient]
+    [patient, sessionRefreshKey, treatmentCreateRequestKey]
   );
 
   const [activeTabId, setActiveTabId] = React.useState<TabId>("ficha");

@@ -1,5 +1,6 @@
 import React from "react";
 import { useLocation, useNavigate, useParams } from "react-router-dom";
+import { Plus } from "lucide-react";
 
 import PatientDetailHeader from "@/components/shared/patient-detail/PatientDetailHeader";
 import PatientDetailTabs from "@/components/shared/patient-detail/PatientDetailTabs";
@@ -23,6 +24,7 @@ const PatientDetail: React.FC = () => {
   
   const [activeTabId, setActiveTabId] = React.useState<TabId>("ficha");
   const [sessionRefreshKey, setSessionRefreshKey] = React.useState(0);
+  const [treatmentCreateRequestKey, setTreatmentCreateRequestKey] = React.useState(0);
   const [patient, setPatient] = React.useState<Patient | null>(state?.patient || null);
   // Inicializar loading en false si ya tenemos datos en el state
   const [loading, setLoading] = React.useState(!state?.patient);
@@ -131,10 +133,20 @@ const PatientDetail: React.FC = () => {
               onSessionCreated={() => setSessionRefreshKey((k) => k + 1)}
             />
           )}
+          {activeTabId === "tratamientos" && (
+            <Button
+              onClick={() => setTreatmentCreateRequestKey((k) => k + 1)}
+              className="rounded-xl bg-brand-primario px-4 text-white hover:bg-brand-hover-primario cursor-pointer"
+            >
+              <Plus className="size-4" />
+              Nuevo tratamiento
+            </Button>
+          )}
         </PatientDetailHeader>
         <PatientDetailTabs
           patient={patientDetail}
           sessionRefreshKey={sessionRefreshKey}
+          treatmentCreateRequestKey={treatmentCreateRequestKey}
           onActiveTabChange={setActiveTabId}
         />
     </div>
