@@ -15,6 +15,10 @@ type AuthResponse = {
   message: string;
 }
 
+type ErrorResponse = {
+  message?: string;
+}
+
 // Mapea el usuario del backend al formato del frontend
 function mapBackendUser(backendUser: BackendUser): User {
   return {
@@ -70,5 +74,35 @@ export const api = {
       token: result.token,
       message: result.message,
     };
+  },
+
+  async getCurrentUser(token: string): Promise<User> {
+    const response = await fetch(
+      `${API_ENDPOINTS.BASE}${API_ENDPOINTS.AUTH.VERIFY_TOKEN}`,
+      {
+        method: "GET",
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      },
+    );
+
+    if (!response.ok) {
+      let message = "Token inválido o expirado";
+
+      try {
+        const errorResult: ErrorResponse = await response.json();
+        if (errorResult.message) {
+          message = errorResult.message;
+        }
+      } catch {
+        // Ignora errores de parsing y usa el mensaje por defecto.
+      }
+
+      throw new Error(message);
+    }
+
+    const result: BackendUser = await response.json();
+    return mapBackendUser(result);
   },
 };

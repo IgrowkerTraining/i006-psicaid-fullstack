@@ -28,7 +28,7 @@ const Login: React.FC = () => {
           ¿No tienes una cuenta creada?{" "}
           <Link
             to="/register"
-            className="font-semibold text-brand-secundario hover:text-brand-secundario/80"
+            className="font-semibold text-brand-primario hover:text-brand-hover-primario"
           >
             Regístrate aquí
           </Link>

@@ -28,7 +28,7 @@ export function SectionCard({
   return (
     <section className={cn(sectionCardClass, className)}>
       <div className="mb-3">
-        <h3 className="text-base font-semibold text-[var(--brand-primario)]">{title}</h3>
+        <h3 className="text-base font-semibold text-gray-900">{title}</h3>
         {subtitle && <p className="text-sm text-slate-500">{subtitle}</p>}
       </div>
       {children}
@@ -47,7 +47,7 @@ export function LabelValue({
 }) {
   return (
     <div className={cn("space-y-1", className)}>
-      <p className="text-xs font-semibold uppercase tracking-[0.12em] text-[var(--brand-secundario)]">
+      <p className="text-xs font-semibold uppercase tracking-[0.12em] text-gray-900">
         {label}
       </p>
       <p className="text-sm leading-6 text-slate-700">{value}</p>
@@ -85,7 +85,7 @@ export function StatusBadge({ status }: { status: SessionStatus }) {
     status === "completada"
       ? "border-emerald-300 bg-emerald-50 text-emerald-700"
       : status === "programada"
-        ? "border-[var(--brand-secundario)]/30 bg-[var(--brand-secundario)]/10 text-[var(--brand-secundario)]"
+        ? "border-[var(--brand-primario)]/30 bg-[var(--brand-primario)]/10 text-brand-primario"
         : "border-rose-300 bg-rose-50 text-rose-700";
 
   return (

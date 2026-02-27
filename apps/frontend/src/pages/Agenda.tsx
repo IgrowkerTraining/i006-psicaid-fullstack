@@ -1,5 +1,5 @@
-import React, { useState } from "react";
-import { Calendar } from "@/components/common/calendar";
+import React, { useState } from "react"
+import { Calendar } from "@/components/common/calendar"
 
 // TODO: Para integrar con sesiones reales del backend, necesitamos:
 // 1. Endpoint: GET /api/dashboard/sessions?startDate=xxx&endDate=xxx
@@ -8,54 +8,60 @@ import { Calendar } from "@/components/common/calendar";
 //    para mostrar el nombre del paciente en las tarjetas
 
 const Agenda: React.FC = () => {
-  const [date, setDate] = useState<Date | undefined>(new Date());
+  const [date, setDate] = useState<Date | undefined>(new Date())
+
+  const selectedDateLabel = date
+    ? date.toLocaleDateString("es-ES", {
+        weekday: "long",
+        year: "numeric",
+        month: "long",
+        day: "numeric",
+      })
+    : "Selecciona una fecha"
 
   return (
-    <div className="mx-auto w-full max-w-7xl space-y-6">
+    <>
       <header className="mb-8">
-        <h1 className="text-3xl font-bold text-[var(--brand-primario)] mb-2">
-          Agenda
-        </h1>
-        <p className="text-gray-600">
-          Gestiona tus citas y sesiones programadas
+        <h1 className="mb-2 text-3xl font-bold text-gray-900">Agenda</h1>
+        <p className="text-sm text-gray-600">
+          Revisa tus sesiones programadas y consulta el detalle por fecha.
         </p>
       </header>
 
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-        <div className="bg-white border border-gray-200 rounded-2xl p-6 shadow-sm">
-          <h3 className="text-xl font-semibold text-[var(--brand-primario)] mb-4">
-            Calendario
-          </h3>
+      <div className="grid grid-cols-1 gap-8 lg:grid-cols-2">
+        <section className="rounded-2xl border border-[var(--border)] bg-white p-6 shadow-sm">
+          <h2 className="mb-4 text-xl font-semibold text-gray-900">Calendario</h2>
           <Calendar
             mode="single"
             selected={date}
             onSelect={setDate}
-            className="rounded-md border-0"
+            className="w-full rounded-md border-0"
             captionLayout="dropdown"
           />
-        </div>
+        </section>
 
-        <div className="bg-white border border-gray-200 rounded-2xl p-6 shadow-sm">
-          <h3 className="text-xl font-semibold text-[var(--brand-primario)] mb-4">
-            Citas del día seleccionado
-          </h3>
-          <p className="text-gray-500 text-sm">
-            {date ? date.toLocaleDateString('es-ES', { 
-              weekday: 'long', 
-              year: 'numeric', 
-              month: 'long', 
-              day: 'numeric' 
-            }) : 'Selecciona una fecha'}
-          </p>
-          <div className="mt-6 text-gray-400 text-sm text-center py-8">
-            No hay citas programadas para este día
+        <section className="rounded-2xl border border-[var(--border)] bg-white p-6 shadow-sm">
+          <h2 className="mb-4 text-xl font-semibold text-gray-900">
+            Sesiones del dia seleccionado
+          </h2>
+
+          <p className="text-sm capitalize text-gray-600">{selectedDateLabel}</p>
+
+          <div className="mt-6 rounded-xl border border-dashed border-[var(--border)] bg-brand-acento px-4 py-8 text-center">
+            <p className="text-sm font-medium text-gray-900">
+              No hay sesiones programadas para este dia.
+            </p>
+            <p className="mt-1 text-xs text-gray-500">
+              Cuando integres el backend, aqui apareceran las citas de la fecha seleccionada.
+            </p>
           </div>
-          {/* TODO: Cuando backend agregue GET /api/dashboard/sessions, 
-              mostrar aquí las sesiones del día seleccionado */}
-        </div>
-      </div>
-    </div>
-  );
-};
 
-export default Agenda;
+          {/* TODO: Cuando backend agregue GET /api/dashboard/sessions,
+              mostrar aqui las sesiones del dia seleccionado */}
+        </section>
+      </div>
+    </>
+  )
+}
+
+export default Agenda

@@ -393,7 +393,7 @@ export function EditSessionDialog({
                 type="button"
                 variant="outline"
                 disabled={isSaving}
-                className="rounded-xl border-green-300 bg-brand-terciario text-slate-200 hover:bg-brand-terciario/85 cursor-pointer"
+                className="rounded-xl border-[var(--brand-primario)]/20 bg-[var(--brand-secundario)] text-[var(--brand-primario)] hover:bg-[var(--brand-hover-secundario)] hover:text-[var(--brand-primario)] cursor-pointer"
               >
                 Cancelar
               </Button>
@@ -402,7 +402,7 @@ export function EditSessionDialog({
               type="button"
               disabled={isSaving}
               onClick={() => setConfirmOpen(true)}
-              className="rounded-xl bg-[var(--brand-secundario)] hover:bg-[var(--brand-secundario)]/90 text-white"
+              className="rounded-xl bg-[var(--brand-primario)] text-white hover:bg-[var(--brand-hover-primario)] active:bg-[var(--brand-active-primario)] cursor-pointer"
             >
               <Check className="size-4" />
               {isSaving ? "Actualizando..." : "Actualizar sesión"}
@@ -426,14 +426,14 @@ export function EditSessionDialog({
               variant="outline"
               onClick={() => setConfirmOpen(false)}
               disabled={isSaving}
-              className="rounded-xl border-green-300 bg-brand-terciario text-slate-200 hover:bg-brand-terciario/85 cursor-pointer"
+              className="rounded-xl border-[var(--brand-primario)]/20 bg-[var(--brand-secundario)] text-[var(--brand-primario)] hover:bg-[var(--brand-hover-secundario)] hover:text-[var(--brand-primario)] cursor-pointer"
             >
               Cancelar
             </Button>
             <Button
               onClick={handleConfirmUpdate}
               disabled={isSaving}
-              className="rounded-xl bg-[var(--brand-secundario)] hover:bg-[var(--brand-secundario)]/90 text-white"
+              className="rounded-xl bg-[var(--brand-primario)] text-white hover:bg-[var(--brand-hover-primario)] active:bg-[var(--brand-active-primario)] cursor-pointer"
             >
               {isSaving ? "Actualizando..." : "Confirmar"}
             </Button>

@@ -326,7 +326,7 @@ export function EditPatientDialog({
                 type="button"
                 variant="outline"
                 disabled={isSaving}
-                className="w-full border-green-300 bg-brand-terciario text-slate-200 hover:bg-brand-terciario/85 cursor-pointer"
+                className="w-full  bg-brand-secundario text-gray-900 hover:bg-brand-hover-secundario cursor-pointer"
               >
                 Cancelar
               </Button>
@@ -334,7 +334,7 @@ export function EditPatientDialog({
             <Button
               type="button"
               disabled={isSaveDisabled || isSaving}
-              className="w-full bg-brand-secundario text-white hover:bg-brand-secundario/85"
+              className="w-full bg-brand-primario text-white hover:bg-brand-hover-primario cursor-pointer"
               onClick={() => setConfirmOpen(true)}
             >
               <Check className="size-4" />

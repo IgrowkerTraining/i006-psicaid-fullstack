@@ -22,7 +22,7 @@ export function Sidebar({
   const currentPath = activePath ?? ""
 
   return (
-    <aside className="h-full w-64 border-r border-gray-200 bg-white">
+    <aside className="h-full w-64 border-r border-gray-200 bg-brand-gradient">
       <div className="h-24 px-4 flex items-center border-b border-gray-200">
 
         <div className="flex items-center gap-2">
@@ -31,7 +31,7 @@ export function Sidebar({
             alt="Psicaid logo"
             className="size-10 object-contain"
           />
-          <span className="font-semibold text-[var(--brand-primario)] text-2xl">Psicaid</span>
+          <span className="font-semibold text-gray-900 text-2xl">Psicaid</span>
         </div>
       </div>
 
@@ -47,10 +47,10 @@ export function Sidebar({
               type="button"
               onClick={() => onNavigate(item.path)}
               className={cn(
-                "w-full flex items-center gap-2 rounded-md px-3 py-2 text-sm transition",
+                "w-full flex items-center gap-2 rounded-md px-3 py-2 text-sm transition-all",
                 isActive
-                  ? "bg-[var(--brand-secundario)] text-white font-medium"
-                  : "text-[var(--brand-primario)] hover:bg-gray-100 cursor-pointer"
+                  ? "bg-brand-active-primario text-white font-medium"
+                  : "text-gray-900 hover:bg-brand-hover-primario hover:text-white cursor-pointer"
               )}
             >
               {item.icon ? <span className="shrink-0">{item.icon}</span> : null}

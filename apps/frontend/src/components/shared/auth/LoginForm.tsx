@@ -182,7 +182,7 @@ export function LoginForm({ onSubmit }: LoginFormProps) {
       <motion.div variants={itemVariants}>
       <Button
         type="submit"
-        className="mt-2 h-11 w-full rounded-md bg-brand-secundario text-white hover:bg-brand-secundario/90"
+        className="mt-2 h-11 w-full rounded-md bg-brand-primario text-white hover:bg-brand-hover-primario"
         isLoading={isLoading}
         loadingText="Iniciando sesión..."
       >

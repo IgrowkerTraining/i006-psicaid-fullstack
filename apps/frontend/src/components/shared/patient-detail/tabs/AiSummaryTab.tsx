@@ -19,7 +19,7 @@ export function AiSummaryTab({ patient }: PatientTabPanelProps) {
     return (
       <PanelShell>
         <div className="flex min-h-[400px] flex-col items-center justify-center py-12">
-          <div className="rounded-full bg-gradient-to-br from-[var(--brand-secundario)]/10 to-[var(--brand-terciario)]/10 p-6 mb-6">
+          <div className="rounded-full bg-brand-gradient p-6 mb-6">
             <Sparkles className="size-12 text-[var(--brand-secundario)]" strokeWidth={1.5} />
           </div>
           <h3 className="text-lg font-semibold text-slate-700 mb-2">

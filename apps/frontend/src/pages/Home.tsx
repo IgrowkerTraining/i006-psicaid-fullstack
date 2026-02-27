@@ -83,10 +83,9 @@ const Home: React.FC = () => {
           <motion.div whileHover={{ y: -2, scale: 1.01 }} whileTap={{ scale: 0.98 }}>
             <Button
               size="lg"
-              className="h-12 min-w-52 bg-brand-secundario text-white hover:bg-brand-secundario/90"
+              className="h-12 min-w-52 bg-brand-secundario text-gray-900 hover:bg-brand-secundario/90"
               onClick={() => navigate(ROUTES.REGISTER)}
             >
-              <UserPlus className="size-4" />
               Registrarse
             </Button>
           </motion.div>
@@ -95,10 +94,9 @@ const Home: React.FC = () => {
             <Button
               size="lg"
               variant="outline"
-              className="h-12 min-w-52 border-brand-secundario/50 bg-white/70 text-brand-primario hover:bg-white"
+              className="h-12 min-w-52 border-brand-primaro/50 bg-brand-primario/70 text-white hover:bg-brand-hover-primario"
               onClick={() => navigate(ROUTES.LOGIN)}
             >
-              <LogIn className="size-4" />
               Iniciar sesion
             </Button>
           </motion.div>

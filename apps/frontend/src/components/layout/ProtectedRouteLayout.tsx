@@ -34,7 +34,7 @@ export const ProtectedLayout: React.FC = () => {
           onLogout={logout}
         />
 
-        <main className="px-6 py-6">
+        <main className="max-w-full mx-auto w-full px-9 py-6">
           <Outlet />
         </main>
       </div>
