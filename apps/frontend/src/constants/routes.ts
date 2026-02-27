@@ -68,6 +68,8 @@ export const ASSETS = {
 
   IMAGES: {
     LOGO: "isotipo_psicaid+2.png",
-    AUTH_IMAGE: "login-sigup-image.webp"
+    AUTH_IMAGE: "login-sigup-image.webp",
+    HOME_IMAGE: "home.webp",
   },
 } as const;
+

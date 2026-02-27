@@ -21,7 +21,7 @@ const Login: React.FC = () => {
 
   return (
     <AuthSplitLayout
-      eyebrow="Inicio de sesión"
+      eyebrow=""
       description="Ingresa tus datos para iniciar sesión"
       footer={
         <>
