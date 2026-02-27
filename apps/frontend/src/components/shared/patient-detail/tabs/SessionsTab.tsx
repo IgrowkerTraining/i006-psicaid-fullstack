@@ -1,9 +1,7 @@
 import { CalendarClock, Clock3, Pencil } from "lucide-react";
-import { useNavigate } from "react-router-dom";
 import * as React from "react";
 
 import { Button } from "@/components/common/Button";
-import { ROUTES } from "@/constants/routes";
 import { sessionsService, type ClinicalSession } from "@/services/sessions.service";
 import { EditSessionDialog } from "@/components/shared/sessions/EditSessionDialog";
 
@@ -51,8 +49,7 @@ const mapSessionToViewModel = (session: ClinicalSession): SessionViewModel => {
   };
 };
 
-export function SessionsTab({ patient }: PatientTabPanelProps) {
-  const navigate = useNavigate();
+export function SessionsTab({ patient, sessionRefreshKey }: PatientTabPanelProps & { sessionRefreshKey?: number }) {
   const [sessions, setSessions] = React.useState<SessionViewModel[]>([]);
   const [rawSessions, setRawSessions] = React.useState<ClinicalSession[]>([]);
   const [isLoading, setIsLoading] = React.useState(true);
@@ -81,7 +78,7 @@ export function SessionsTab({ patient }: PatientTabPanelProps) {
 
   React.useEffect(() => {
     loadSessions();
-  }, [loadSessions]);
+  }, [loadSessions, sessionRefreshKey]);
 
   const handleEditSession = (sessionId: string) => {
     const numericId = Number(sessionId.replace('SES-', ''));

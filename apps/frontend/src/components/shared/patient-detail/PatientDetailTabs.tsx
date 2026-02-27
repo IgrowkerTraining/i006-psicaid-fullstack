@@ -14,6 +14,7 @@ import type { PatientDetailViewModel } from "./types";
 type PatientDetailTabsProps = {
   patient: PatientDetailViewModel;
   onActiveTabChange?: (tabId: TabId) => void;
+  sessionRefreshKey?: number;
 };
 
 type TabItem = {
@@ -22,7 +23,7 @@ type TabItem = {
   content: React.ReactNode;
 };
 
-export function PatientDetailTabs({ patient, onActiveTabChange }: PatientDetailTabsProps) {
+export function PatientDetailTabs({ patient, onActiveTabChange, sessionRefreshKey }: PatientDetailTabsProps) {
   const tabsId = React.useId();
   const tabRefs = React.useRef<Array<HTMLButtonElement | null>>([]);
 
@@ -41,7 +42,7 @@ export function PatientDetailTabs({ patient, onActiveTabChange }: PatientDetailT
       {
         id: "sesiones",
         label: "Sesiones clinicas",
-        content: <SessionsTab patient={patient} />,
+        content: <SessionsTab patient={patient} sessionRefreshKey={sessionRefreshKey} />,
       },
       {
         id: "resumen",

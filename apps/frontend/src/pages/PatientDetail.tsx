@@ -1,12 +1,12 @@
 import React from "react";
 import { useLocation, useNavigate, useParams } from "react-router-dom";
-import { Plus } from "lucide-react";
 
 import PatientDetailHeader from "@/components/shared/patient-detail/PatientDetailHeader";
 import PatientDetailTabs from "@/components/shared/patient-detail/PatientDetailTabs";
 import { buildPatientDetail } from "@/components/shared/patient-detail/patientDetail";
 import { Button } from "@/components/common/Button";
 import { LoadingSpinner } from "@/components/layout/LoadingSpinner";
+import { NewSessionDialog } from "@/components/shared/sessions/NewSessionDialog";
 import { ROUTES } from "@/constants/routes";
 import { patientsService, type Patient } from "@/services/patients.service";
 import type { TabId } from "@/components/shared/patient-detail/tabs";
@@ -22,6 +22,7 @@ const PatientDetail: React.FC = () => {
   const state = (location.state ?? null) as PatientDetailLocationState;
   
   const [activeTabId, setActiveTabId] = React.useState<TabId>("ficha");
+  const [sessionRefreshKey, setSessionRefreshKey] = React.useState(0);
   const [patient, setPatient] = React.useState<Patient | null>(state?.patient || null);
   // Inicializar loading en false si ya tenemos datos en el state
   const [loading, setLoading] = React.useState(!state?.patient);
@@ -93,12 +94,6 @@ const PatientDetail: React.FC = () => {
     [patient, id]
   );
 
-  const handleNewSession = () => {
-    navigate(ROUTES.SESSION_NEW.replace(':id', id || ''), {
-      state: { patient }
-    });
-  };
-
   if (loading) {
     return (
       <div className="flex h-screen items-center justify-center">
@@ -131,17 +126,15 @@ const PatientDetail: React.FC = () => {
           onBack={() => navigate(ROUTES.PATIENTS)}
         >
           {activeTabId === "sesiones" && (
-            <Button
-              onClick={handleNewSession}
-              className="rounded-xl bg-[var(--brand-primario)] text-white hover:bg-[var(--brand-hover-primario)] active:bg-[var(--brand-active-primario)] cursor-pointer"
-            >
-              <Plus className="size-4" />
-              Nueva sesión
-            </Button>
+            <NewSessionDialog
+              patientId={patientDetail.profile.numericId}
+              onSessionCreated={() => setSessionRefreshKey((k) => k + 1)}
+            />
           )}
         </PatientDetailHeader>
-        <PatientDetailTabs 
-          patient={patientDetail} 
+        <PatientDetailTabs
+          patient={patientDetail}
+          sessionRefreshKey={sessionRefreshKey}
           onActiveTabChange={setActiveTabId}
         />
     </div>
