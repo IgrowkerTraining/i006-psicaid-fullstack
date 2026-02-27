@@ -159,33 +159,30 @@ export function NewPatientDialog({ onSave }: NewPatientDialogProps) {
         </Button>
       </DialogTrigger>
 
-      <DialogContent className="border-gray-200 bg-brand-acento text-gray-700 sm:max-w-2xl">
+      <DialogContent className="border-gray-200 bg-white text-gray-700 sm:max-w-2xl">
         <DialogHeader className="space-y-2 text-left">
           <DialogTitle className="text-2xl font-bold">
             Agregar paciente
           </DialogTitle>
-          <DialogDescription className="text-slate-600">
-            Completa los datos para registrar el paciente.
-          </DialogDescription>
         </DialogHeader>
 
         <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
           <Input
             label="Nombre"
-            placeholder="Ej: Joseph"
+            placeholder=""
             value={values.firstName}
             onChange={handleFieldChange('firstName')}
-            icon={<User className="size-4" />}
+            className="bg-white"
           />
           <Input
             label="Apellido"
-            placeholder="Ej: Vilanova"
+            placeholder=""
             value={values.lastName}
             onChange={handleFieldChange('lastName')}
-            icon={<User className="size-4" />}
+            className="bg-white"
           />
           <div className="flex w-full flex-col gap-1.5">
-            <label className="ml-1 text-sm font-medium text-slate-400">
+            <label className="ml-1 text-sm font-medium text-gray-800">
               Fecha de nacimiento
             </label>
             <Popover open={birthDatePickerOpen} onOpenChange={setBirthDatePickerOpen}>
@@ -194,14 +191,16 @@ export function NewPatientDialog({ onSave }: NewPatientDialogProps) {
                   type="button"
                   variant="outline"
                   disabled={isSaving}
-                  className={`h-[42px] w-full justify-start border-slate-300 bg-white text-left font-normal hover:bg-white ${
+                  className={`h-[42px] w-full justify-start border-slate-300 bg-white text-left font-normal hover:bg-white transition-all duration-200 ${
                     values.birthDate ? 'text-slate-900' : 'text-slate-400'
+                  } ${
+                    birthDatePickerOpen ? 'ring-2 ring-indigo-500/50 border-indigo-500' : ''
                   }`}
                 >
-                  <CalendarHeart className="size-4" />
+                  
                   {selectedBirthDate
                     ? format(selectedBirthDate, 'PPP')
-                    : 'Selecciona una fecha'}
+                    : ''}
                 </Button>
               </PopoverTrigger>
               <PopoverContent
@@ -227,13 +226,13 @@ export function NewPatientDialog({ onSave }: NewPatientDialogProps) {
           </div>
           <Input
             label="Ocupacion"
-            placeholder="Ej: Ingeniero"
+            placeholder=""
             value={values.occupation}
             onChange={handleFieldChange('occupation')}
-            icon={<Stethoscope className="size-4" />}
+            className="bg-white"
           />
           <div className="flex w-full flex-col gap-1.5">
-            <label className="ml-1 text-sm font-medium text-slate-400">Sexo</label>
+            <label className="ml-1 text-sm font-medium text-gray-800">Sexo</label>
             <select
               value={values.sex}
               onChange={handleSelectChange('sex')}
@@ -251,7 +250,7 @@ export function NewPatientDialog({ onSave }: NewPatientDialogProps) {
             </select>
           </div>
           <div className="flex w-full flex-col gap-1.5">
-            <label className="ml-1 text-sm font-medium text-slate-400">
+            <label className="ml-1 text-sm font-medium text-gray-800">
               Estado civil
             </label>
             <select
@@ -272,23 +271,23 @@ export function NewPatientDialog({ onSave }: NewPatientDialogProps) {
           </div>
           <Input
             label="Email"
-            placeholder="ejemplo@email.com"
+            placeholder=""
             type="email"
             value={values.email || ''}
             onChange={handleFieldChange('email')}
-            icon={<Mail className="size-4" />}
+            className="bg-white"
           />
           <Input
             label="Telefono"
-            placeholder="+56 9 1234 5678"
+            placeholder=""
             value={values.phone || ''}
             onChange={handleFieldChange('phone')}
-            icon={<Phone className="size-4" />}
+            className="bg-white"
           />
         </div>
 
         <div className="flex w-full flex-col gap-1.5">
-          <label className="ml-1 text-sm font-medium text-slate-400">
+          <label className="ml-1 text-sm font-medium text-gray-800">
             Motivo de consulta
           </label>
           <textarea
@@ -298,7 +297,7 @@ export function NewPatientDialog({ onSave }: NewPatientDialogProps) {
               setSubmitError(null);
             }}
             disabled={isSaving}
-            placeholder="Describe el motivo de la consulta..."
+            placeholder=""
             className="min-h-[80px] w-full rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm text-slate-900 focus:border-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-500/50 resize-none"
           />
         </div>
