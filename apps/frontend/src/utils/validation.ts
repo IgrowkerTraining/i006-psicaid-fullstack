@@ -27,7 +27,7 @@ const PASSWORD_COMPLEXITY_REGEX =
 
 export const validateEmail = (email: string): string | null => {
   if (!EMAIL_REGEX.test(email.trim())) {
-    return "Ingresa un correo electrónico válido."
+    return "Ingresa un correo electronico valido."
   }
   return null
 }
@@ -55,17 +55,21 @@ export const validateMinLength = (
 
 export const validatePasswordStrength = (
   value: string,
-  fieldName = "La contraseña"
-): string | null => {
+  fieldName = "La contrasena"
+): string[] => {
+  const errors: string[] = []
+
   if (value.length <= 8) {
-    return `${fieldName} debe tener más de 8 caracteres.`
+    errors.push(`${fieldName} debe tener mas de 8 caracteres.`)
   }
 
   if (!PASSWORD_COMPLEXITY_REGEX.test(value)) {
-    return `${fieldName} debe incluir una mayúscula, una minúscula, un número y un carácter especial.`
+    errors.push(
+      `${fieldName} debe incluir una mayuscula, una minuscula, un numero y un caracter especial.`
+    )
   }
 
-  return null
+  return errors
 }
 
 export const validateLogin = (data: LoginValidationData): ValidationResult => {
@@ -74,7 +78,7 @@ export const validateLogin = (data: LoginValidationData): ValidationResult => {
   const emailValue = data.email.trim()
   const passwordValue = data.password
 
-  const emailRequiredError = validateRequired(emailValue, "El correo electrónico")
+  const emailRequiredError = validateRequired(emailValue, "El correo electronico")
   if (emailRequiredError) {
     errors.push({ field: "email", message: emailRequiredError })
   } else {
@@ -84,14 +88,14 @@ export const validateLogin = (data: LoginValidationData): ValidationResult => {
     }
   }
 
-  const passwordError = validateRequired(passwordValue, "La contraseña")
+  const passwordError = validateRequired(passwordValue, "La contrasena")
   if (passwordError) {
     errors.push({ field: "password", message: passwordError })
   } else {
-    const passwordStrengthError = validatePasswordStrength(passwordValue)
-    if (passwordStrengthError) {
+    const passwordStrengthErrors = validatePasswordStrength(passwordValue)
+    passwordStrengthErrors.forEach((passwordStrengthError) => {
       errors.push({ field: "password", message: passwordStrengthError })
-    }
+    })
   }
 
   return {
@@ -121,7 +125,7 @@ export const validateRegistration = (
     errors.push({ field: "lastName", message: lastNameError })
   }
 
-  const emailRequiredError = validateRequired(emailValue, "El correo electrónico")
+  const emailRequiredError = validateRequired(emailValue, "El correo electronico")
   if (emailRequiredError) {
     errors.push({ field: "email", message: emailRequiredError })
   } else {
@@ -131,30 +135,30 @@ export const validateRegistration = (
     }
   }
 
-  const passwordRequiredError = validateRequired(passwordValue, "La contraseña")
+  const passwordRequiredError = validateRequired(passwordValue, "La contrasena")
   if (passwordRequiredError) {
     errors.push({ field: "password", message: passwordRequiredError })
   } else {
-    const passwordStrengthError = validatePasswordStrength(
+    const passwordStrengthErrors = validatePasswordStrength(
       passwordValue,
-      "La contraseña"
+      "La contrasena"
     )
-    if (passwordStrengthError) {
+    passwordStrengthErrors.forEach((passwordStrengthError) => {
       errors.push({ field: "password", message: passwordStrengthError })
-    }
+    })
   }
 
   if (data.confirmPassword !== undefined) {
     const confirmRequiredError = validateRequired(
       confirmPasswordValue,
-      "La confirmación de contraseña"
+      "La confirmacion de contrasena"
     )
     if (confirmRequiredError) {
       errors.push({ field: "confirmPassword", message: confirmRequiredError })
     } else if (passwordValue !== confirmPasswordValue) {
       errors.push({
         field: "confirmPassword",
-        message: "Las contraseñas no coinciden.",
+        message: "Las contrasenas no coinciden.",
       })
     }
   }
@@ -169,7 +173,11 @@ export const toErrorMap = (
   errors: ValidationError[]
 ): Record<string, string> => {
   return errors.reduce<Record<string, string>>((accumulator, error) => {
-    accumulator[error.field] = error.message
+    if (accumulator[error.field]) {
+      accumulator[error.field] = `${accumulator[error.field]}\n${error.message}`
+    } else {
+      accumulator[error.field] = error.message
+    }
     return accumulator
   }, {})
 }

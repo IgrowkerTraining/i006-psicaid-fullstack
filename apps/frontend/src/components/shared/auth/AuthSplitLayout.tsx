@@ -38,7 +38,6 @@ export function AuthSplitLayout({
             className="h-full w-full object-cover"
           />
           <div className="absolute inset-0 bg-black/10" />
-          <p className="absolute left-6 top-6 text-sm text-white/90">{eyebrow}</p>
         </motion.div>
 
         <motion.div
@@ -48,15 +47,6 @@ export function AuthSplitLayout({
           className="flex items-center justify-center p-6 sm:p-10"
         >
           <div className="w-full max-w-md">
-            <motion.p
-              initial={{ opacity: 0, y: 6 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.35, delay: 0.28, ease: smoothEase }}
-              className="mb-6 text-xs font-medium uppercase tracking-wide text-brand-primario/60 md:hidden"
-            >
-              {eyebrow}
-            </motion.p>
-
             <motion.div
               initial={{ opacity: 0, y: 10 }}
               animate={{ opacity: 1, y: 0 }}
@@ -68,8 +58,8 @@ export function AuthSplitLayout({
                 alt="Psicaid logo"
                 className="mb-4 h-14 w-14 object-contain"
               />
-              <h1 className="text-4xl font-bold text-brand-primario">Psicaid</h1>
-              <p className="mt-3 text-sm text-brand-primario/70">{description}</p>
+              <h1 className="text-4xl font-bold text-gray-900">Psicaid</h1>
+              <p className="mt-3 text-sm text-gray-900/70">{description}</p>
             </motion.div>
 
             {children}
@@ -78,7 +68,7 @@ export function AuthSplitLayout({
               initial={{ opacity: 0, y: 8 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.35, delay: 0.45, ease: smoothEase }}
-              className="mt-8 text-center text-sm text-brand-primario/70"
+              className="mt-8 text-center text-sm text-gray-900/70"
             >
               {footer}
             </motion.div>

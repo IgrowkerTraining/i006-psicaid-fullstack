@@ -22,7 +22,7 @@ export const Input: React.FC<InputProps> = ({
   return (
     <div className="flex flex-col gap-1.5 w-full">
       {label && (
-        <label className="text-sm font-medium ml-1 text-slate-400">
+        <label className="text-sm font-medium ml-1 text-gray-800">
           {label}
         </label>
       )}
@@ -68,7 +68,11 @@ export const Input: React.FC<InputProps> = ({
           </button>
         )}
       </div>
-      {error && <p className="text-xs text-red-500 mt-0.5 ml-1">{error}</p>}
+      {error && (
+        <p className="text-xs text-red-500 mt-0.5 ml-1 whitespace-pre-line">
+          {error}
+        </p>
+      )}
     </div>
   );
 };
