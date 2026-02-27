@@ -28,7 +28,7 @@ const Register: React.FC = () => {
           ¿Ya tienes una cuenta?{" "}
           <Link
             to="/login"
-            className="font-semibold text-brand-secundario hover:text-brand-secundario/80"
+            className="font-semibold text-brand-primario hover:text-brand-hover-primario"
           >
             Ingresa aquí
           </Link>
