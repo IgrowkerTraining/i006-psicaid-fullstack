@@ -32,6 +32,10 @@ public class ClinicalSession {
 
     private Integer duration; // En minutos
 
+    //@Enumerated(EnumType.STRING)
+    @Column(name = "status")
+    private String status;
+
     // --- CAMPOS DE TEXTO LARGO (Narrativa Clínica) ---
     // Usamos columnDefinition = "TEXT" para que Hibernate sepa que no es un VARCHAR(255)
 
@@ -62,6 +66,7 @@ public class ClinicalSession {
     @JoinColumn(name = "patient_id", nullable = false)
     @ToString.Exclude
     private Patient patient;
+
     @OneToMany(mappedBy = "session", fetch = FetchType.LAZY)
     private List<HistoryChange> historyChanges;
 

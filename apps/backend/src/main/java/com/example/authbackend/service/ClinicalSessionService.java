@@ -3,10 +3,12 @@ package com.example.authbackend.service;
 import com.example.authbackend.dto.ClinicalSessionDTO;
 import com.example.authbackend.dto.ClinicalSessionUpdateDTO;
 import com.example.authbackend.model.ClinicalSession;
+import com.example.authbackend.model.HistoryChange;
 import com.example.authbackend.model.LogCriticality;
 import com.example.authbackend.model.Patient;
 import com.example.authbackend.model.Professional;
 import com.example.authbackend.repository.ClinicalSessionRepository;
+import com.example.authbackend.repository.HistoryChangeRepository;
 import com.example.authbackend.repository.PatientRepository;
 import com.example.authbackend.repository.ProfessionalRepository;
 import lombok.RequiredArgsConstructor;
@@ -26,6 +28,7 @@ public class ClinicalSessionService {
     private final PatientRepository patientRepository;
     private final ProfessionalRepository professionalRepository;
     private final AiIntegrationService aiIntegrationService;
+    private final HistoryChangeRepository historyChangeRepository;
     private final LogService logService;
 
     /**
@@ -133,12 +136,17 @@ public class ClinicalSessionService {
         if (!session.getPatient().getId().equals(patientId)) {
             throw new RuntimeException("La sesión no pertenece al paciente indicado en la URL.");
         }
+
         // Calculamos la fecha y duración (si el DTO trae una nueva la usamos, si no, usamos la vieja)
         OffsetDateTime newStart = dto.getSessionDateTime() != null ? dto.getSessionDateTime() : session.getSessionDateTime();
         Integer newDuration = dto.getDuration() != null ? dto.getDuration() : session.getDuration();
 
         // Comprobamos que no se solapen sesiones
         validateNoOverlappingSessions(pro.getId(), newStart, newDuration, sessionId);
+
+        // Histórico de cambios:
+        // Guardamos el contenido previo.
+        String previousContent = buildNarrative(session);
 
         // Actualizamos solo los campos que no sean nulos
         if (dto.getSessionDateTime() != null) session.setSessionDateTime(dto.getSessionDateTime());
@@ -151,6 +159,8 @@ public class ClinicalSessionService {
         if (dto.getClinicalEvolution() != null) session.setClinicalEvolution(dto.getClinicalEvolution());
         if (dto.getTherapeuticGoals() != null) session.setTherapeuticGoals(dto.getTherapeuticGoals());
         if (dto.getDiagnosticNotes() != null) session.setDiagnosticNotes(dto.getDiagnosticNotes());
+        if (dto.getStatus() != null) session.setStatus(dto.getStatus());
+        session.setUpdatedAt(OffsetDateTime.now());
 
         ClinicalSession updatedSession = sessionRepository.save(session);
 
@@ -159,6 +169,23 @@ public class ClinicalSessionService {
                 "Modificación de sesión clínica ID: " + sessionId + " del paciente ID: " + patientId,
                 pro
         );
+
+        // HC: Guardamos el contenido nuevo
+        String newContent = buildNarrative(updatedSession);
+
+        // HC: Si cambió algo → registramos auditoría
+        if (!previousContent.equals(newContent)) {
+
+            HistoryChange history = HistoryChange.builder()
+                    .previousContent(previousContent)
+                    .newContent(newContent)
+                    .session(updatedSession)
+                    .changeDate(OffsetDateTime.now())
+                    .build();
+
+            historyChangeRepository.save(history);
+        }
+
         return convertToDTO(updatedSession);
     }
 
@@ -245,6 +272,30 @@ public class ClinicalSessionService {
                 .createdAt(session.getCreatedAt())
                 .updatedAt(session.getUpdatedAt())
                 .summary(session.getSummary())
+                .status(session.getStatus())
                 .build();
+    }
+
+    // Metodo helper para unificar el contenido clinico
+    private String buildNarrative(ClinicalSession session) {
+        return """
+                Status: %s
+                Observations: %s
+                Hypothesis: %s
+                Interventions: %s
+                Clinical Evolution: %s
+                Therapeutic Goals: %s
+                Diagnostic Notes: %s
+                Summary: %s
+                """.formatted(
+                    session.getStatus(),
+                    session.getObservations(),
+                    session.getHypothesis(),
+                    session.getInterventions(),
+                    session.getClinicalEvolution(),
+                    session.getTherapeuticGoals(),
+                    session.getDiagnosticNotes(),
+                    session.getSummary()
+                );
     }
 }

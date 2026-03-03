@@ -12,6 +12,7 @@ public class ClinicalSessionUpdateDTO {
     private String sessionType;
     private String frequency;
     private Integer duration;
+    private String status;
 
     // Campos clínicos (para rellenar durante o después de la sesión)
     private String observations;
