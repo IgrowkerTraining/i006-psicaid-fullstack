@@ -7,8 +7,7 @@ public enum LogCriticality {
     // Definimos los valores de Java (Mayúsculas) y su equivalente en BD (Minúsculas)
     LOW("low"),
     MEDIUM("medium"),
-    HIGH("high"),
-    CRITICAL("critical");
+    HIGH("high");
 
     private final String dbValue;
 

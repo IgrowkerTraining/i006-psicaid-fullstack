@@ -61,4 +61,13 @@ public class PatientController {
         patientService.archivePatient(patientId);
         return ResponseEntity.noContent().build();
     }
+
+    /**
+     * Restaura a un paciente previamente archivado.
+     */
+    @PostMapping("/{patientId}/restore")
+    public ResponseEntity<Void> restorePatient(@PathVariable Long patientId) {
+        patientService.restorePatient(patientId);
+        return ResponseEntity.ok().build();
+    }
 }

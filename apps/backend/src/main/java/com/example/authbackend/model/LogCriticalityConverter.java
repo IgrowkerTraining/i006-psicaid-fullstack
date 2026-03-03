@@ -12,7 +12,7 @@ public class LogCriticalityConverter implements AttributeConverter<LogCriticalit
         if (attribute == null) {
             return null;
         }
-        // Java -> Base de Datos: Devuelve "bajo", "medio", etc.
+        // Java -> Base de Datos: Devuelve "low", "medium", "hight".
         return attribute.getDbValue();
     }
 

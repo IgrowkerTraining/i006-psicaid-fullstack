@@ -2,6 +2,7 @@ package com.example.authbackend.service;
 
 import com.example.authbackend.dto.ProfessionalDTO;
 import com.example.authbackend.dto.ProfessionalUpdateDTO;
+import com.example.authbackend.model.LogCriticality;
 import com.example.authbackend.model.Professional;
 import com.example.authbackend.repository.ProfessionalRepository;
 import lombok.RequiredArgsConstructor;
@@ -14,6 +15,7 @@ import org.springframework.transaction.annotation.Transactional;
 public class ProfessionalService {
 
     private final ProfessionalRepository professionalRepository;
+    private final LogService logService;
 
     private Professional getAuthenticatedProfessional() {
         String email = SecurityContextHolder.getContext().getAuthentication().getName();
@@ -33,6 +35,12 @@ public class ProfessionalService {
         if (dto.getLastName() != null) profesionalAuth.setLastName(dto.getLastName());
 
         Professional updatedProfessional = professionalRepository.save(profesionalAuth);
+
+        logService.recordLog(
+                LogCriticality.LOW,
+                "Modificación del perfil del profesional ID: " + updatedProfessional.getId(),
+                updatedProfessional
+        );
         return convertToDTO(updatedProfessional);
     }
     /**
@@ -42,13 +50,11 @@ public class ProfessionalService {
         Professional professional = professionalRepository.findByEmail(email)
                 .orElseThrow(() -> new RuntimeException("Profesional no encontrado en la base de datos"));
 
-        // Convertimos la entidad al DTO que le enviaremos al frontend (¡sin la contraseña!)
         return ProfessionalDTO.builder()
                 .id(professional.getId())
                 .firstName(professional.getFirstName())
                 .lastName(professional.getLastName())
                 .email(professional.getEmail())
-                // .role(professional.getRole()) // Si tienes roles, añádelo
                 .build();
     }
 

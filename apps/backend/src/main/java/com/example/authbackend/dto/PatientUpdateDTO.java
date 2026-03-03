@@ -23,7 +23,6 @@ public class PatientUpdateDTO {
     private String occupation;
     private String maritalStatus;
     private String sex;
-    private Boolean active;
     private String reason_consultation;
     private String email;
     private String phone;
