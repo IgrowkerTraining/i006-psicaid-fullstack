@@ -2,6 +2,7 @@ package com.example.authbackend.service;
 
 import com.example.authbackend.dto.PatientDTO;
 import com.example.authbackend.dto.PatientUpdateDTO;
+import com.example.authbackend.model.LogCriticality;
 import com.example.authbackend.model.Patient;
 import com.example.authbackend.model.Professional;
 import com.example.authbackend.repository.PatientRepository;
@@ -20,6 +21,7 @@ public class PatientService {
 
     private final PatientRepository patientRepository;
     private final ProfessionalRepository professionalRepository;
+    private final LogService logService;
 
     /**
      * Método privado de utilidad para obtener al profesional que ha iniciado sesión.
@@ -78,6 +80,13 @@ public class PatientService {
                 .build();
 
         Patient savedPatient = patientRepository.save(patient);
+
+        logService.recordLog(
+                LogCriticality.MEDIUM,
+                "Alta de nuevo paciente. Código Interno: " + savedPatient.getInternalCode(),
+                pro
+        );
+
         return convertToDTO(savedPatient);
     }
 
@@ -105,13 +114,18 @@ public class PatientService {
         if (dto.getBirthDate() != null) patient.setBirthDate(dto.getBirthDate());
         if (dto.getMaritalStatus() != null) patient.setMaritalStatus(dto.getMaritalStatus());
         if (dto.getSex() != null) patient.setSex(dto.getSex());
-        if (dto.getActive() != null) patient.setActive(dto.getActive());
         if (dto.getReason_consultation() != null) patient.setReason_consultation(dto.getReason_consultation());
         if (dto.getEmail() != null) patient.setEmail(dto.getEmail());
         if (dto.getPhone() != null) patient.setPhone(dto.getPhone());
         if (dto.getClinical_history() != null) patient.setClinical_history(dto.getClinical_history());
 
         Patient updatedPatient = patientRepository.save(patient);
+
+        logService.recordLog(
+                LogCriticality.MEDIUM,
+                "Modificación de datos del paciente con ID: " + updatedPatient.getId(),
+                pro
+        );
         return convertToDTO(updatedPatient);
     }
 
@@ -133,6 +147,42 @@ public class PatientService {
         }
 
         patient.setActive(false);
+
+        logService.recordLog(
+                LogCriticality.HIGH,
+                "Archivado (Soft Delete) de paciente con ID: " + patient.getId(),
+                pro
+        );
+
+        patientRepository.save(patient);
+    }
+
+    /**
+     * Restaura a un paciente que había sido archivado (Soft Delete).
+     * Vuelve a aparecer en la lista de pacientes activos.
+     */
+    @Transactional
+    public void restorePatient(Long patientId) {
+        // Identificamos al psicólogo por su token
+        Professional pro = getAuthenticatedProfessional();
+
+        // Buscamos al paciente
+        Patient patient = patientRepository.findById(patientId)
+                .orElseThrow(() -> new RuntimeException("Paciente no encontrado"));
+
+        // Verificamos que no intente restaurar el paciente de otro compañero
+        if (!patient.getProfessional().getId().equals(pro.getId())) {
+            throw new RuntimeException("Acceso denegado. No puedes restaurar pacientes de otros profesionales.");
+        }
+
+        patient.setActive(true);
+
+        logService.recordLog(
+                LogCriticality.HIGH,
+                "Restauración de paciente archivado con ID: " + patient.getId(),
+                pro
+        );
+
         patientRepository.save(patient);
     }
 

@@ -3,6 +3,7 @@ package com.example.authbackend.service;
 import com.example.authbackend.dto.ClinicalSessionDTO;
 import com.example.authbackend.dto.ClinicalSessionUpdateDTO;
 import com.example.authbackend.model.ClinicalSession;
+import com.example.authbackend.model.LogCriticality;
 import com.example.authbackend.model.Patient;
 import com.example.authbackend.model.Professional;
 import com.example.authbackend.repository.ClinicalSessionRepository;
@@ -25,6 +26,7 @@ public class ClinicalSessionService {
     private final PatientRepository patientRepository;
     private final ProfessionalRepository professionalRepository;
     private final AiIntegrationService aiIntegrationService;
+    private final LogService logService;
 
     /**
      * Obtiene el profesional autenticado a través del JWT.
@@ -74,6 +76,12 @@ public class ClinicalSessionService {
                 .build();
 
         ClinicalSession savedSession = sessionRepository.save(session);
+
+        logService.recordLog(
+                LogCriticality.MEDIUM,
+                "Alta de sesión clínica para el paciente ID: " + patientId,
+                pro
+        );
         return convertToDTO(savedSession);
     }
 
@@ -145,6 +153,12 @@ public class ClinicalSessionService {
         if (dto.getDiagnosticNotes() != null) session.setDiagnosticNotes(dto.getDiagnosticNotes());
 
         ClinicalSession updatedSession = sessionRepository.save(session);
+
+        logService.recordLog(
+                LogCriticality.MEDIUM,
+                "Modificación de sesión clínica ID: " + sessionId + " del paciente ID: " + patientId,
+                pro
+        );
         return convertToDTO(updatedSession);
     }
 
@@ -208,7 +222,7 @@ public class ClinicalSessionService {
             OffsetDateTime existingEnd = existingStart.plusMinutes(existing.getDuration());
 
             if (sessionStart.isBefore(existingEnd) && sessionEnd.isAfter(existingStart)) {
-                throw new RuntimeException("Horario no disponible. Esta cita se solapa con otra sesión programada a las " + existingStart.toLocalTime());
+                throw new RuntimeException("Horario no disponible. Esta cita se solapa con otra sesión programada.");
             }
         }
     }

@@ -19,7 +19,7 @@ import org.springframework.web.bind.annotation.*;
  */
 @RestController
 @RequestMapping("/api/auth")
-@RequiredArgsConstructor // Genera el constructor para la inyección de dependencias
+@RequiredArgsConstructor
 public class AuthController {
 
     private final AuthService authService;
@@ -49,5 +49,15 @@ public class AuthController {
         ProfessionalDTO professionalDTO = professionalService.getProfessionalByEmail(email);
 
         return ResponseEntity.ok(professionalDTO);
+    }
+
+    /**
+     * Endpoint para registrar el cierre de sesión en la auditoría.
+     * El frontend debe llamar a este endpoint con el token ANTES de borrarlo del localStorage.
+     */
+    @PostMapping("/logout")
+    public ResponseEntity<String> logout() {
+        authService.logout();
+        return ResponseEntity.ok("Sesión cerrada correctamente. Log registrado.");
     }
 }
