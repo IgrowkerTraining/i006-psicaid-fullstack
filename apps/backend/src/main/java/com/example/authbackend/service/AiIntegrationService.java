@@ -40,23 +40,21 @@ public class AiIntegrationService {
     }
 
     // ========================================================================
-    // MOTOR CENTRAL QUE SE COMUNICA CON PYTHON (chat.py)
+    // MOTOR CENTRAL QUE SE COMUNICA CON PYTHON
     // ========================================================================
     private String callChatApi(String content, String errorMessage) {
-        // 1. Montamos el mensaje del usuario
+        // Montamos el mensaje del usuario
         AiChatRequestDTO.Message userMessage = AiChatRequestDTO.Message.builder()
                 .role("user")
                 .content(content)
                 .build();
-
-        // 2. Montamos el Body completo
+        // Montamos el request
         AiChatRequestDTO request = AiChatRequestDTO.builder()
                 .model("openai/gpt-4o-mini")
                 .messages(List.of(userMessage))
                 .build();
 
         try {
-            // 3. Disparamos a la única ruta válida de Python
             AiChatResponseDTO response = restClient.post()
                     .uri("/api/v1/chat/summary")
                     .contentType(MediaType.APPLICATION_JSON)
