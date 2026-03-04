@@ -211,7 +211,7 @@ public class ClinicalSessionService {
         }
 
         // Llamamos al microservicio de Python (FastAPI)
-        String generatedSummary = aiIntegrationService.getSessionSummary(pro.getId(), combinedNotes);
+        String generatedSummary = aiIntegrationService.getSingleSessionSummary(pro.getId(), combinedNotes);
 
         // Guardamos el resumen generado en la base de datos
         session.setSummary(generatedSummary);
