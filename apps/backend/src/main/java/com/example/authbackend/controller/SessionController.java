@@ -12,6 +12,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+// IMPORTACIONES NUEVAS AÑADIDAS
+import java.util.HashMap;
+import java.util.Map;
 import java.util.List;
 
 @RestController
@@ -59,13 +62,18 @@ public class SessionController {
      * Endpoint para generar un resumen de la sesión clínica usando IA (Microservicio Python).
      */
     @PostMapping("/{patientId}/sessions/{sessionId}/summarize")
-    public ResponseEntity<ClinicalSessionDTO> generateSessionSummary(
+    public ResponseEntity<Map<String, String>> generateSessionSummary(
             @PathVariable Long patientId,
             @PathVariable Long sessionId) {
 
+        // Ejecutamos la lógica en el servicio (guarda en BD y contacta con IA)
         ClinicalSessionDTO updatedSession = sessionService.generateAndSaveSummary(patientId, sessionId);
 
-        return ResponseEntity.ok(updatedSession);
+        // Extraemos solo el resumen y creamos el mapa para la respuesta JSON
+        Map<String, String> response = new HashMap<>();
+        response.put("summary", updatedSession.getSummary());
+
+        return ResponseEntity.ok(response);
     }
 
     /**

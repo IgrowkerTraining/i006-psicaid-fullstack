@@ -1,7 +1,7 @@
 package com.example.authbackend.service;
 
-import com.example.authbackend.dto.AiSummaryRequestDTO;
-import com.example.authbackend.dto.AiSummaryResponseDTO;
+import com.example.authbackend.dto.AiChatRequestDTO;
+import com.example.authbackend.dto.AiChatResponseDTO;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.MediaType;
 import org.springframework.http.client.SimpleClientHttpRequestFactory;
@@ -16,7 +16,6 @@ public class AiIntegrationService {
     private final RestClient restClient;
 
     public AiIntegrationService(@Value("${ai.service.base-url}") String baseUrl) {
-        // Obligamos a Spring Boot a usar HTTP/1.1 básico
         SimpleClientHttpRequestFactory factory = new SimpleClientHttpRequestFactory();
         this.restClient = RestClient.builder()
                 .baseUrl(baseUrl)
@@ -24,66 +23,85 @@ public class AiIntegrationService {
                 .build();
     }
 
-    /**
-     * Llama al microservicio de Python para resumir las notas de una sesión.
-     */
-    public String getSessionSummary(Long psychologistId, String combinedNotes) {
+    // ========================================================================
+    // CASO 1: RESUMEN DE UNA SOLA SESIÓN
+    // ========================================================================
+    public String getSingleSessionSummary(Long psychologistId, String notes) {
+        String prompt = "Por favor, analiza las siguientes notas de una ÚNICA sesión clínica y extrae la información solicitada: " + notes;
+        return callChatApi(prompt, "Error: No se pudo generar el resumen de la sesión.");
+    }
 
-        AiSummaryRequestDTO request = AiSummaryRequestDTO.builder()
-                .psychologistId(psychologistId)
-                .rawNotes(combinedNotes)
+    // ========================================================================
+    // CASO 2: RESUMEN HISTÓRICO POR FECHAS
+    // ========================================================================
+    public String getHistoricalSummary(String combinedNotes) {
+        String prompt = "Por favor, analiza el siguiente HISTORIAL de notas clínicas acumuladas de varias sesiones y genera una memoria clínica unificada de la evolución: " + combinedNotes;
+        return callChatApi(prompt, "Error: No se pudo generar la memoria clínica.");
+    }
+
+    // ========================================================================
+    // MOTOR CENTRAL QUE SE COMUNICA CON PYTHON
+    // ========================================================================
+    private String callChatApi(String content, String errorMessage) {
+        // Montamos el mensaje del usuario
+        AiChatRequestDTO.Message userMessage = AiChatRequestDTO.Message.builder()
+                .role("user")
+                .content(content)
+                .build();
+        // Montamos el request
+        AiChatRequestDTO request = AiChatRequestDTO.builder()
+                .model("openai/gpt-4o-mini")
+                .messages(List.of(userMessage))
                 .build();
 
         try {
-            AiSummaryResponseDTO response = restClient.post()
-                    .uri("/api/v1/sessions/summarize")
+            AiChatResponseDTO response = restClient.post()
+                    .uri("/api/v1/chat/summary")
                     .contentType(MediaType.APPLICATION_JSON)
                     .body(request)
                     .retrieve()
-                    .body(AiSummaryResponseDTO.class);
+                    .body(AiChatResponseDTO.class);
 
-            return formatSummaryToString(response);
+            return formatResponseToString(response);
 
         } catch (Exception e) {
             System.err.println("Error al conectar con IA: " + e.getMessage());
-            return "Error: No se pudo generar el resumen automático.";
+            return errorMessage + " Detalles: " + e.getMessage();
         }
-
     }
 
     /**
-     * Transforma el objeto complejo de la IA en un bloque de texto legible.
+     * Pasa el JSON estricto a un texto bonito para el Frontend,
+     * ocultando automáticamente los campos que la IA marca como desconocidos.
      */
-    private String formatSummaryToString(AiSummaryResponseDTO response) {
-        if (response == null || response.getSummary() == null) {
-            return "Resumen no disponible.";
-        }
+    private String formatResponseToString(AiChatResponseDTO response) {
+        if (response == null) return "Memoria clínica no disponible.";
+        StringBuilder sb = new StringBuilder();
 
-        AiSummaryResponseDTO.SummaryData data = response.getSummary();
-        StringBuilder formattedText = new StringBuilder();
+        appendIfValid(sb, "Paciente: ", response.getPaciente());
+        appendIfValid(sb, "Edad: ", response.getEdad());
+        appendIfValid(sb, "Frecuencia: ", response.getFrecuenciaSesiones());
+        appendIfValid(sb, "Última sesión: ", response.getUltimaSesion());
+        appendIfValid(sb, "Motivo de consulta:\n", response.getMotivoConsulta());
+        appendIfValid(sb, "Contexto clínico:\n", response.getContextoClinico());
+        appendIfValid(sb, "Hipótesis de trabajo:\n", response.getHipotesisTrabajo());
+        appendIfValid(sb, "Intervenciones:\n", response.getIntervenciones());
+        appendIfValid(sb, "Evolución:\n", response.getEvolucion());
+        appendIfValid(sb, "Objetivos:\n", response.getObjetivos());
+        appendIfValid(sb, "Próxima sesión:\n", response.getProximaSesion());
 
-        if (data.getMainConcern() != null) {
-            formattedText.append("Motivo principal: ").append(data.getMainConcern()).append("\n\n");
-        }
+        return sb.toString().trim();
+    }
 
-        if (data.getObservations() != null) {
-            formattedText.append("Observaciones:\n");
-            formattedText.append(" - Duración: ").append(data.getObservations().getDuration()).append("\n");
-            formattedText.append(" - Evolución: ").append(data.getObservations().getImprovement()).append("\n\n");
-        }
-
-        if (data.getActionItems() != null && !data.getActionItems().isEmpty()) {
-            formattedText.append("Plan de acción:\n");
-            for (String item : data.getActionItems()) {
-                formattedText.append(" - ").append(item).append("\n");
+    /**
+     * Filtro inteligente anti-basura.
+     */
+    private void appendIfValid(StringBuilder sb, String label, String value) {
+        if (value != null && !value.trim().isEmpty()) {
+            String lower = value.toLowerCase();
+            if (!lower.contains("desconocid") && !lower.contains("no especificad") && !lower.contains("no mencionad") && !lower.equals("null")) {
+                sb.append(label).append(value).append("\n\n");
             }
-            formattedText.append("\n");
         }
-
-        if (data.getFollowUp() != null) {
-            formattedText.append("Seguimiento: ").append(data.getFollowUp());
-        }
-
-        return formattedText.toString().trim();
     }
 }

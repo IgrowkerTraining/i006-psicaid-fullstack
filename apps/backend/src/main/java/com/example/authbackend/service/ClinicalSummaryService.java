@@ -70,7 +70,7 @@ public class ClinicalSummaryService {
         }
 
         // Llamamos al servicio de IA (Python)
-        String generatedSummary = aiIntegrationService.getSessionSummary(pro.getId(), combinedNotes.toString());
+        String generatedSummary = aiIntegrationService.getHistoricalSummary(combinedNotes.toString());
 
         ClinicalSummary summary = ClinicalSummary.builder()
                 .content(generatedSummary)
