@@ -25,6 +25,7 @@ public class ClinicalSessionDTO {
     private String sessionType; // Ej: Individual presencial
     private String frequency; // Semanal, mensual..
     private Integer duration; // En minutos
+    private String status;
 
     // --- Narrativa Clínica ---
     private String observations;

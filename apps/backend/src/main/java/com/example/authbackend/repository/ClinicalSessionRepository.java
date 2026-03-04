@@ -29,4 +29,10 @@ public interface ClinicalSessionRepository extends JpaRepository<ClinicalSession
     // Busca las próximas 5 sesiones de este profesional, desde 'ahora' hacia el futuro, ordenadas por fecha más cercana.
     List<ClinicalSession> findTop5ByPatientProfessionalIdAndSessionDateTimeGreaterThanEqualOrderBySessionDateTimeAsc(
             Long professionalId, OffsetDateTime now);
+
+    List<ClinicalSession> findByPatientIdAndSessionDateTimeBetweenOrderBySessionDateTimeAsc(
+            Long patientId,
+            java.time.OffsetDateTime start,
+            java.time.OffsetDateTime end
+    );
 }
