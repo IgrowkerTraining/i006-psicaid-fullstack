@@ -2,7 +2,10 @@ package com.example.authbackend.controller;
 
 import com.example.authbackend.dto.ClinicalSessionDTO;
 import com.example.authbackend.dto.ClinicalSessionUpdateDTO;
+import com.example.authbackend.dto.ClinicalSummaryDTO;
+import com.example.authbackend.model.ClinicalSummary;
 import com.example.authbackend.service.ClinicalSessionService;
+import com.example.authbackend.service.ClinicalSummaryService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -17,6 +20,7 @@ import java.util.List;
 public class SessionController {
 
     private final ClinicalSessionService sessionService;
+    private final ClinicalSummaryService clinicalSummaryService;
 
     /**
      * Endpoint para obtener el historial clínico completo de un paciente.
@@ -62,5 +66,22 @@ public class SessionController {
         ClinicalSessionDTO updatedSession = sessionService.generateAndSaveSummary(patientId, sessionId);
 
         return ResponseEntity.ok(updatedSession);
+    }
+
+    /**
+     * Endpoint para generar un resumen HISTÓRICO de varias sesiones entre dos fechas.
+     */
+    @PostMapping("/{patientId}/summaries/historical")
+    public ResponseEntity<ClinicalSummaryDTO> generateHistoricalSummary(
+            @PathVariable Long patientId,
+            @Valid @RequestBody com.example.authbackend.dto.ClinicalSummaryRequestDTO requestDTO) {
+
+        ClinicalSummaryDTO summary = clinicalSummaryService.generateHistoricalSummary(
+                patientId,
+                requestDTO.getDateFrom(),
+                requestDTO.getDateUntil()
+        );
+
+        return ResponseEntity.ok(summary);
     }
 }
