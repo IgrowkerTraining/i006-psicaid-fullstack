@@ -12,7 +12,6 @@ import PatientDetail from "@/pages/PatientDetail"
 import PatientsList from "@/pages/PatientsList"
 import Profile from "@/pages/Profile"
 import Register from "@/pages/Register"
-import Settings from "@/pages/Settings"
 import SummaryGenerate from "@/pages/SummaryGenerate"
 
 import ProtectedRoute from "./ProtectedRoute"
@@ -36,7 +35,6 @@ export const AppRoutes: React.FC = () => {
           <Route path={ROUTES.PATIENT_DETAIL} element={<PatientDetail />} />
           <Route path={ROUTES.SUMMARY_GENERATE} element={<SummaryGenerate />} />
           <Route path={ROUTES.PROFILE} element={<Profile />} />
-          <Route path={ROUTES.SETTINGS} element={<Settings />} />
         </Route>
       </Route>
 

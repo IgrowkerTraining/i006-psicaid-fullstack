@@ -13,6 +13,7 @@ export type DashboardAppointmentLog = {
     diagnosis: string;
     status: AppointmentLogStatus;
     url: string;
+    patientId?: number;
 };
 
 const statusClassByType: Record<AppointmentLogStatus, string> = {

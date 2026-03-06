@@ -112,6 +112,13 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
   };
 
   const logout = () => {
+    const token = storage.getToken();
+    // Notifica al backend en background (best-effort: siempre limpia la sesión local)
+    if (token) {
+      api.logout(token).catch((err) =>
+        console.warn("El endpoint de logout falló, la sesión local ya fue cerrada.", err)
+      );
+    }
     storage.clear();
     dispatch({ type: "LOGOUT" });
   };

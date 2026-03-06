@@ -77,6 +77,7 @@ function mapUpcomingSessionToAppointmentLog(
     diagnosis: "Sesion programada",
     status: "confirmada",
     url: `/patients/${session.patientId}`,
+    patientId: session.patientId,
   };
 }
 

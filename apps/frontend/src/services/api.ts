@@ -76,6 +76,27 @@ export const api = {
     };
   },
 
+  async logout(token: string): Promise<void> {
+    const response = await fetch(
+      `${API_ENDPOINTS.BASE}${API_ENDPOINTS.AUTH.LOGOUT}`,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+      },
+    );
+    if (!response.ok && response.status !== 401) {
+      let message = "Error al cerrar sesión";
+      try {
+        const err: ErrorResponse = await response.json();
+        if (err.message) message = err.message;
+      } catch { /* ignore */ }
+      throw new Error(message);
+    }
+  },
+
   async getCurrentUser(token: string): Promise<User> {
     const response = await fetch(
       `${API_ENDPOINTS.BASE}${API_ENDPOINTS.AUTH.VERIFY_TOKEN}`,

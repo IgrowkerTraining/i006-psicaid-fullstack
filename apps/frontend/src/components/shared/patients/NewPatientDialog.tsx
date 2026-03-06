@@ -169,14 +169,14 @@ export function NewPatientDialog({ onSave }: NewPatientDialogProps) {
         <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
           <Input
             label="Nombre"
-            placeholder=""
+            placeholder="Ej: María"
             value={values.firstName}
             onChange={handleFieldChange('firstName')}
             className="bg-white"
           />
           <Input
             label="Apellido"
-            placeholder=""
+            placeholder="Ej: García López"
             value={values.lastName}
             onChange={handleFieldChange('lastName')}
             className="bg-white"
@@ -226,7 +226,7 @@ export function NewPatientDialog({ onSave }: NewPatientDialogProps) {
           </div>
           <Input
             label="Ocupacion"
-            placeholder=""
+            placeholder="Ej: Ingeniero, Estudiante..."
             value={values.occupation}
             onChange={handleFieldChange('occupation')}
             className="bg-white"
@@ -271,7 +271,7 @@ export function NewPatientDialog({ onSave }: NewPatientDialogProps) {
           </div>
           <Input
             label="Email"
-            placeholder=""
+            placeholder="ejemplo@correo.com"
             type="email"
             value={values.email || ''}
             onChange={handleFieldChange('email')}
@@ -279,7 +279,7 @@ export function NewPatientDialog({ onSave }: NewPatientDialogProps) {
           />
           <Input
             label="Telefono"
-            placeholder=""
+            placeholder="Ej: +34 600 000 000"
             value={values.phone || ''}
             onChange={handleFieldChange('phone')}
             className="bg-white"
@@ -297,7 +297,7 @@ export function NewPatientDialog({ onSave }: NewPatientDialogProps) {
               setSubmitError(null);
             }}
             disabled={isSaving}
-            placeholder=""
+            placeholder="Describe brevemente el motivo por el que el paciente busca atención..."
             className="min-h-[80px] w-full rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm text-slate-900 focus:border-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-500/50 resize-none"
           />
         </div>

@@ -69,7 +69,7 @@ export function ProximasSesiones({
             No tienes proximas sesiones programadas
           </p>
           <p className="mt-1 text-xs text-gray-500">
-            Cuando registres nuevas sesiones apareceran aqui.
+            Cuando registres nuevas sesiones aparecerán aquí.
           </p>
         </div>
       ) : (
@@ -78,11 +78,17 @@ export function ProximasSesiones({
             const [dateText, timeText] = appointment.date.split(" - ")
             const appointmentTime = appointment.time || timeText
 
+            const nameParts = appointment.patientName.split(' ');
+            const patientState = appointment.patientId != null
+              ? { patient: { id: appointment.patientId, firstName: nameParts[0] ?? '', lastName: nameParts.slice(1).join(' ') } }
+              : undefined;
+
             return (
               <Link
                 key={appointment.id}
                 to={appointment.url}
-                className="group flex items-start gap-4 p-4 rounded-xl border border-gray-200 hover:border-brand-primario bg-white hover:bg-gray-50 transition-all"
+                state={patientState}
+                className="group flex items-center gap-4 p-4 rounded-xl border border-gray-200 hover:border-brand-primario bg-white hover:bg-gray-50 transition-all"
               >
                 <Avatar
                   className={`h-10 w-10 shrink-0 ${statusBorderByType[appointment.status]}`}
@@ -93,21 +99,17 @@ export function ProximasSesiones({
                 </Avatar>
 
                 <div className="flex-1 min-w-0">
-                  <p className="text-sm font-medium text-primary-foreground  mb-2">
+                  <p className="text-sm font-medium text-primary-foreground mb-1">
                     {appointment.patientName}
                   </p>
-                  <p className="text-xs text-gray-600 inline-flex items-center gap-1.5 mb-3">
-                    <Stethoscope className="size-3.5 text-gray-500" />
-                    Motivo / diagnostico: {appointment.diagnosis}
-                  </p>
-                  <div className="flex flex-wrap items-center gap-x-4 gap-y-1 text-xs text-gray-600">
+                  <div className="flex flex-col gap-0.5 text-xs text-gray-600">
                     <span className="inline-flex items-center gap-1.5">
-                      <CalendarDays className="size-3.5" />
+                      <CalendarDays className="size-3.5 text-brand-primario" />
                       Fecha: {dateText || appointment.date}
                     </span>
                     {appointmentTime ? (
                       <span className="inline-flex items-center gap-1.5">
-                        <Clock3 className="size-3.5" />
+                        <Clock3 className="size-3.5 text-brand-primario" />
                         Hora: {appointmentTime}
                       </span>
                     ) : null}
