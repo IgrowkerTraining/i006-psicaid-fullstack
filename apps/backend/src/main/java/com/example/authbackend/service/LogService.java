@@ -18,9 +18,9 @@ public class LogService {
     private final LogRepository logRepository;
 
     /**
-     * Guarda un registro en la tabla de logs de manera independiente.
+     * Guarda un registro en la tabla de logs. Participa en la transacción actual.
      */
-    @Transactional(propagation = Propagation.REQUIRES_NEW)
+    @Transactional
     public void recordLog(LogCriticality criticality, String action, Professional professional) {
         Log log = Log.builder()
                 .criticality(criticality)
