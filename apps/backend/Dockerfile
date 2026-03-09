@@ -42,8 +42,17 @@ FROM eclipse-temurin:17-jre-alpine AS production
 
 WORKDIR /app
 
-# Copy the built jar from build stage
-COPY --from=build /app/target/*.jar app.jar
+# Add a non-root user for security
+RUN addgroup -S spring && adduser -S spring -G spring
+
+# Copy the built jar from build stage and give ownership
+COPY --from=build --chown=spring:spring /app/target/*.jar app.jar
+
+# Run as non-root user
+USER spring
+
+# Set default profile (can be overridden)
+ENV SPRING_PROFILES_ACTIVE=production
 
 # Expose port
 EXPOSE 3000
