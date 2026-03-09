@@ -12,10 +12,13 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Function;
 
+import org.springframework.beans.factory.annotation.Value;
+
 @Service
 public class JwtService {
     
-    private static final String SECRET_KEY = "mySecretKey123456789012345678901234567890";
+    @Value("${jwt.secret:}")
+    private String SECRET_KEY;
     private static final long JWT_TOKEN_VALIDITY = 24 * 60 * 60 * 1000; // 24 horas
 
     private Key getSigningKey() {
