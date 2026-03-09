@@ -1,7 +1,4 @@
-import { Eye, Pencil, Trash2 } from 'lucide-react';
-
 import { cn } from '@/lib/utils';
-import IconActionButton from './IconActionButton';
 
 export type PatientStatus = 'activo' | 'inactivo';
 
@@ -19,8 +16,6 @@ type PatientResultCardProps = {
   patient: PatientResult;
   className?: string;
   onView?: (patientId: string) => void;
-  onEdit?: (patientId: string) => void;
-  onDelete?: (patientId: string) => void;
 };
 
 const statusBadgeClassByType: Record<PatientStatus, string> = {
@@ -32,17 +27,19 @@ export function PatientResultCard({
   patient,
   className,
   onView,
-  onEdit,
-  onDelete,
 }: PatientResultCardProps) {
   return (
     <article
+      role="button"
+      tabIndex={0}
+      onClick={() => onView?.(patient.id)}
+      onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') onView?.(patient.id); }}
       className={cn(
-        'rounded-2xl shadow-sm bg-brand-acento p-4 border border-gray-200',
+        'group relative cursor-pointer rounded-2xl shadow-sm bg-brand-acento p-4 border border-gray-200 transition-all duration-200 hover:border-brand-primario hover:shadow-md',
         className
       )}
     >
-      <div className="flex flex-col gap-4 md:flex-row md:items-start md:justify-between">
+      <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
         <div className="min-w-0 flex-1">
           <div className="mb-3 flex flex-wrap items-center gap-3">
             <h3 className="text-2xl font-semibold text-gray-800">
@@ -58,48 +55,21 @@ export function PatientResultCard({
             </span>
           </div>
 
-          <div className="grid grid-cols-1 gap-2 text-sm text-slate-500 md:grid-cols-3">
+          <div className="flex flex-wrap items-center gap-x-8 gap-y-1 text-sm text-slate-500">
             <p>
               <span className="font-semibold text-slate-600">Edad:</span>{' '}
               {patient.age} años
-            </p>
-            <p>
-              <span className="font-semibold text-slate-600">Telefono:</span>{' '}
-              {patient.phone}
             </p>
             <p className="truncate">
               <span className="font-semibold text-slate-600">Email:</span>{' '}
               {patient.email}
             </p>
           </div>
-
-          <p className="mt-2 text-sm text-slate-500">
-            <span className="font-semibold text-slate-600">Ocupacion:</span>{' '}
-            {patient.occupation}
-          </p>
         </div>
 
-        <div className="flex items-center gap-1 md:pt-1">
-          <IconActionButton
-            label="Ver paciente"
-            onClick={onView ? () => onView(patient.id) : undefined}
-          >
-            <Eye className="size-4" />
-          </IconActionButton>
-          <IconActionButton
-            label="Editar paciente"
-            onClick={onEdit ? () => onEdit(patient.id) : undefined}
-          >
-            <Pencil className="size-4" />
-          </IconActionButton>
-          <IconActionButton
-            label="Eliminar paciente"
-            tone="danger"
-            onClick={onDelete ? () => onDelete(patient.id) : undefined}
-          >
-            <Trash2 className="size-4" />
-          </IconActionButton>
-        </div>
+        <span className="shrink-0 text-sm font-medium text-brand-primario opacity-0 transition-opacity duration-200 group-hover:opacity-100">
+          Ver paciente →
+        </span>
       </div>
     </article>
   );

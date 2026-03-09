@@ -13,8 +13,6 @@ type PatientsCollectionSectionProps = {
   searchValue: string;
   patients: PatientResult[];
   onViewPatient: (patientId: string) => void;
-  onEditPatient: (patientId: string) => void;
-  onDeactivatePatient: (patientId: string) => void;
 };
 
 const SKELETON_ITEMS = 3;
@@ -38,8 +36,6 @@ export function PatientsCollectionSection({
   searchValue,
   patients,
   onViewPatient,
-  onEditPatient,
-  onDeactivatePatient,
 }: PatientsCollectionSectionProps) {
   return (
     <div className="space-y-4">
@@ -79,8 +75,6 @@ export function PatientsCollectionSection({
             key={patient.id}
             patient={patient}
             onView={onViewPatient}
-            onEdit={onEditPatient}
-            onDelete={onDeactivatePatient}
           />
         ))}
     </div>

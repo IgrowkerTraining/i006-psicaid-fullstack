@@ -33,9 +33,8 @@ export const ROUTES = {
   SUMMARY_DETAIL: '/patients/:id/summaries/:summaryId',
   SUMMARIES_HISTORY: '/patients/:id/summaries/history',
   
-  // Perfil del usuario y configuración
+  // Perfil del usuario
   PROFILE: '/profile',
-  SETTINGS: '/settings',
   SECURITY: '/settings/security',
 } as const;
 
@@ -44,12 +43,14 @@ export const API_ENDPOINTS = {
   AUTH: {
     LOGIN: '/auth/login',
     REGISTER: '/auth/register',
-    VERIFY_TOKEN: '/auth/me'
+    VERIFY_TOKEN: '/auth/me',
+    LOGOUT: '/auth/logout',
   },
   PATIENTS: {
     LIST: '/patients',
     CREATE: '/patients',
     DETAIL: (id: string) => `/patients/${id}`,
+    RESTORE: (id: string) => `/patients/${id}/restore`,
   },
   SESSIONS: {
     LIST: (patientId: string) => `/patients/${patientId}/sessions`,

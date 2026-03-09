@@ -6,6 +6,7 @@ export type CreateSessionDto = {
   sessionType?: string;
   frequency?: string; // Semanal, quincenal, mensual
   duration?: number;
+  status?: string; // PROGRAMADA, COMPLETADA, CANCELADA
   observations?: string;
   hypothesis?: string;
   interventions?: string;

@@ -1,6 +1,7 @@
 import React from "react"
 import { Navigate, Outlet } from "react-router-dom"
 import { useAuth } from "../hooks/useAuth"
+import { LoadingSpinner } from "../components/layout/LoadingSpinner"
 
 interface ProtectedRouteProps {
   children?: React.ReactNode
@@ -14,14 +15,7 @@ export const ProtectedRoute: React.FC<ProtectedRouteProps> = ({
   const { isAuthenticated, loading } = useAuth()
 
   if (loading) {
-    return (
-      <div className="min-h-screen bg-slate-950 flex items-center justify-center">
-        <div className="animate-pulse flex flex-col items-center">
-          <div className="w-12 h-12 bg-indigo-600 rounded-full mb-4"></div>
-          <p className="text-slate-400 font-medium">Loading...</p>
-        </div>
-      </div>
-    )
+    return <LoadingSpinner message="Cargando..." />
   }
 
   if (!isAuthenticated) {

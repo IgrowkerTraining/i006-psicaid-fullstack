@@ -133,8 +133,6 @@ const PatientsList: React.FC = () => {
           searchValue={searchValue}
           patients={filteredPatients}
           onViewPatient={handleOpenDetail}
-          onEditPatient={handleOpenEdit}
-          onDeactivatePatient={handleOpenDeactivate}
         />
 
       <EditPatientDialog

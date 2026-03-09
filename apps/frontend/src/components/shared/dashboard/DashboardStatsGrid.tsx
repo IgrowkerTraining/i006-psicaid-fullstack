@@ -24,25 +24,25 @@ function buildStats(data: DashboardStats): DashboardStatItem[] {
       label: "Sesiones de hoy",
       value: String(data.sessionsToday),
       subText: "Pacientes activos",
-      icon: <Calendar className="text-brand-secundario" />,
+      icon: <Calendar/>,
     },
     {
       label: "Esta semana",
       value: String(data.sessionsThisWeek),
       subText: "Citas programadas",
-      icon: <TrendingUp className="text-brand-secundario" />,
+      icon: <TrendingUp/>,
     },
     {
       label: "Total Pacientes",
       value: String(data.totalActivePatients),
       subText: "Pacientes activos",
-      icon: <Users className="text-brand-secundario" />,
+      icon: <Users/>,
     },
     {
       label: "Sesiones completadas",
       value: String(data.sessionsThisMonth),
       subText: "Este mes",
-      icon: <FileText className="text-brand-secundario" />,
+      icon: <FileText/>,
     },
   ];
 }

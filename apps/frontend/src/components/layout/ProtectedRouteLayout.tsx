@@ -21,7 +21,6 @@ export const ProtectedLayout: React.FC = () => {
             { label: "Inicio", path: ROUTES.DASHBOARD, icon: <LayoutDashboard size={20} /> },
             { label: "Pacientes", path: ROUTES.PATIENTS, icon: <Users size={20} /> },
             { label: "Agenda", path: ROUTES.AGENDA, icon: <CalendarHeart size={20} /> },
-            { label: "Configuración", path: ROUTES.SETTINGS, icon: <Settings size={20} /> },
           ]}
           activePath={location.pathname}
           onNavigate={(path) => navigate(path)}

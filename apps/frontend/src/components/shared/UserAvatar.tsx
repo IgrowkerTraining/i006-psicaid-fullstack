@@ -50,9 +50,9 @@ export function UserAvatarDropdown({
           </Avatar>
 
           <div className="min-w-0 text-left leading-tight">
-            <div className="truncate text-sm font-medium">{name}</div>
+            <div className="truncate text-sm font-medium text-black">{name}</div>
             {role ? (
-              <div className="truncate text-xs text-muted-foreground">
+              <div className="truncate text-xs text-black">
                 {role}
               </div>
             ) : null}
@@ -66,13 +66,9 @@ export function UserAvatarDropdown({
       {/*Contenido del menu que se muestra al presionar el Trigger*/}
       <DropdownMenuContent align="end" className="w-44">
         <DropdownMenuGroup>
-          <DropdownMenuItem className="cursor-pointer" onClick={onProfile}>
+          <DropdownMenuItem className="cursor-pointer text-black" onClick={onProfile}>
             <User />
             Perfil
-          </DropdownMenuItem>
-          <DropdownMenuItem className="cursor-pointer" onClick={onSettings}>
-            <Settings />
-            Configuración
           </DropdownMenuItem>
         </DropdownMenuGroup>
 

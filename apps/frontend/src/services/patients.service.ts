@@ -156,20 +156,23 @@ export const patientsService = {
 
   async deactivate(id: string): Promise<void> {
     const res = await fetch(`${API_ENDPOINTS.BASE}${API_ENDPOINTS.PATIENTS.DETAIL(id)}`, {
-      method: "PATCH",
+      method: "DELETE",
       headers: getAuthHeaders(),
-      body: JSON.stringify({ active: "false" }),
     });
 
     if (!res.ok) {
-      throw new Error(await getErrorMessage(res, "No se pudo desactivar el paciente"));
+      throw new Error(await getErrorMessage(res, "No se pudo archivar el paciente"));
     }
-    
-    // Manejar respuesta vacía - void no necesita parsear
-    try {
-      await res.text(); // Consumir el body aunque no lo usemos
-    } catch {
-      // Ignorar errores de parsing para métodos void
+  },
+
+  async restore(id: string): Promise<void> {
+    const res = await fetch(`${API_ENDPOINTS.BASE}${API_ENDPOINTS.PATIENTS.RESTORE(id)}`, {
+      method: "POST",
+      headers: getAuthHeaders(),
+    });
+
+    if (!res.ok) {
+      throw new Error(await getErrorMessage(res, "No se pudo restaurar el paciente"));
     }
   },
 };
