@@ -15,7 +15,7 @@ public class AiIntegrationService {
 
     private final RestClient restClient;
 
-    public AiIntegrationService(@Value("${ai.service.base-url}") String baseUrl) {
+    public AiIntegrationService(@Value("${AI_SERVICE_BASE_URL}") String baseUrl) {
         SimpleClientHttpRequestFactory factory = new SimpleClientHttpRequestFactory();
         this.restClient = RestClient.builder()
                 .baseUrl(baseUrl)
