@@ -1,33 +1,41 @@
-import { Sparkles } from "lucide-react";
+﻿import { Sparkles } from "lucide-react";
+import { useNavigate } from "react-router-dom";
 
+import { Button } from "@/components/common/Button";
+import { ROUTES } from "@/constants/routes";
 import type { PatientTabPanelProps } from "./types";
 import { BulletList, PanelShell, SectionCard } from "./ui";
 
 export function AiSummaryTab({ patient }: PatientTabPanelProps) {
+  const navigate = useNavigate();
   const ai = patient.aiSummary;
 
-  // Verificar si no hay resumen generado
-  const hasNoSummary = 
-    ai.currentState === "No disponible" || 
-    (ai.keyPatterns.length === 0 && 
-     ai.recommendations.length === 0 && 
-     ai.nextSessionFocus.length === 0 && 
-     ai.riskFlags.length === 0);
+  const hasNoSummary =
+    ai.currentState === "No disponible" ||
+    (ai.keyPatterns.length === 0 &&
+      ai.recommendations.length === 0 &&
+      ai.nextSessionFocus.length === 0 &&
+      ai.riskFlags.length === 0);
 
-  // Mostrar estado vacío si no hay resumen
   if (hasNoSummary) {
     return (
       <PanelShell>
         <div className="flex min-h-[400px] flex-col items-center justify-center py-12">
-          <div className="rounded-full bg-brand-gradient p-6 mb-6">
+          <div className="mb-6 rounded-full bg-brand-gradient p-6">
             <Sparkles className="size-12 text-[var(--brand-secundario)]" strokeWidth={1.5} />
           </div>
-          <h3 className="text-lg font-semibold text-slate-700 mb-2">
-            No hay resumen generado
-          </h3>
-          <p className="text-sm text-slate-500 text-center max-w-md">
-            Aún no se ha generado un resumen de IA para este paciente. El resumen se creará automáticamente después de registrar sesiones clínicas.
+          <h3 className="mb-2 text-lg font-semibold text-slate-700">No hay resumen generado</h3>
+          <p className="max-w-md text-center text-sm text-slate-500">
+            Aun no se genero un resumen de IA para este paciente. Puedes generarlo por sesion o por rango de fechas.
           </p>
+          <Button
+            className="mt-5 rounded-xl bg-brand-primario px-4 text-white hover:bg-brand-hover-primario"
+            onClick={() =>
+              navigate(ROUTES.SUMMARY_GENERATE.replace(":id", String(patient.profile.numericId)))
+            }
+          >
+            Generar resumen IA
+          </Button>
         </div>
       </PanelShell>
     );
@@ -70,4 +78,3 @@ export function AiSummaryTab({ patient }: PatientTabPanelProps) {
 }
 
 export default AiSummaryTab;
-

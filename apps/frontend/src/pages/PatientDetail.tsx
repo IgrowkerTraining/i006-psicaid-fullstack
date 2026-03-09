@@ -145,6 +145,11 @@ const PatientDetail: React.FC = () => {
 
           {activeTabId === "resumen" && (
             <Button
+              onClick={() =>
+                navigate(
+                  ROUTES.SUMMARY_GENERATE.replace(":id", String(patientDetail.profile.numericId))
+                )
+              }
               className="rounded-xl bg-brand-primario px-4 text-white hover:bg-brand-hover-primario cursor-pointer"
             >
               <Plus className="size-4" />
