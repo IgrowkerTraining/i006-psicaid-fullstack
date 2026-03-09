@@ -142,6 +142,15 @@ const PatientDetail: React.FC = () => {
               Nuevo tratamiento
             </Button>
           )}
+
+          {activeTabId === "resumen" && (
+            <Button
+              className="rounded-xl bg-brand-primario px-4 text-white hover:bg-brand-hover-primario cursor-pointer"
+            >
+              <Plus className="size-4" />
+              Generar Resumen IA
+            </Button>
+          )}
         </PatientDetailHeader>
         <PatientDetailTabs
           patient={patientDetail}

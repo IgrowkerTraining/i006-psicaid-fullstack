@@ -137,7 +137,7 @@ export function PatientDetailTabs({
               onClick={() => setActiveTabId(tab.id)}
               onKeyDown={(event) => handleTabKeyDown(event, index)}
               className={cn(
-                "inline-flex min-h-10 items-center gap-2 rounded-xl px-3 py-2 text-sm font-semibold transition sm:px-4 cursor-pointer",
+                "inline-flex justify-center grow min-h-10 items-center gap-2 rounded-xl px-3 py-2 text-sm font-semibold transition sm:px-4 cursor-pointer",
                 isActive
                   ? "bg-brand-active-primario text-white shadow-[0_10px_24px_rgba(9,2,36,0.08)]"
                   : "text-slate-600 hover:bg-brand-hover-primario hover:text-white"
