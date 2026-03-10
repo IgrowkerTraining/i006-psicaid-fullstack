@@ -8,6 +8,7 @@ import com.example.authbackend.service.ClinicalSessionService;
 import com.example.authbackend.service.ClinicalSummaryService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -16,6 +17,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.List;
+
 
 @RestController
 @RequestMapping("/api/patients")
@@ -91,5 +93,18 @@ public class SessionController {
         );
 
         return ResponseEntity.ok(summary);
+    }
+
+    /**
+     * Endpoint paginado para obtener el historial de resúmenes (IA) de un paciente.
+     * Por defecto: página 0, tamaño 10.
+     */
+    @GetMapping("/{patientId}/summaries/historical")
+    public ResponseEntity<Page<ClinicalSummaryDTO>> getHistoricalSummaries(
+            @PathVariable Long patientId,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size) {
+
+        return ResponseEntity.ok(clinicalSummaryService.fetchHistoricalSummaries(patientId, page, size));
     }
 }
