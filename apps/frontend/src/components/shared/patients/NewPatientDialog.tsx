@@ -153,13 +153,13 @@ export function NewPatientDialog({ onSave }: NewPatientDialogProps) {
   return (
     <Dialog open={open} onOpenChange={handleOpenChange}>
       <DialogTrigger asChild>
-        <Button className="rounded-xl bg-brand-primario px-6 text-white hover:bg-brand-hover-primario cursor-pointer">
+        <Button className="rounded-[6px] bg-brand-primario px-6 text-white hover:bg-brand-hover-primario cursor-pointer">
           <Plus className="size-4" />
-          Nuevo Paciente
+          Nuevo paciente
         </Button>
       </DialogTrigger>
 
-      <DialogContent className="border-gray-200 bg-white text-gray-700 sm:max-w-2xl">
+      <DialogContent className="rounded-[20px] border-gray-200 bg-white text-gray-700 sm:max-w-2xl">
         <DialogHeader className="space-y-2 text-left">
           <DialogTitle className="text-2xl font-bold">
             Agregar paciente
@@ -191,7 +191,7 @@ export function NewPatientDialog({ onSave }: NewPatientDialogProps) {
                   type="button"
                   variant="outline"
                   disabled={isSaving}
-                  className={`h-[42px] w-full justify-start border-slate-300 bg-white text-left font-normal hover:bg-white transition-all duration-200 ${
+                  className={`h-[42px] w-full justify-start rounded-[6px] border-slate-300 bg-white text-left font-normal hover:bg-white transition-all duration-200 ${
                     values.birthDate ? 'text-slate-900' : 'text-slate-400'
                   } ${
                     birthDatePickerOpen ? 'ring-2 ring-indigo-500/50 border-indigo-500' : ''
@@ -225,7 +225,7 @@ export function NewPatientDialog({ onSave }: NewPatientDialogProps) {
             </Popover>
           </div>
           <Input
-            label="Ocupacion"
+            label="Ocupación"
             placeholder="Ej: Ingeniero, Estudiante..."
             value={values.occupation}
             onChange={handleFieldChange('occupation')}
@@ -237,7 +237,7 @@ export function NewPatientDialog({ onSave }: NewPatientDialogProps) {
               value={values.sex}
               onChange={handleSelectChange('sex')}
               disabled={isSaving}
-              className="h-[42px] w-full rounded-lg border border-slate-300 bg-white px-3 text-slate-900 focus:border-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-500/50"
+              className="h-[42px] w-full rounded-[6px] border border-slate-300 bg-white px-3 text-slate-900 focus:border-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-500/50"
             >
               <option value="" disabled>
                 Selecciona sexo
@@ -257,7 +257,7 @@ export function NewPatientDialog({ onSave }: NewPatientDialogProps) {
               value={values.maritalStatus}
               onChange={handleSelectChange('maritalStatus')}
               disabled={isSaving}
-              className="h-[42px] w-full rounded-lg border border-slate-300 bg-white px-3 text-slate-900 focus:border-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-500/50"
+              className="h-[42px] w-full rounded-[6px] border border-slate-300 bg-white px-3 text-slate-900 focus:border-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-500/50"
             >
               <option value="" disabled>
                 Selecciona estado civil
@@ -278,7 +278,7 @@ export function NewPatientDialog({ onSave }: NewPatientDialogProps) {
             className="bg-white"
           />
           <Input
-            label="Telefono"
+            label="Teléfono"
             placeholder="Ej: +34 600 000 000"
             value={values.phone || ''}
             onChange={handleFieldChange('phone')}
@@ -298,7 +298,7 @@ export function NewPatientDialog({ onSave }: NewPatientDialogProps) {
             }}
             disabled={isSaving}
             placeholder="Describe brevemente el motivo por el que el paciente busca atención..."
-            className="min-h-[80px] w-full rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm text-slate-900 focus:border-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-500/50 resize-none"
+            className="min-h-[80px] w-full rounded-[6px] border border-slate-300 bg-white px-3 py-2 text-sm text-slate-900 focus:border-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-500/50 resize-none"
           />
         </div>
 
@@ -314,14 +314,14 @@ export function NewPatientDialog({ onSave }: NewPatientDialogProps) {
               type="button"
               variant="outline"
               disabled={isSaving}
-              className="w-full  bg-brand-secundario text-gray-900 hover:bg-brand-hover-secundario cursor-pointer"
+              className="w-full rounded-[6px] bg-brand-secundario text-gray-900 hover:bg-brand-hover-secundario cursor-pointer"
             >
               Cancelar
             </Button>
           </DialogClose>
           <Button
             type="button"
-            className="w-full bg-brand-primario text-white hover:bg-brand-hover-primario cursor-pointer"
+            className="w-full rounded-[6px] bg-brand-primario text-white hover:bg-brand-hover-primario cursor-pointer"
             onClick={handleSave}
             disabled={isSaveDisabled || isSaving}
             isLoading={isSaving}

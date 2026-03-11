@@ -24,7 +24,7 @@ export function AuthSplitLayout({
         initial={{ opacity: 0, y: 18, scale: 0.985 }}
         animate={{ opacity: 1, y: 0, scale: 1 }}
         transition={{ duration: 0.5, ease: smoothEase }}
-        className="mx-auto grid min-h-[90vh] w-full max-w-6xl overflow-hidden rounded-2xl border border-brand-secundario/30 bg-brand-acento md:grid-cols-2"
+        className="mx-auto grid min-h-[90vh] w-full max-w-6xl overflow-hidden rounded-[6px] border border-brand-secundario/30 bg-brand-acento md:grid-cols-2"
       >
         <motion.div
           initial={{ opacity: 0, x: -34 }}

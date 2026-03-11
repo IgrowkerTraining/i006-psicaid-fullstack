@@ -260,7 +260,7 @@ export function RegisterForm({ onSubmit }: RegisterFormProps) {
       <motion.div variants={itemVariants}>
         <Button
           type="submit"
-          className="h-11 w-full rounded-md bg-brand-primario text-white hover:bg-brand-hover-primario"
+          className="h-11 w-full rounded-[6px] bg-brand-primario text-white hover:bg-brand-hover-primario"
           isLoading={isLoading}
           loadingText="Registrando..."
         >

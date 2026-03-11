@@ -90,8 +90,8 @@ export function DashboardPanelsGrid({
     data?.upcomingSessions.map(mapUpcomingSessionToAppointmentLog) ?? [];
 
   return (
-    <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-      <section className="lg:col-span-2">
+    <div className="grid grid-cols-1 lg:grid-cols-5 gap-8">
+      <section className="lg:col-span-3">
         <Suspense fallback={<ProximasSesionesModuleFallback />}>
           <LazyProximasSesiones
             logs={appointmentLogs}
@@ -101,7 +101,7 @@ export function DashboardPanelsGrid({
         </Suspense>
       </section>
 
-      <section>
+      <section className="lg:col-span-1">
         <Suspense fallback={<AgendaCalendarFallback />}>
           <LazyAgendaCalendar />
         </Suspense>

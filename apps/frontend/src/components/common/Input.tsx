@@ -41,7 +41,7 @@ export const Input: React.FC<InputProps> = ({
         <input
           aria-invalid={!!error}
           className={`
-            w-full  border border-gray-200 rounded-lg px-3 py-2.5 
+            w-full  border border-gray-200 rounded-[6px] px-3 py-2.5 
             ${icon ? "pl-10" : ""} 
             ${endIcon ? "pr-10" : ""}
             text-slate-800 placeholder:text-slate-500
