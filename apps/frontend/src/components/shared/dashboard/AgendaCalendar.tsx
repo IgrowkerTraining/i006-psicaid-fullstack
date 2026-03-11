@@ -10,7 +10,7 @@ export function AgendaCalendar() {
   const [date, setDate] = React.useState<Date | undefined>(new Date())
 
   return (
-    <div className="bg-white border border-gray-200 rounded-[5px] px-6 py-4 shadow-sm w-full">
+    <div className="w-full max-w-full rounded-[5px] border border-gray-200 bg-white px-4 py-4 shadow-sm sm:px-6">
       <h3 className="text-xl font-semibold text-primary-foreground  mb-3 pl-0.5">
         Tu agenda
       </h3>
@@ -18,7 +18,7 @@ export function AgendaCalendar() {
         mode="single"
         selected={date}
         onSelect={setDate}
-        className="rounded-md border-0 p-0"
+        className="w-full rounded-md border-0 p-0"
         captionLayout="dropdown"
       />
       {date && (
