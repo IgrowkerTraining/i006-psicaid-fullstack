@@ -236,12 +236,6 @@ const PatientDetail: React.FC = () => {
 
   return (
     <div className="relative min-h-full">
-      <div className="pointer-events-none absolute inset-0 overflow-hidden">
-        <div className="absolute left-32 top-24 h-56 w-56 rounded-full bg-brand-secundario/10 blur-3xl" />
-        <div className="absolute right-24 top-20 h-52 w-52 rounded-full bg-brand-terciario/12 blur-3xl" />
-        <div className="absolute bottom-10 left-1/3 h-44 w-44 rounded-full bg-brand-secundario/8 blur-3xl" />
-      </div>
-
         <PatientDetailHeader
           patient={patientDetail}
           onBack={() => navigate(ROUTES.PATIENTS)}

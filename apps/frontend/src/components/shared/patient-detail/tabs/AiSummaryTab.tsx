@@ -4,6 +4,7 @@ import { CalendarRange, Eye, Filter, Pencil, Sparkles, Trash2 } from "lucide-rea
 import { Button } from "@/components/common/Button";
 import {
   Dialog,
+  DialogClose,
   DialogContent,
   DialogDescription,
   DialogHeader,
@@ -204,6 +205,37 @@ export function AiSummaryTab({
   const [selectedSummary, setSelectedSummary] = React.useState<HistoricalSummaryResponse | null>(
     null
   );
+  const [filterOpen, setFilterOpen] = React.useState(false);
+  const [filterDesde, setFilterDesde] = React.useState("");
+  const [filterHasta, setFilterHasta] = React.useState("");
+  const [appliedDesde, setAppliedDesde] = React.useState("");
+  const [appliedHasta, setAppliedHasta] = React.useState("");
+
+  const parseInputDate = (value: string): Date | null => {
+    const [day, month, year] = value.split("/");
+    if (!day || !month || !year) return null;
+    const d = new Date(`${year}-${month}-${day}T00:00:00`);
+    return Number.isNaN(d.getTime()) ? null : d;
+  };
+
+  const filteredSummaries = React.useMemo(() => {
+    const desde = parseInputDate(appliedDesde);
+    const hasta = parseInputDate(appliedHasta);
+    if (!desde && !hasta) return summaries;
+    return summaries.filter((s) => {
+      const from = new Date(s.dateFrom);
+      const to = new Date(s.dateUntil);
+      if (desde && to < desde) return false;
+      if (hasta && from > hasta) return false;
+      return true;
+    });
+  }, [summaries, appliedDesde, appliedHasta]);
+
+  const handleApplyFilter = () => {
+    setAppliedDesde(filterDesde);
+    setAppliedHasta(filterHasta);
+    setFilterOpen(false);
+  };
 
   const handleOpenDetail = React.useCallback((summary: HistoricalSummaryResponse) => {
     setSelectedSummary(summary);
@@ -232,6 +264,7 @@ export function AiSummaryTab({
           <Button
             type="button"
             variant="outline"
+            onClick={() => { setFilterDesde(appliedDesde); setFilterHasta(appliedHasta); setFilterOpen(true); }}
             className="rounded-md border-[var(--brand-primario)]/25 bg-brand-active-primario px-4 text-white hover:bg-brand-hover-primario hover:text-white cursor-pointer"
           >
             <Filter className="size-4" />
@@ -263,7 +296,7 @@ export function AiSummaryTab({
           </div>
         ) : (
           <div className="space-y-5">
-            {summaries.map((summary) => (
+            {filteredSummaries.map((summary) => (
               <article
                 key={summary.id}
                 className="overflow-hidden rounded-2xl border border-[var(--brand-primario)]/35 bg-white shadow-[0_14px_36px_rgba(9,2,36,0.05)]"
@@ -358,6 +391,46 @@ export function AiSummaryTab({
         open={Boolean(selectedSummary)}
         onOpenChange={handleCloseDetail}
       />
+
+      <Dialog open={filterOpen} onOpenChange={setFilterOpen}>
+        <DialogContent className="rounded-[20px] border-gray-200 bg-white text-gray-700 sm:max-w-md">
+          <DialogHeader className="space-y-1 text-left">
+            <DialogTitle className="text-xl font-bold">Filtro</DialogTitle>
+            <DialogDescription className="sr-only">Filtra los resumenes por rango de fechas</DialogDescription>
+          </DialogHeader>
+
+          <div className="grid grid-cols-2 gap-4">
+            <div className="flex flex-col gap-1.5">
+              <label className="text-sm font-medium text-gray-800">Desde</label>
+              <input
+                type="text"
+                value={filterDesde}
+                onChange={(e) => setFilterDesde(e.target.value)}
+                placeholder="dd/mm/aaaa"
+                className="h-[42px] w-full rounded-[6px] border border-slate-300 bg-white px-3 text-slate-900 placeholder:text-slate-400 focus:border-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-500/50"
+              />
+            </div>
+            <div className="flex flex-col gap-1.5">
+              <label className="text-sm font-medium text-gray-800">Hasta</label>
+              <input
+                type="text"
+                value={filterHasta}
+                onChange={(e) => setFilterHasta(e.target.value)}
+                placeholder="dd/mm/aaaa"
+                className="h-[42px] w-full rounded-[6px] border border-slate-300 bg-white px-3 text-slate-900 placeholder:text-slate-400 focus:border-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-500/50"
+              />
+            </div>
+          </div>
+
+          <Button
+            type="button"
+            className="mt-2 w-full rounded-[6px] bg-brand-primario text-white hover:bg-brand-hover-primario cursor-pointer"
+            onClick={handleApplyFilter}
+          >
+            Aplicar filtro
+          </Button>
+        </DialogContent>
+      </Dialog>
     </PanelShell>
   );
 }

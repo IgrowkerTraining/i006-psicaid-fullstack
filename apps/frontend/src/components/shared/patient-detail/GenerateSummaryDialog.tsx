@@ -98,11 +98,11 @@ export function GenerateSummaryDialog({
 
   return (
     <Dialog open={open} onOpenChange={handleOpenChange}>
-      <DialogContent className="border-gray-200 bg-white text-gray-700 sm:max-w-2xl">
-        <DialogHeader className="space-y-2 text-left">
+      <DialogContent className="rounded-[20px] border-gray-200 bg-white text-gray-700 sm:max-w-2xl">
+        <DialogHeader className="space-y-2 text-center">
           <DialogTitle className="text-2xl font-bold">Generar resumen asistido</DialogTitle>
           <DialogDescription className="text-sm text-slate-600">
-            Seleccione un periodo de sesiones para resumir.
+            Seleccione un periodo de sesiones para resumir
           </DialogDescription>
         </DialogHeader>
 
@@ -141,7 +141,7 @@ export function GenerateSummaryDialog({
               className="w-full rounded-lg bg-transparent p-0"
               classNames={{
                 root: "w-full",
-                months: "grid gap-4 md:grid-cols-2",
+                months: "relative grid gap-4 md:grid-cols-2",
                 month:
                   "relative min-w-0 rounded-2xl border border-slate-200 bg-white px-4 pb-4 pt-4 shadow-[0_6px_18px_rgba(9,2,36,0.04)]",
                 month_caption: "mb-3 flex h-8 items-center justify-center px-10",
@@ -171,14 +171,14 @@ export function GenerateSummaryDialog({
               type="button"
               variant="outline"
               disabled={isGenerating}
-              className="w-full bg-brand-secundario text-gray-900 hover:bg-brand-hover-secundario cursor-pointer"
+              className="w-full rounded-[6px] bg-brand-secundario text-gray-900 hover:bg-brand-hover-secundario cursor-pointer"
             >
               Cancelar
             </Button>
           </DialogClose>
           <Button
             type="button"
-            className="w-full bg-brand-primario text-white hover:bg-brand-hover-primario cursor-pointer"
+            className="w-full rounded-[6px] bg-brand-primario text-white hover:bg-brand-hover-primario cursor-pointer"
             onClick={handleGenerate}
             disabled={isSubmitDisabled}
             isLoading={isGenerating}
