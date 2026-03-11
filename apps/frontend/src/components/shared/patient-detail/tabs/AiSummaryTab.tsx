@@ -232,7 +232,7 @@ export function AiSummaryTab({
           <Button
             type="button"
             variant="outline"
-            className="rounded-xl border-[var(--brand-primario)]/25 bg-brand-active-primario px-4 text-white hover:bg-brand-hover-primario hover:text-white cursor-pointer"
+            className="rounded-md border-[var(--brand-primario)]/25 bg-brand-active-primario px-4 text-white hover:bg-brand-hover-primario hover:text-white cursor-pointer"
           >
             <Filter className="size-4" />
             Filtro
