@@ -176,7 +176,7 @@ export function EditPatientDialog({
   return (
     <>
       <Dialog open={open} onOpenChange={handleDialogOpenChange}>
-        <DialogContent className="border-gray-200 bg-brand-acento text-gray-700 sm:max-w-2xl">
+        <DialogContent className="border-gray-200 bg-white text-gray-700 sm:max-w-2xl">
           <DialogHeader className="space-y-2 text-left">
             <DialogTitle className="text-2xl font-bold">
               Editar paciente
@@ -290,7 +290,7 @@ export function EditPatientDialog({
               icon={<Mail className="size-4" />}
             />
             <Input
-              label="Telefono"
+              label="Teléfono"
               placeholder="+56 9 1234 5678"
               value={values.phone || ''}
               onChange={handleFieldChange('phone')}
@@ -326,7 +326,7 @@ export function EditPatientDialog({
                 type="button"
                 variant="outline"
                 disabled={isSaving}
-                className="w-full  bg-brand-secundario text-gray-900 hover:bg-brand-hover-secundario cursor-pointer"
+                className="w-full rounded-md  bg-brand-secundario text-gray-900 hover:bg-brand-hover-secundario cursor-pointer"
               >
                 Cancelar
               </Button>
@@ -347,10 +347,10 @@ export function EditPatientDialog({
       <AlertDialog open={confirmOpen} onOpenChange={setConfirmOpen}>
         <AlertDialogContent className="border-amber-300 bg-amber-50 text-amber-950">
           <AlertDialogHeader className="text-left">
-            <AlertDialogTitle>Confirmar actualizacion</AlertDialogTitle>
+            <AlertDialogTitle>Confirmar actualización</AlertDialogTitle>
             <AlertDialogDescription className="text-amber-900/90">
-              Estas a punto de actualizar la informacion basica del paciente.
-              Esta accion guardara cambios en la base de datos.
+              Estas a punto de actualizar la información básica del paciente.
+              Esta acción guardara cambios en la base de datos.
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter className="gap-3 sm:grid sm:grid-cols-2">
@@ -371,7 +371,7 @@ export function EditPatientDialog({
               className="w-full bg-amber-600 text-white hover:bg-amber-700"
               onClick={handleConfirmUpdate}
             >
-              Si, continuar
+              Sí, continuar
             </Button>
           </AlertDialogFooter>
         </AlertDialogContent>

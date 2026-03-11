@@ -20,7 +20,7 @@ export function PatientDetailHeader({ patient, onBack, children }: PatientDetail
         Volver a pacientes
       </button>
 
-      <div className="overflow-hidden rounded-3xl border border-white/70 bg-gradient-to-br from-white via-white to-[var(--brand-acento)] p-5 shadow-[0_18px_50px_rgba(9,2,36,0.08)] sm:p-6">
+      <div className="overflow-hidden rounded-md border border-[#B3B1BB] bg-white p-5 shadow-md sm:p-6">
         <div className="flex items-center justify-between gap-4">
           <h1 className="text-2xl font-bold tracking-tight text-gray-900 sm:text-3xl">
             {patient.profile.fullName}
