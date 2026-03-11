@@ -139,7 +139,7 @@ export function PatientDetailTabs({
   );
 
   return (
-    <section className="rounded-sm border border-white/70 bg-white/65 p-3 shadow-[0_20px_60px_rgba(9,2,36,0.08)] backdrop-blur">
+    <section className="rounded-md border border-white/70 bg-white/65 shadow-[0_20px_60px_rgba(9,2,36,0.08)]">
       <div
         role="tablist"
         aria-label="Detalle del paciente"

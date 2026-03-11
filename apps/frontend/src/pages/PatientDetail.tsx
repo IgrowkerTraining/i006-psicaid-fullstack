@@ -296,7 +296,7 @@ const PatientDetail: React.FC = () => {
           {activeTabId === "tratamientos" && (
             <Button
               onClick={() => setTreatmentCreateRequestKey((k) => k + 1)}
-              className="rounded-xl bg-brand-primario px-4 text-white hover:bg-brand-hover-primario cursor-pointer"
+              className="rounded-md bg-brand-primario px-4 text-white hover:bg-brand-hover-primario cursor-pointer"
             >
               <Plus className="size-4" />
               Nuevo tratamiento
@@ -306,7 +306,7 @@ const PatientDetail: React.FC = () => {
           {activeTabId === "resumen" && (
             <Button
               onClick={handleOpenSummaryDialog}
-              className="rounded-xl bg-brand-primario px-4 text-white hover:bg-brand-hover-primario cursor-pointer"
+              className="rounded-md bg-brand-primario px-4 text-white hover:bg-brand-hover-primario cursor-pointer"
             >
               <Plus className="size-4" />
               Generar Resumen IA
@@ -343,13 +343,14 @@ const PatientDetail: React.FC = () => {
           onGenerated={async (summary) => {
             setHistoricalSummariesPageIndex(0);
             await loadHistoricalSummaries(0);
+            toast.success("Resumen IA generado correctamente.");
             setSummaryCreationFeedback(
               `Resumen generado para el rango ${summary.dateFrom} a ${summary.dateUntil}.`
             );
           }}
         />
         {activeTabId === "resumen" && summaryCreationFeedback ? (
-          <div className="mt-4 rounded-2xl border border-emerald-200 bg-emerald-50 px-4 py-3 text-sm text-emerald-800">
+          <div className="mt-4 rounded-md border border-emerald-200 bg-emerald-50 px-4 py-3 text-sm text-emerald-800">
             {summaryCreationFeedback}
           </div>
         ) : null}

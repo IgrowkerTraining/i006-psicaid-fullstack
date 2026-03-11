@@ -54,6 +54,48 @@ const buildPreview = (content: string, maxLength = 260) => {
   return `${normalized.slice(0, maxLength).trim()}...`;
 };
 
+const SUMMARY_LABEL_PATTERN =
+  /(Paciente:|Edad:|Frecuencia:|Ultima sesion:|Última sesión:|Ultima sesión:|Última sesion:|Motivo de consulta:|Contexto clinico:|Contexto clínico:|Fecha de ultima sesion:|Fecha de última sesión:|Fecha de ultima sesión:|Fecha de última sesion:)/g;
+
+const renderHighlightedLabels = (text: string) => {
+  const nodes: React.ReactNode[] = [];
+  let lastIndex = 0;
+
+  for (const match of text.matchAll(SUMMARY_LABEL_PATTERN)) {
+    const label = match[0];
+    const start = match.index ?? 0;
+
+    if (start > lastIndex) {
+      nodes.push(
+        <React.Fragment key={`text-${lastIndex}`}>
+          {text.slice(lastIndex, start)}
+        </React.Fragment>
+      );
+    }
+
+    nodes.push(
+      <span
+        key={`label-${start}`}
+        className="font-semibold text-[var(--brand-active-primario)]"
+      >
+        {label}
+      </span>
+    );
+
+    lastIndex = start + label.length;
+  }
+
+  if (lastIndex < text.length) {
+    nodes.push(
+      <React.Fragment key={`text-${lastIndex}`}>
+        {text.slice(lastIndex)}
+      </React.Fragment>
+    );
+  }
+
+  return nodes;
+};
+
 const parseSummarySections = (content: string) =>
   content
     .split(/\n{2,}/)
@@ -185,7 +227,7 @@ export function AiSummaryTab({
 
   return (
     <PanelShell>
-      <div className="space-y-5">
+      <div className="space-y-5 p-3">
         <div className="flex flex-wrap items-center justify-between gap-3">
           <Button
             type="button"
@@ -195,12 +237,6 @@ export function AiSummaryTab({
             <Filter className="size-4" />
             Filtro
           </Button>
-
-          {summariesPage ? (
-            <p className="text-sm text-slate-500">
-              {summariesPage.totalElements} resumenes para {patient.profile.fullName}
-            </p>
-          ) : null}
         </div>
 
         {summariesError ? (
@@ -236,7 +272,7 @@ export function AiSummaryTab({
                   <div className="space-y-1">
                     <h3 className="text-base font-semibold text-slate-900">Resumen generado</h3>
                     <p className="flex items-center gap-2 text-sm text-slate-600">
-                      <CalendarRange className="size-4 text-[var(--brand-terciario)]" />
+                      <CalendarRange className="size-4 text-brand-terciario" />
                       {formatDate(summary.dateFrom)} - {formatDate(summary.dateUntil)}
                     </p>
                   </div>
@@ -276,7 +312,9 @@ export function AiSummaryTab({
                 </div>
 
                 <div className="space-y-3 px-5 py-5">
-                  <p className="text-sm leading-7 text-slate-700">{buildPreview(summary.content)}</p>
+                  <p className="text-sm leading-7 text-slate-700">
+                    {renderHighlightedLabels(buildPreview(summary.content))}
+                  </p>
                   <p className="text-xs text-slate-500">
                     Generado el {formatDateTime(summary.generatedAt)}
                   </p>
