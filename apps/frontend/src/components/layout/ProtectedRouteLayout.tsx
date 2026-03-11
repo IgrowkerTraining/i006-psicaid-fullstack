@@ -14,7 +14,7 @@ export const ProtectedLayout: React.FC = () => {
   const location = useLocation()
 
   return (
-    <div className="flex min-h-screen bg-[#e8ebf9] text-[var(--brand-primario)]">
+    <div className="flex min-h-screen bg-white text-[var(--brand-primario)]">
       <div className="hidden md:block">
         <Sidebar
           items={[
