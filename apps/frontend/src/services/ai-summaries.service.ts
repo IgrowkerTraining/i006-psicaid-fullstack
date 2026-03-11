@@ -19,6 +19,18 @@ export type HistoricalSummaryResponse = {
   patientId: number;
 };
 
+export type HistoricalSummariesPageResponse = {
+  content: HistoricalSummaryResponse[];
+  totalPages: number;
+  totalElements: number;
+  last: boolean;
+  first: boolean;
+  numberOfElements: number;
+  size: number;
+  number: number;
+  empty: boolean;
+};
+
 const getAuthHeaders = () => {
   const token = storage.getToken();
   return {
@@ -94,6 +106,32 @@ export const aiSummariesService = {
     }
 
     return JSON.parse(text) as HistoricalSummaryResponse;
+  },
+
+  async getHistoricalSummaries(
+    patientId: string | number,
+    params: { page?: number; size?: number } = {}
+  ): Promise<HistoricalSummariesPageResponse> {
+    const searchParams = new URLSearchParams({
+      page: String(params.page ?? 0),
+      size: String(params.size ?? 5),
+    });
+
+    const res = await fetch(
+      `${API_ENDPOINTS.BASE}${API_ENDPOINTS.SUMMARIES.GENERATE_HISTORICAL(String(
+        patientId
+      ))}?${searchParams.toString()}`,
+      {
+        method: "GET",
+        headers: getAuthHeaders(),
+      }
+    );
+
+    if (!res.ok) {
+      throw new Error(await getErrorMessage(res, "No se pudieron cargar los resumenes"));
+    }
+
+    return (await res.json()) as HistoricalSummariesPageResponse;
   },
 };
 

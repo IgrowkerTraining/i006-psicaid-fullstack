@@ -10,7 +10,7 @@ const AppContent: React.FC = () => {
   const { loading } = useAuth();
 
   if (loading) {
-    return <LoadingSpinner message="Initializing Example App..." />;
+    return <LoadingSpinner message="Estamos configurando todo para ti..." />;
   }
 
   return (
