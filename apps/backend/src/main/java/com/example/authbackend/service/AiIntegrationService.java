@@ -66,7 +66,7 @@ public class AiIntegrationService {
 
         } catch (Exception e) {
             System.err.println("Error al conectar con IA: " + e.getMessage());
-            return errorMessage + " Detalles: " + e.getMessage();
+            throw new RuntimeException("El servicio de IA está despertando o no está disponible. " + errorMessage);
         }
     }
 
