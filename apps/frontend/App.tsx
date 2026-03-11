@@ -3,6 +3,7 @@ import { BrowserRouter } from "react-router-dom";
 import { AuthProvider } from "./src/context/AuthContext";
 import { Layout } from "./src/components/layout/Layout";
 import { LoadingSpinner } from "./src/components/layout/LoadingSpinner";
+import { ToastViewport } from "./src/components/common/toast";
 import { AppRoutes } from "./src/routes/AppRoutes";
 import { useAuth } from "./src/hooks/useAuth";
 
@@ -24,6 +25,7 @@ export const App: React.FC = () => {
   return (
     <BrowserRouter>
       <AuthProvider>
+        <ToastViewport />
         <AppContent />
       </AuthProvider>
     </BrowserRouter>

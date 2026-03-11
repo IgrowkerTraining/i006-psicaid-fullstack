@@ -8,6 +8,8 @@ export type TabId = "ficha" | "tratamientos" | "sesiones" | "resumen";
 
 export type PatientTabPanelProps = {
   patient: PatientDetailViewModel;
+  onEditPatient?: () => void;
+  onDeletePatient?: () => void;
   onOpenGenerateSummary?: () => void;
   summaries?: HistoricalSummaryResponse[];
   summariesPage?: Pick<
