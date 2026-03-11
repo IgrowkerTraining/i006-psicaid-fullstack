@@ -111,10 +111,18 @@ const PatientsList: React.FC = () => {
 
   return (
     <div className="min-h-screen">
+        <button
+          type="button"
+          onClick={() => navigate(ROUTES.DASHBOARD)}
+          className="group mb-6 inline-flex items-center gap-2 rounded-[20px] bg-brand-primario px-4 py-2 text-sm font-medium text-white shadow-sm transition hover:-translate-y-0.5 hover:bg-brand-hover-primario cursor-pointer"
+        >
+          <svg xmlns="http://www.w3.org/2000/svg" className="size-4 transition group-hover:-translate-x-0.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M19 12H5M12 5l-7 7 7 7"/></svg>
+          Volver al inicio
+        </button>
         <div className="mb-8 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
           <div>
             <h1 className="mb-2 text-3xl font-bold text-gray-700">Pacientes</h1>
-            <p className="text-slate-500">Gestiona la informacion de tus pacientes</p>
+            <p className="text-slate-500">Gestiona la información de tus pacientes</p>
           </div>
           <NewPatientDialog onSave={handleCreatePatient} />
         </div>
@@ -123,7 +131,7 @@ const PatientsList: React.FC = () => {
           value={searchValue}
           onChange={setSearchValue}
           className="mb-6"
-          placeholder="Buscar paciente por nombre, apellido o email..."
+          placeholder="Buscar por nombre o email"
         />
         <PatientsCollectionSection
           loading={loading}

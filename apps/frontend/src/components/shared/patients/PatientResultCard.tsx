@@ -35,24 +35,16 @@ export function PatientResultCard({
       onClick={() => onView?.(patient.id)}
       onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') onView?.(patient.id); }}
       className={cn(
-        'group relative cursor-pointer rounded-2xl shadow-sm bg-brand-acento p-4 border border-gray-200 transition-all duration-200 hover:border-brand-primario hover:shadow-md',
+        'group relative cursor-pointer rounded-[12px] shadow-sm bg-brand-acento p-4 border border-gray-200 transition-all duration-200 hover:border-brand-primario hover:shadow-md',
         className
       )}
     >
       <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
         <div className="min-w-0 flex-1">
-          <div className="mb-3 flex flex-wrap items-center gap-3">
+          <div className="mb-3">
             <h3 className="text-2xl font-semibold text-gray-800">
               {patient.fullName}
             </h3>
-            <span
-              className={cn(
-                'rounded-full px-2.5 py-1 text-xs font-semibold tracking-wide',
-                statusBadgeClassByType[patient.status]
-              )}
-            >
-              {patient.status}
-            </span>
           </div>
 
           <div className="flex flex-wrap items-center gap-x-8 gap-y-1 text-sm text-slate-500">
@@ -67,8 +59,13 @@ export function PatientResultCard({
           </div>
         </div>
 
-        <span className="shrink-0 text-sm font-medium text-brand-primario opacity-0 transition-opacity duration-200 group-hover:opacity-100">
-          Ver paciente →
+        <span
+          className={cn(
+            'shrink-0 rounded-full px-2.5 py-1 text-xs font-semibold tracking-wide',
+            statusBadgeClassByType[patient.status]
+          )}
+        >
+          {patient.status}
         </span>
       </div>
     </article>

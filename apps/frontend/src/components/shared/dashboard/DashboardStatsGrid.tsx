@@ -1,5 +1,5 @@
 import * as React from "react";
-import { Calendar, FileText, TrendingUp, Users } from "lucide-react";
+import { Calendar, Calendar1, FileText, TrendingUp, User2, Users } from "lucide-react";
 
 import { type DashboardStats } from "@/services/dashboard.service";
 import { StatsCard, StatsCardSkeleton } from "@/components/shared/dashboard/StatsCard";
@@ -29,20 +29,20 @@ function buildStats(data: DashboardStats): DashboardStatItem[] {
     {
       label: "Esta semana",
       value: String(data.sessionsThisWeek),
-      subText: "Citas programadas",
+      subText: "Sesiones programadas",
       icon: <TrendingUp/>,
     },
     {
       label: "Total Pacientes",
       value: String(data.totalActivePatients),
       subText: "Pacientes activos",
-      icon: <Users/>,
+      icon: <User2/>,
     },
     {
       label: "Sesiones completadas",
       value: String(data.sessionsThisMonth),
       subText: "Este mes",
-      icon: <FileText/>,
+      icon: <Calendar/>,
     },
   ];
 }

@@ -23,7 +23,7 @@ export function Sidebar({
 
   return (
     <aside className="h-full w-64 border-r border-gray-200 bg-brand-gradient">
-      <div className="h-24 px-4 flex items-center border-b border-gray-200">
+      <div className="h-24 px-4 flex items-center">
 
         <div className="flex items-center gap-2">
           <img

@@ -25,7 +25,7 @@ export function PatientSearchInput({
         value={value}
         onChange={(event) => onChange(event.target.value)}
         placeholder={placeholder}
-        className="h-12 w-full rounded-xl border border-gray-200 bg-brand-acento pl-11 pr-10 text-sm text-brand-primary placeholder:text-slate-500 focus:outline-none focus:ring-2 focus:ring-indigo-500/50"
+        className="h-12 w-full rounded-[12px] border border-gray-200 bg-brand-acento pl-11 pr-10 text-sm text-brand-primary placeholder:text-slate-500 focus:outline-none focus:ring-2 focus:ring-indigo-500/50"
       />
 
       {value ? (

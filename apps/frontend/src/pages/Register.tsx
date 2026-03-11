@@ -25,7 +25,7 @@ const Register: React.FC = () => {
       description="Ingresa tus datos para crear tu cuenta"
       footer={
         <>
-          ¿Ya tienes una cuenta?{" "}
+          ¿Tienes una cuenta creada?{" "}
           <Link
             to="/login"
             className="font-semibold text-brand-primario hover:text-brand-hover-primario"

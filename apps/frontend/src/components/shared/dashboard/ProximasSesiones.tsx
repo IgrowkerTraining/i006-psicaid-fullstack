@@ -1,5 +1,5 @@
 import * as React from "react"
-import { CalendarDays, Clock3, Stethoscope } from "lucide-react"
+import { ArrowRight, CalendarDays, Clock3 } from "lucide-react"
 import { Link } from "react-router-dom"
 import { Avatar, AvatarFallback } from "@/components/common/avatar"
 import { format } from "@/utils/format"
@@ -51,7 +51,7 @@ export function ProximasSesiones({
   error = null,
 }: ProximasSesionesProps) {
   return (
-    <div className="bg-white border border-gray-200 rounded-2xl p-6 shadow-sm">
+    <div>
       <h3 className="text-xl font-semibold text-primary-foreground  mb-4">
         Tus proximas sesiones
       </h3>
@@ -88,7 +88,7 @@ export function ProximasSesiones({
                 key={appointment.id}
                 to={appointment.url}
                 state={patientState}
-                className="group flex items-center gap-4 p-4 rounded-xl border border-gray-200 hover:border-brand-primario bg-white hover:bg-gray-50 transition-all"
+                className="flex items-center gap-4 p-4 rounded-[8px] border border-[#8995DF] hover:border-brand-primario bg-white hover:bg-gray-50 transition-all"
               >
                 <Avatar
                   className={`h-10 w-10 shrink-0 ${statusBorderByType[appointment.status]}`}
@@ -117,8 +117,8 @@ export function ProximasSesiones({
                 </div>
 
                 <div className="shrink-0">
-                  <span className="text-xs text-brand-primario opacity-0 group-hover:opacity-100 transition-opacity">
-                    Ver detalle {">"}
+                  <span className="text-xs text-brand-primario flex items-center gap-1">
+                    Ver sesión <ArrowRight className="size-3.5" />
                   </span>
                 </div>
               </Link>

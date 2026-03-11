@@ -4,6 +4,7 @@ import { CalendarRange, Eye, Filter, Pencil, Sparkles, Trash2 } from "lucide-rea
 import { Button } from "@/components/common/Button";
 import {
   Dialog,
+  DialogClose,
   DialogContent,
   DialogDescription,
   DialogHeader,
@@ -52,6 +53,48 @@ const buildPreview = (content: string, maxLength = 260) => {
   }
 
   return `${normalized.slice(0, maxLength).trim()}...`;
+};
+
+const SUMMARY_LABEL_PATTERN =
+  /(Paciente:|Edad:|Frecuencia:|Ultima sesion:|Última sesión:|Ultima sesión:|Última sesion:|Motivo de consulta:|Contexto clinico:|Contexto clínico:|Fecha de ultima sesion:|Fecha de última sesión:|Fecha de ultima sesión:|Fecha de última sesion:)/g;
+
+const renderHighlightedLabels = (text: string) => {
+  const nodes: React.ReactNode[] = [];
+  let lastIndex = 0;
+
+  for (const match of text.matchAll(SUMMARY_LABEL_PATTERN)) {
+    const label = match[0];
+    const start = match.index ?? 0;
+
+    if (start > lastIndex) {
+      nodes.push(
+        <React.Fragment key={`text-${lastIndex}`}>
+          {text.slice(lastIndex, start)}
+        </React.Fragment>
+      );
+    }
+
+    nodes.push(
+      <span
+        key={`label-${start}`}
+        className="font-semibold text-[var(--brand-active-primario)]"
+      >
+        {label}
+      </span>
+    );
+
+    lastIndex = start + label.length;
+  }
+
+  if (lastIndex < text.length) {
+    nodes.push(
+      <React.Fragment key={`text-${lastIndex}`}>
+        {text.slice(lastIndex)}
+      </React.Fragment>
+    );
+  }
+
+  return nodes;
 };
 
 const parseSummarySections = (content: string) =>
@@ -162,6 +205,37 @@ export function AiSummaryTab({
   const [selectedSummary, setSelectedSummary] = React.useState<HistoricalSummaryResponse | null>(
     null
   );
+  const [filterOpen, setFilterOpen] = React.useState(false);
+  const [filterDesde, setFilterDesde] = React.useState("");
+  const [filterHasta, setFilterHasta] = React.useState("");
+  const [appliedDesde, setAppliedDesde] = React.useState("");
+  const [appliedHasta, setAppliedHasta] = React.useState("");
+
+  const parseInputDate = (value: string): Date | null => {
+    const [day, month, year] = value.split("/");
+    if (!day || !month || !year) return null;
+    const d = new Date(`${year}-${month}-${day}T00:00:00`);
+    return Number.isNaN(d.getTime()) ? null : d;
+  };
+
+  const filteredSummaries = React.useMemo(() => {
+    const desde = parseInputDate(appliedDesde);
+    const hasta = parseInputDate(appliedHasta);
+    if (!desde && !hasta) return summaries;
+    return summaries.filter((s) => {
+      const from = new Date(s.dateFrom);
+      const to = new Date(s.dateUntil);
+      if (desde && to < desde) return false;
+      if (hasta && from > hasta) return false;
+      return true;
+    });
+  }, [summaries, appliedDesde, appliedHasta]);
+
+  const handleApplyFilter = () => {
+    setAppliedDesde(filterDesde);
+    setAppliedHasta(filterHasta);
+    setFilterOpen(false);
+  };
 
   const handleOpenDetail = React.useCallback((summary: HistoricalSummaryResponse) => {
     setSelectedSummary(summary);
@@ -185,22 +259,17 @@ export function AiSummaryTab({
 
   return (
     <PanelShell>
-      <div className="space-y-5">
+      <div className="space-y-5 p-3">
         <div className="flex flex-wrap items-center justify-between gap-3">
           <Button
             type="button"
             variant="outline"
-            className="rounded-xl border-[var(--brand-primario)]/25 bg-brand-active-primario px-4 text-white hover:bg-brand-hover-primario hover:text-white cursor-pointer"
+            onClick={() => { setFilterDesde(appliedDesde); setFilterHasta(appliedHasta); setFilterOpen(true); }}
+            className="rounded-md border-[var(--brand-primario)]/25 bg-brand-active-primario px-4 text-white hover:bg-brand-hover-primario hover:text-white cursor-pointer"
           >
             <Filter className="size-4" />
             Filtro
           </Button>
-
-          {summariesPage ? (
-            <p className="text-sm text-slate-500">
-              {summariesPage.totalElements} resumenes para {patient.profile.fullName}
-            </p>
-          ) : null}
         </div>
 
         {summariesError ? (
@@ -227,7 +296,7 @@ export function AiSummaryTab({
           </div>
         ) : (
           <div className="space-y-5">
-            {summaries.map((summary) => (
+            {filteredSummaries.map((summary) => (
               <article
                 key={summary.id}
                 className="overflow-hidden rounded-2xl border border-[var(--brand-primario)]/35 bg-white shadow-[0_14px_36px_rgba(9,2,36,0.05)]"
@@ -236,7 +305,7 @@ export function AiSummaryTab({
                   <div className="space-y-1">
                     <h3 className="text-base font-semibold text-slate-900">Resumen generado</h3>
                     <p className="flex items-center gap-2 text-sm text-slate-600">
-                      <CalendarRange className="size-4 text-[var(--brand-terciario)]" />
+                      <CalendarRange className="size-4 text-brand-terciario" />
                       {formatDate(summary.dateFrom)} - {formatDate(summary.dateUntil)}
                     </p>
                   </div>
@@ -276,7 +345,9 @@ export function AiSummaryTab({
                 </div>
 
                 <div className="space-y-3 px-5 py-5">
-                  <p className="text-sm leading-7 text-slate-700">{buildPreview(summary.content)}</p>
+                  <p className="text-sm leading-7 text-slate-700">
+                    {renderHighlightedLabels(buildPreview(summary.content))}
+                  </p>
                   <p className="text-xs text-slate-500">
                     Generado el {formatDateTime(summary.generatedAt)}
                   </p>
@@ -320,6 +391,46 @@ export function AiSummaryTab({
         open={Boolean(selectedSummary)}
         onOpenChange={handleCloseDetail}
       />
+
+      <Dialog open={filterOpen} onOpenChange={setFilterOpen}>
+        <DialogContent className="rounded-[20px] border-gray-200 bg-white text-gray-700 sm:max-w-md">
+          <DialogHeader className="space-y-1 text-left">
+            <DialogTitle className="text-xl font-bold">Filtro</DialogTitle>
+            <DialogDescription className="sr-only">Filtra los resumenes por rango de fechas</DialogDescription>
+          </DialogHeader>
+
+          <div className="grid grid-cols-2 gap-4">
+            <div className="flex flex-col gap-1.5">
+              <label className="text-sm font-medium text-gray-800">Desde</label>
+              <input
+                type="text"
+                value={filterDesde}
+                onChange={(e) => setFilterDesde(e.target.value)}
+                placeholder="dd/mm/aaaa"
+                className="h-[42px] w-full rounded-[6px] border border-slate-300 bg-white px-3 text-slate-900 placeholder:text-slate-400 focus:border-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-500/50"
+              />
+            </div>
+            <div className="flex flex-col gap-1.5">
+              <label className="text-sm font-medium text-gray-800">Hasta</label>
+              <input
+                type="text"
+                value={filterHasta}
+                onChange={(e) => setFilterHasta(e.target.value)}
+                placeholder="dd/mm/aaaa"
+                className="h-[42px] w-full rounded-[6px] border border-slate-300 bg-white px-3 text-slate-900 placeholder:text-slate-400 focus:border-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-500/50"
+              />
+            </div>
+          </div>
+
+          <Button
+            type="button"
+            className="mt-2 w-full rounded-[6px] bg-brand-primario text-white hover:bg-brand-hover-primario cursor-pointer"
+            onClick={handleApplyFilter}
+          >
+            Aplicar filtro
+          </Button>
+        </DialogContent>
+      </Dialog>
     </PanelShell>
   );
 }

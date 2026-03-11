@@ -1,16 +1,23 @@
 import React from "react";
 import { useLocation, useNavigate, useParams } from "react-router-dom";
-import { Plus } from "lucide-react";
+import { Pencil, Plus, RotateCcw, Trash2 } from "lucide-react";
 
 import PatientDetailHeader from "@/components/shared/patient-detail/PatientDetailHeader";
 import PatientDetailTabs from "@/components/shared/patient-detail/PatientDetailTabs";
+import { DeactivatePatientAlertDialog } from "@/components/shared/patients/DeactivatePatientAlertDialog";
+import { EditPatientDialog } from "@/components/shared/patients/EditPatientDialog";
 import GenerateSummaryDialog from "@/components/shared/patient-detail/GenerateSummaryDialog";
 import { buildPatientDetail } from "@/components/shared/patient-detail/patientDetail";
 import { Button } from "@/components/common/Button";
+import { toast } from "@/components/common/toast";
 import { LoadingSpinner } from "@/components/layout/LoadingSpinner";
 import { NewSessionDialog } from "@/components/shared/sessions/NewSessionDialog";
 import { ROUTES } from "@/constants/routes";
-import { patientsService, type Patient } from "@/services/patients.service";
+import {
+  patientsService,
+  type Patient,
+  type UpdatePatientDto,
+} from "@/services/patients.service";
 import {
   aiSummariesService,
   type HistoricalSummariesPageResponse,
@@ -43,6 +50,9 @@ const PatientDetail: React.FC = () => {
     null
   );
   const [historicalSummariesPageIndex, setHistoricalSummariesPageIndex] = React.useState(0);
+  const [isEditPatientOpen, setIsEditPatientOpen] = React.useState(false);
+  const [isDeactivatePatientOpen, setIsDeactivatePatientOpen] = React.useState(false);
+  const [isRestoringPatient, setIsRestoringPatient] = React.useState(false);
   const [patient, setPatient] = React.useState<Patient | null>(state?.patient || null);
   // Inicializar loading en false si ya tenemos datos en el state
   const [loading, setLoading] = React.useState(!state?.patient);
@@ -157,6 +167,54 @@ const PatientDetail: React.FC = () => {
     setIsSummaryDialogOpen(true);
   }, []);
 
+  const handleUpdatePatient = React.useCallback(
+    async (patientId: string, values: UpdatePatientDto) => {
+      await patientsService.update(patientId, values);
+      setPatient((current) =>
+        current
+          ? {
+              ...current,
+              ...values,
+              reason_consultation: values.reasonConsultation,
+            }
+          : current
+      );
+      toast.success("Paciente actualizado correctamente.");
+    },
+    []
+  );
+
+  const handleDeactivatePatient = React.useCallback(
+    async (patientId: string) => {
+      await patientsService.deactivate(patientId);
+      toast.success("Paciente desactivado correctamente.");
+      navigate(ROUTES.PATIENTS, { replace: true });
+    },
+    [navigate]
+  );
+
+  const handleRestorePatient = React.useCallback(async () => {
+    if (!patient) {
+      return;
+    }
+
+    setIsRestoringPatient(true);
+    try {
+      await patientsService.restore(String(patient.id));
+      setPatient((current) =>
+        current
+          ? {
+              ...current,
+              active: true,
+            }
+          : current
+      );
+      toast.success("Paciente restaurado correctamente.");
+    } finally {
+      setIsRestoringPatient(false);
+    }
+  }, [patient]);
+
   if (loading) {
     return (
       <div className="flex h-screen items-center justify-center">
@@ -178,16 +236,51 @@ const PatientDetail: React.FC = () => {
 
   return (
     <div className="relative min-h-full">
-      <div className="pointer-events-none absolute inset-0 overflow-hidden">
-        <div className="absolute left-32 top-24 h-56 w-56 rounded-full bg-brand-secundario/10 blur-3xl" />
-        <div className="absolute right-24 top-20 h-52 w-52 rounded-full bg-brand-terciario/12 blur-3xl" />
-        <div className="absolute bottom-10 left-1/3 h-44 w-44 rounded-full bg-brand-secundario/8 blur-3xl" />
-      </div>
-
         <PatientDetailHeader
           patient={patientDetail}
           onBack={() => navigate(ROUTES.PATIENTS)}
         >
+          {activeTabId === "ficha" && (
+            <div className="flex items-center gap-2">
+              <Button
+                type="button"
+                size="icon-sm"
+                variant="ghost"
+                onClick={() => setIsEditPatientOpen(true)}
+                className="rounded-full text-brand-hover-primario hover:bg-brand-hover-primario/10 hover:text-brand-hover-primario cursor-pointer"
+                aria-label="Editar paciente"
+                title="Editar paciente"
+              >
+                <Pencil className="size-4" />
+              </Button>
+              {patientDetail.profile.status === "inactivo" ? (
+                <Button
+                  type="button"
+                  size="icon-sm"
+                  variant="ghost"
+                  onClick={handleRestorePatient}
+                  disabled={isRestoringPatient}
+                  className="rounded-full text-emerald-600 hover:bg-emerald-50 hover:text-emerald-700 cursor-pointer"
+                  aria-label="Restaurar paciente"
+                  title="Restaurar paciente"
+                >
+                  <RotateCcw className="size-4" />
+                </Button>
+              ) : (
+                <Button
+                  type="button"
+                  size="icon-sm"
+                  variant="ghost"
+                  onClick={() => setIsDeactivatePatientOpen(true)}
+                  className="rounded-full text-brand-hover-primario hover:bg-brand-hover-primario/10 hover:text-brand-hover-primario cursor-pointer"
+                  aria-label="Eliminar paciente"
+                  title="Eliminar paciente"
+                >
+                  <Trash2 className="size-4" />
+                </Button>
+              )}
+            </div>
+          )}
           {activeTabId === "sesiones" && (
             <NewSessionDialog
               patientId={patientDetail.profile.numericId}
@@ -197,7 +290,7 @@ const PatientDetail: React.FC = () => {
           {activeTabId === "tratamientos" && (
             <Button
               onClick={() => setTreatmentCreateRequestKey((k) => k + 1)}
-              className="rounded-xl bg-brand-primario px-4 text-white hover:bg-brand-hover-primario cursor-pointer"
+              className="rounded-md bg-brand-primario px-4 text-white hover:bg-brand-hover-primario cursor-pointer"
             >
               <Plus className="size-4" />
               Nuevo tratamiento
@@ -207,7 +300,7 @@ const PatientDetail: React.FC = () => {
           {activeTabId === "resumen" && (
             <Button
               onClick={handleOpenSummaryDialog}
-              className="rounded-xl bg-brand-primario px-4 text-white hover:bg-brand-hover-primario cursor-pointer"
+              className="rounded-md bg-brand-primario px-4 text-white hover:bg-brand-hover-primario cursor-pointer"
             >
               <Plus className="size-4" />
               Generar Resumen IA
@@ -244,20 +337,31 @@ const PatientDetail: React.FC = () => {
           onGenerated={async (summary) => {
             setHistoricalSummariesPageIndex(0);
             await loadHistoricalSummaries(0);
+            toast.success("Resumen IA generado correctamente.");
             setSummaryCreationFeedback(
               `Resumen generado para el rango ${summary.dateFrom} a ${summary.dateUntil}.`
             );
           }}
         />
         {activeTabId === "resumen" && summaryCreationFeedback ? (
-          <div className="mt-4 rounded-2xl border border-emerald-200 bg-emerald-50 px-4 py-3 text-sm text-emerald-800">
+          <div className="mt-4 rounded-md border border-emerald-200 bg-emerald-50 px-4 py-3 text-sm text-emerald-800">
             {summaryCreationFeedback}
           </div>
         ) : null}
+        <EditPatientDialog
+          patient={patient}
+          open={isEditPatientOpen}
+          onOpenChange={setIsEditPatientOpen}
+          onConfirmUpdate={handleUpdatePatient}
+        />
+        <DeactivatePatientAlertDialog
+          patient={patient}
+          open={isDeactivatePatientOpen}
+          onOpenChange={setIsDeactivatePatientOpen}
+          onConfirmDeactivate={handleDeactivatePatient}
+        />
     </div>
   );
 };
 
 export default PatientDetail;
-
-

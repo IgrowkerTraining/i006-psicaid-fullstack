@@ -286,7 +286,7 @@ export function TreatmentsTab({ patient, createRequestKey }: TreatmentsTabProps)
             </p>
           </div>
         ) : (
-          <div className="space-y-3">
+          <div className="space-y-3 p-3">
             {treatments.map((treatment, index) => (
               <article
                 key={`${treatment.id ?? "treatment"}-${index}`}

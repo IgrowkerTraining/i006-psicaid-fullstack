@@ -66,7 +66,7 @@ export function PatientDetailTabs({
       },
       {
         id: "sesiones",
-        label: "Sesiones clinicas",
+        label: "Sesiones clínicas",
         content: <SessionsTab patient={patient} sessionRefreshKey={sessionRefreshKey} />,
       },
       {
@@ -139,11 +139,11 @@ export function PatientDetailTabs({
   );
 
   return (
-    <section className="rounded-3xl border border-white/70 bg-white/65 p-3 shadow-[0_20px_60px_rgba(9,2,36,0.08)] backdrop-blur">
+    <section className="rounded-md border border-white/70 bg-white/65 shadow-[0_20px_60px_rgba(9,2,36,0.08)]">
       <div
         role="tablist"
         aria-label="Detalle del paciente"
-        className="mb-3 flex flex-wrap gap-2 rounded-2xl border border-[var(--border)]/80 bg-[var(--brand-acento)]/80 p-2"
+        className="mb-3 flex flex-wrap gap-2 rounded-sm border border-[var(--border)]/80 bg-white p-2"
       >
         {tabs.map((tab, index) => {
           const isActive = tab.id === activeTab.id;
@@ -165,7 +165,7 @@ export function PatientDetailTabs({
               onClick={() => onActiveTabChange?.(tab.id)}
               onKeyDown={(event) => handleTabKeyDown(event, index)}
               className={cn(
-                "inline-flex justify-center grow min-h-10 items-center gap-2 rounded-xl px-3 py-2 text-sm font-semibold transition sm:px-4 cursor-pointer",
+                "inline-flex justify-center grow min-h-10 items-center gap-2 rounded-sm px-3 py-2 text-sm font-semibold transition sm:px-4 cursor-pointer",
                 isActive
                   ? "bg-brand-active-primario text-white shadow-[0_10px_24px_rgba(9,2,36,0.08)]"
                   : "text-slate-600 hover:bg-brand-hover-primario hover:text-white"

@@ -10,7 +10,7 @@ export function AgendaCalendar() {
   const [date, setDate] = React.useState<Date | undefined>(new Date())
 
   return (
-    <div className="bg-white border border-gray-200 rounded-2xl px-3 py-4 shadow-sm w-fit mx-auto">
+    <div className="bg-white border border-gray-200 rounded-[5px] px-6 py-4 shadow-sm w-full">
       <h3 className="text-xl font-semibold text-primary-foreground  mb-3 pl-0.5">
         Tu agenda
       </h3>
