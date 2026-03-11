@@ -13,9 +13,16 @@ import type { PatientDetailViewModel } from "./types";
 
 type PatientDetailTabsProps = {
   patient: PatientDetailViewModel;
+  activeTabId: TabId;
   onActiveTabChange?: (tabId: TabId) => void;
   sessionRefreshKey?: number;
   treatmentCreateRequestKey?: number;
+  onOpenGenerateSummary?: () => void;
+  summaries?: React.ComponentProps<typeof AiSummaryTab>["summaries"];
+  summariesPage?: React.ComponentProps<typeof AiSummaryTab>["summariesPage"];
+  summariesLoading?: React.ComponentProps<typeof AiSummaryTab>["summariesLoading"];
+  summariesError?: React.ComponentProps<typeof AiSummaryTab>["summariesError"];
+  onSummaryPageChange?: React.ComponentProps<typeof AiSummaryTab>["onSummaryPageChange"];
 };
 
 type TabItem = {
@@ -26,9 +33,16 @@ type TabItem = {
 
 export function PatientDetailTabs({
   patient,
+  activeTabId,
   onActiveTabChange,
   sessionRefreshKey,
   treatmentCreateRequestKey,
+  onOpenGenerateSummary,
+  summaries,
+  summariesPage,
+  summariesLoading,
+  summariesError,
+  onSummaryPageChange,
 }: PatientDetailTabsProps) {
   const tabsId = React.useId();
   const tabRefs = React.useRef<Array<HTMLButtonElement | null>>([]);
@@ -58,17 +72,31 @@ export function PatientDetailTabs({
       {
         id: "resumen",
         label: "Resumen IA",
-        content: <AiSummaryTab patient={patient} />,
+        content: (
+          <AiSummaryTab
+            patient={patient}
+            onOpenGenerateSummary={onOpenGenerateSummary}
+            summaries={summaries}
+            summariesPage={summariesPage}
+            summariesLoading={summariesLoading}
+            summariesError={summariesError}
+            onSummaryPageChange={onSummaryPageChange}
+          />
+        ),
       },
     ],
-    [patient, sessionRefreshKey, treatmentCreateRequestKey]
+    [
+      patient,
+      sessionRefreshKey,
+      treatmentCreateRequestKey,
+      onOpenGenerateSummary,
+      summaries,
+      summariesPage,
+      summariesLoading,
+      summariesError,
+      onSummaryPageChange,
+    ]
   );
-
-  const [activeTabId, setActiveTabId] = React.useState<TabId>("ficha");
-
-  React.useEffect(() => {
-    onActiveTabChange?.(activeTabId);
-  }, [activeTabId, onActiveTabChange]);
 
   const activeTab = tabs.find((tab) => tab.id === activeTabId) ?? tabs[0];
 
@@ -79,10 +107,10 @@ export function PatientDetailTabs({
         return;
       }
 
-      setActiveTabId(nextTab.id);
+      onActiveTabChange?.(nextTab.id);
       tabRefs.current[nextIndex]?.focus();
     },
-    [tabs]
+    [onActiveTabChange, tabs]
   );
 
   const handleTabKeyDown = React.useCallback(
@@ -134,10 +162,10 @@ export function PatientDetailTabs({
               aria-selected={isActive}
               aria-controls={panelId}
               tabIndex={isActive ? 0 : -1}
-              onClick={() => setActiveTabId(tab.id)}
+              onClick={() => onActiveTabChange?.(tab.id)}
               onKeyDown={(event) => handleTabKeyDown(event, index)}
               className={cn(
-                "inline-flex min-h-10 items-center gap-2 rounded-xl px-3 py-2 text-sm font-semibold transition sm:px-4 cursor-pointer",
+                "inline-flex justify-center grow min-h-10 items-center gap-2 rounded-xl px-3 py-2 text-sm font-semibold transition sm:px-4 cursor-pointer",
                 isActive
                   ? "bg-brand-active-primario text-white shadow-[0_10px_24px_rgba(9,2,36,0.08)]"
                   : "text-slate-600 hover:bg-brand-hover-primario hover:text-white"
