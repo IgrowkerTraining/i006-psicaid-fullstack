@@ -1,5 +1,3 @@
-import { Phone } from "lucide-react";
-
 import type { PatientTabPanelProps } from "./types";
 import { LabelValue, PanelShell, SectionCard } from "./ui";
 
@@ -7,7 +5,6 @@ export function PatientRecordTab({ patient }: PatientTabPanelProps) {
   return (
     <PanelShell>
       <SectionCard title="" subtitle="">
-        {/* Header con metadatos clave */}
         <div className="mb-6 grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-4 pb-6 border-b border-slate-200">
           <div>
             <p className="text-xs font-semibold uppercase tracking-wider text-gray-900 mb-1">ID del paciente</p>
@@ -18,7 +15,7 @@ export function PatientRecordTab({ patient }: PatientTabPanelProps) {
             <p className="text-sm font-medium text-slate-700">{patient.profile.sessionFrequency}</p>
           </div>
           <div>
-            <p className="text-xs font-semibold uppercase tracking-wider text-gray-900 mb-1">Proxima sesion</p>
+            <p className="text-xs font-semibold uppercase tracking-wider text-gray-900 mb-1">Proxima sesión</p>
             <p className="text-sm font-medium text-slate-700">{patient.profile.nextSessionDate}</p>
           </div>
           <div>
@@ -36,7 +33,7 @@ export function PatientRecordTab({ patient }: PatientTabPanelProps) {
               <LabelValue label="Apellido" value={patient.profile.fullName.split(' ').slice(1).join(' ') || ''} />
               <LabelValue label="Fecha de nacimiento" value={patient.profile.birthDate} />
               <LabelValue label="Edad" value={`${patient.profile.age} años`} />
-              <LabelValue label="Ocupacion" value={patient.profile.occupation} />
+              <LabelValue label="Ocupación" value={patient.profile.occupation} />
               <LabelValue label="Sexo" value={patient.profile.sex} />
               <LabelValue label="Estado civil" value={patient.profile.maritalStatus} />
               <div>
@@ -51,7 +48,7 @@ export function PatientRecordTab({ patient }: PatientTabPanelProps) {
             <div className="space-y-3">
               <LabelValue label="Email" value={patient.contact.email} />
               <LabelValue
-                label="Telefono"
+                label="Teléfono"
                 value={
                   <span className="inline-flex items-center gap-2">
                     {patient.contact.phone}

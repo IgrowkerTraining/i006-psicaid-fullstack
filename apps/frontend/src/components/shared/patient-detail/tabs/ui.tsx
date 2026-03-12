@@ -4,11 +4,10 @@ import { cn } from "@/lib/utils";
 
 import type { SessionStatus } from "./types";
 
-const panelCardClass =
-  "rounded-3xl border border-white/70 bg-white/90 p-5 shadow-[0_16px_40px_rgba(9,2,36,0.06)] backdrop-blur sm:p-6";
+const panelCardClass = "min-w-0";
 
 const sectionCardClass =
-  "rounded-2xl border border-[var(--border)] bg-[var(--brand-acento)]/75 p-4 shadow-[0_8px_24px_rgba(9,2,36,0.05)]";
+  "rounded-md border border-[var(--border)] bg-[var(--brand-acento)]/75 p-4 shadow-[0_8px_24px_rgba(9,2,36,0.05)]";
 
 export function PanelShell({ children }: { children: ReactNode }) {
   return <div className={panelCardClass}>{children}</div>;

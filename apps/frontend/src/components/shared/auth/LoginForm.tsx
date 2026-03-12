@@ -50,6 +50,7 @@ export function LoginForm({ onSubmit }: LoginFormProps) {
     password: "",
   })
   const [showPassword, setShowPassword] = React.useState(false)
+  const [rememberMe, setRememberMe] = React.useState(false)
   const [errors, setErrors] = React.useState<Record<string, string>>({})
   const [serverError, setServerError] = React.useState<string | null>(null)
   const [isLoading, setIsLoading] = React.useState(false)
@@ -179,10 +180,28 @@ export function LoginForm({ onSubmit }: LoginFormProps) {
         />
       </motion.div>
 
+      <motion.div variants={itemVariants} className="flex items-center justify-between">
+        <label className="flex items-center gap-2 cursor-pointer select-none">
+          <input
+            type="checkbox"
+            checked={rememberMe}
+            onChange={(e) => setRememberMe(e.target.checked)}
+            className="h-4 w-4 rounded border-slate-300 accent-brand-primario"
+          />
+          <span className="text-sm text-slate-600">Recordarme</span>
+        </label>
+        <button
+          type="button"
+          className="text-sm font-medium text-brand-primario hover:text-brand-hover-primario transition-colors"
+        >
+          ¿Has olvidado tu contraseña?
+        </button>
+      </motion.div>
+
       <motion.div variants={itemVariants}>
       <Button
         type="submit"
-        className="mt-2 h-11 w-full rounded-md bg-brand-primario text-white hover:bg-brand-hover-primario"
+        className="mt-2 h-11 w-full rounded-[6px] bg-brand-primario text-white hover:bg-brand-hover-primario"
         isLoading={isLoading}
         loadingText="Iniciando sesión..."
       >

@@ -63,8 +63,8 @@ export function DeactivatePatientAlertDialog({
         <AlertDialogHeader className="text-left">
           <AlertDialogTitle>Desactivar paciente</AlertDialogTitle>
           <AlertDialogDescription className="text-rose-900/90">
-            Esta accion desactivara al paciente
-            {fullName ? ` (${fullName})` : ""}. No se eliminara el registro, pero
+            Esta acción desactivará al paciente
+            {fullName ? ` (${fullName})` : ""}. No se eliminará el registro, pero
             quedara inactivo en el sistema.
           </AlertDialogDescription>
         </AlertDialogHeader>

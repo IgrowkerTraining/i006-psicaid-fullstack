@@ -39,7 +39,7 @@ export const ROUTES = {
 } as const;
 
 export const API_ENDPOINTS = {
-  BASE: 'http://localhost:3000/api',
+  BASE: 'https://psicaid-backend.onrender.com/api',
   AUTH: {
     LOGIN: '/auth/login',
     REGISTER: '/auth/register',
@@ -56,6 +56,11 @@ export const API_ENDPOINTS = {
     LIST: (patientId: string) => `/patients/${patientId}/sessions`,
     CREATE: (patientId: string) => `/patients/${patientId}/sessions`,
     DETAIL: (patientId: string, sessionId: number) => `/patients/${patientId}/sessions/${sessionId}`,
+    SUMMARIZE: (patientId: string, sessionId: number) =>
+      `/patients/${patientId}/sessions/${sessionId}/summarize`,
+  },
+  SUMMARIES: {
+    GENERATE_HISTORICAL: (patientId: string) => `/patients/${patientId}/summaries/historical`,
   },
   TREATMENTS: {
     LIST: (patientId: string) => `/patients/${patientId}/treatments`,

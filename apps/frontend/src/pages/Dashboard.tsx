@@ -14,12 +14,13 @@ const Dashboard: React.FC = () => {
     : "Hola de nuevo. Tu espacio terapeutico esta listo.";
 
   return (
-    <div className="min-h-screen flex flex-col bg-[#e8ebf9]">
+    <div className="min-h-screen flex flex-col">
         <header className="mb-10 flex items-start justify-between">
           <div>
-            <h2 className="text-3xl font-bold text-gray-900 mb-2">
-              {greeting}
+            <h2 className="text-4xl font-bold text-gray-900 mb-1">
+              {user?.firstName ? `¡Bienvenido, ${user.firstName}!` : "¡Bienvenido!"}
             </h2>
+            <p className="text-base text-gray-500">Resumen de tu práctica psicológica</p>
           </div>
         </header>
 

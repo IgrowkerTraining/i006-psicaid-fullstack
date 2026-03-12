@@ -28,7 +28,7 @@ export function Header({ user, onLogout }: HeaderProps) {
 
   return (
     <header
-      className={`sticky top-0 z-50 flex items-center justify-end border-b border-gray-200 bg-white/90 px-6 py-4 backdrop-blur-md shadow-sm transition-transform duration-300 ${
+      className={`sticky top-0 z-50 flex items-center justify-end border-b border-gray-200 bg-brand-acento px-6 py-4 backdrop-blur-md shadow-sm transition-transform duration-300 ${
         visible ? "translate-y-0" : "-translate-y-full"
       }`}
     >

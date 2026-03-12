@@ -27,7 +27,7 @@ const LazyProximasSesiones = React.lazy(async () => {
 });
 
 const AgendaCalendarFallback: React.FC = () => (
-  <div className="bg-white border border-gray-200 rounded-2xl px-3 py-4 shadow-sm w-full max-w-90 mx-auto">
+  <div className="mx-auto w-full max-w-full rounded-2xl border border-gray-200 bg-white px-3 py-4 shadow-sm">
     <div className="animate-pulse">
       <div className="mb-4 h-6 w-28 rounded bg-slate-200" />
       <div className="h-72.5 rounded-xl bg-slate-100 border border-slate-200" />
@@ -90,8 +90,8 @@ export function DashboardPanelsGrid({
     data?.upcomingSessions.map(mapUpcomingSessionToAppointmentLog) ?? [];
 
   return (
-    <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-      <section className="lg:col-span-2">
+    <div className="grid grid-cols-1 gap-8 lg:grid-cols-5">
+      <section className="min-w-0 lg:col-span-3">
         <Suspense fallback={<ProximasSesionesModuleFallback />}>
           <LazyProximasSesiones
             logs={appointmentLogs}
@@ -101,7 +101,7 @@ export function DashboardPanelsGrid({
         </Suspense>
       </section>
 
-      <section>
+      <section className="min-w-0 lg:col-span-2">
         <Suspense fallback={<AgendaCalendarFallback />}>
           <LazyAgendaCalendar />
         </Suspense>

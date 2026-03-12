@@ -13,9 +13,16 @@ import type { PatientDetailViewModel } from "./types";
 
 type PatientDetailTabsProps = {
   patient: PatientDetailViewModel;
+  activeTabId: TabId;
   onActiveTabChange?: (tabId: TabId) => void;
   sessionRefreshKey?: number;
   treatmentCreateRequestKey?: number;
+  onOpenGenerateSummary?: () => void;
+  summaries?: React.ComponentProps<typeof AiSummaryTab>["summaries"];
+  summariesPage?: React.ComponentProps<typeof AiSummaryTab>["summariesPage"];
+  summariesLoading?: React.ComponentProps<typeof AiSummaryTab>["summariesLoading"];
+  summariesError?: React.ComponentProps<typeof AiSummaryTab>["summariesError"];
+  onSummaryPageChange?: React.ComponentProps<typeof AiSummaryTab>["onSummaryPageChange"];
 };
 
 type TabItem = {
@@ -26,9 +33,16 @@ type TabItem = {
 
 export function PatientDetailTabs({
   patient,
+  activeTabId,
   onActiveTabChange,
   sessionRefreshKey,
   treatmentCreateRequestKey,
+  onOpenGenerateSummary,
+  summaries,
+  summariesPage,
+  summariesLoading,
+  summariesError,
+  onSummaryPageChange,
 }: PatientDetailTabsProps) {
   const tabsId = React.useId();
   const tabRefs = React.useRef<Array<HTMLButtonElement | null>>([]);
@@ -52,23 +66,37 @@ export function PatientDetailTabs({
       },
       {
         id: "sesiones",
-        label: "Sesiones clinicas",
+        label: "Sesiones clínicas",
         content: <SessionsTab patient={patient} sessionRefreshKey={sessionRefreshKey} />,
       },
       {
         id: "resumen",
         label: "Resumen IA",
-        content: <AiSummaryTab patient={patient} />,
+        content: (
+          <AiSummaryTab
+            patient={patient}
+            onOpenGenerateSummary={onOpenGenerateSummary}
+            summaries={summaries}
+            summariesPage={summariesPage}
+            summariesLoading={summariesLoading}
+            summariesError={summariesError}
+            onSummaryPageChange={onSummaryPageChange}
+          />
+        ),
       },
     ],
-    [patient, sessionRefreshKey, treatmentCreateRequestKey]
+    [
+      patient,
+      sessionRefreshKey,
+      treatmentCreateRequestKey,
+      onOpenGenerateSummary,
+      summaries,
+      summariesPage,
+      summariesLoading,
+      summariesError,
+      onSummaryPageChange,
+    ]
   );
-
-  const [activeTabId, setActiveTabId] = React.useState<TabId>("ficha");
-
-  React.useEffect(() => {
-    onActiveTabChange?.(activeTabId);
-  }, [activeTabId, onActiveTabChange]);
 
   const activeTab = tabs.find((tab) => tab.id === activeTabId) ?? tabs[0];
 
@@ -79,10 +107,10 @@ export function PatientDetailTabs({
         return;
       }
 
-      setActiveTabId(nextTab.id);
+      onActiveTabChange?.(nextTab.id);
       tabRefs.current[nextIndex]?.focus();
     },
-    [tabs]
+    [onActiveTabChange, tabs]
   );
 
   const handleTabKeyDown = React.useCallback(
@@ -111,11 +139,11 @@ export function PatientDetailTabs({
   );
 
   return (
-    <section className="rounded-3xl border border-white/70 bg-white/65 p-3 shadow-[0_20px_60px_rgba(9,2,36,0.08)] backdrop-blur">
+    <section className="rounded-md border border-white/70 bg-white/65 shadow-[0_20px_60px_rgba(9,2,36,0.08)]">
       <div
         role="tablist"
         aria-label="Detalle del paciente"
-        className="mb-3 flex flex-wrap gap-2 rounded-2xl border border-[var(--border)]/80 bg-[var(--brand-acento)]/80 p-2"
+        className="mb-3 flex flex-wrap gap-2 rounded-sm border border-[var(--border)]/80 bg-white p-2"
       >
         {tabs.map((tab, index) => {
           const isActive = tab.id === activeTab.id;
@@ -134,10 +162,10 @@ export function PatientDetailTabs({
               aria-selected={isActive}
               aria-controls={panelId}
               tabIndex={isActive ? 0 : -1}
-              onClick={() => setActiveTabId(tab.id)}
+              onClick={() => onActiveTabChange?.(tab.id)}
               onKeyDown={(event) => handleTabKeyDown(event, index)}
               className={cn(
-                "inline-flex min-h-10 items-center gap-2 rounded-xl px-3 py-2 text-sm font-semibold transition sm:px-4 cursor-pointer",
+                "inline-flex justify-center grow min-h-10 items-center gap-2 rounded-sm px-3 py-2 text-sm font-semibold transition sm:px-4 cursor-pointer",
                 isActive
                   ? "bg-brand-active-primario text-white shadow-[0_10px_24px_rgba(9,2,36,0.08)]"
                   : "text-slate-600 hover:bg-brand-hover-primario hover:text-white"
